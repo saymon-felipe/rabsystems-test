@@ -1,12 +1,12 @@
 <template>
     <div class="rabsystems-chat">
-        <div class="chat-header" :style="rabsystemsUser.id == user.id ? 'padding: .7rem;' : ''">
+        <div class="chat-header">
             <div class="destiny-user">
                 <div class="user-img-container">
-                    <img v-if="rabsystemsUser.id != user.id" :src="order_user.profile_photo" class="avatar-p">
-                    <div class="user-status" v-if="rabsystemsUser.id != user.id" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
+                    <img :src="rabsystemsUser.id == user.id ? order_user.profile_photo : rabsystemsUser.profile_photo" class="avatar-p">
+                    <div class="user-status" :class="current_status"></div>
                 </div>
-                <h5>{{ rabsystemsUser.id == user.id ? 'Mensagens' : 'Rabsystems'}}</h5>
+                <h5>{{ rabsystemsUser.id == user.id ? order_user.name : rabsystemsUser.name}}</h5>
             </div>
             <div class="header-icons">
                 <i class="fas fa-window-minimize" id="chat-minimize" v-on:click="toggleChat()"></i>
@@ -14,61 +14,21 @@
             </div>
         </div>
         <div class="chat-body">
-            <div class="owner-inbox" v-if="rabsystemsUser.id == user.id">
-                <aside class="opened-chats custom-scroll">
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                    <div class="user-chat">
-                        <img :src="rabsystemsUser.profile_photo" class="avatar-pp">
-                        <div class="user-status-p" :class="rabsystemsUser.is_online == 'true' ? 'online' : ''"></div>
-                    </div>
-                </aside>
-            </div>
-            <div class="user-inbox">
-                <div class="message" :class="message.sender_id == user.id ? 'out' : 'in'" v-for="message in messages" :key="message.message_id">
+            <div class="messages-container">
+                <div class="message" :id="'message-' + message.message_id" :class="message.sender_id == user.id ? 'out' : 'in'" v-for="message in messages" :key="message.message_id">
                     <div class="message-header">
                         <h5>{{ message.sender_name }}</h5>
                         <span>{{ formatDate(message.send_date) }}</span>
-                        <div class="view-icon">
+                        <div class="view-icon" :class='message.view_date.length != 2 ? "viewed" : ""'>
                             <i class="fas fa-check"></i>
                             <i class="fas fa-check"></i>
                         </div>
                     </div>
-                    <div class="message-body">{{ message.message }}</div>
+                    <div class="message-body"> 
+                        <span>{{ message.message }}</span>
+                    </div>
+                    <span class="show-more" v-on:click="expandMessage('#message-' + message.message_id)">Ver mais</span>
+                    <span class="show-less" v-on:click="contractMessage('#message-' + message.message_id)">Ver menos</span>
                 </div>
             </div>
         </div>
@@ -89,56 +49,157 @@ import { globalMethods } from '../js/globalMethods';
 
 export default {
     name: "rabsystemsChat",
-    props: ['order', 'user'],
+    props: ['order'],
     mixins: [globalMethods],
     data() {
         return {
-            messages: [
-                /*{
-                    message_id: 1,
-                    sender_id: 3,
-                    sender_name: "Saymon",
-                    receiver_id: 4,
-                    message: "Lorem ipsum dolor sit amet, consectetur adpiscing elit. Lorem ipsum dolor sit amet, consectetur adpiscing elit.",
-                    send_date: moment().format()
-                },
-                {
-                    message_id: 2,
-                    sender_id: 4,
-                    sender_name: "Rabudinha",
-                    receiver_id: 3,
-                    message: "Lorem ipsum dolor sit amet, consectetur adpiscing elit. Lorem ipsum dolor sit amet, consectetur adpiscing elit.",
-                    send_date: moment().format()
-                }*/
-            ],
+            messages: [],
             order_user: {},
-            rabsystemsUser: {}
+            rabsystemsUser: {},
+            first: true,
+            current_status: ""
         }
     },
     methods: {
-        getRabsystemsUser: function () {
+        findCurrentStatus: function () {
             let self = this;
-            api.get("/user/get_rabsystems_user")
+            if (self.rabsystemsUser.id == self.user.id) {
+                if (self.order_user.user_status == 'online') {
+                    self.current_status = "online";
+                } else if (self.order_user.user_status == "out") {
+                    self.current_status = "user-out";
+                } else {
+                    self.current_status = "";
+                }
+            } else {
+                if (self.rabsystemsUser.user_status == 'online') {
+                    self.current_status = "online";
+                } else if (self.rabsystemsUser.user_status == "out") {
+                    self.current_status = "user-out";
+                } else {
+                    self.current_status = "";
+                }
+            }
+        },
+        checkMessageContentHeight: function () {
+            let messages = $(".message");
+            let container = $(".messages-container");
+
+            messages.each((index) => {
+                let currentMessage = messages[index];
+                let text = $("#" + currentMessage.getAttribute("id") + " .message-body span");
+                let showMore = $("#" + currentMessage.getAttribute("id") + " .show-more");
+                if (text[0].offsetHeight > 72) {
+                    showMore.show();
+                }
+            })
+
+            container.scrollTop(9999999);
+        },
+        expandMessage: function (id_message) {
+            let message = $(id_message);
+            let body = message.find(".message-body");
+            let showMore = message.find(".show-more");
+            let showLess = message.find(".show-less");
+            body.css("-webkit-line-clamp", "initial").css("max-height", "inherit");
+            showMore.hide();
+            showLess.show();
+        },
+        contractMessage: function (id_message) {
+            let message = $(id_message);
+            let body = message.find(".message-body");
+            let showMore = message.find(".show-more");
+            let showLess = message.find(".show-less");
+            body.css("-webkit-line-clamp", "3").css("max-height", 72);
+            showMore.show();
+            showLess.hide();
+        },
+        lastChat: function () {
+            let self = this
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            let data = {
+                order_id: self.order.order_id
+            }
+            
+            api.post("/messages/have_new_messages", data, {
+                headers: {
+                    Authorization: jwt
+                }
+            })
             .then(function(response){
-                self.rabsystemsUser = response.data.response.user;
+                if (response.data.response.have_new_messages) {
+                    self.fillMessages();
+                }
             }).catch(function(error){
                 console.log(error);
             })
             .then(function () {
                 setTimeout(() => {
-                    self.getRabsystemsUser();
-                }, 20 * 1000);
-            });
+                    self.lastChat();
+                }, 10 * 1000)
+            })
+        },
+        viewMessage: function () {
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            let sender_id = self.order_user.id;
+
+            if (self.rabsystemsUser.id != self.user.id) {
+                sender_id = self.rabsystemsUser.id
+            }
+
+            if ($(".rabsystems-chat").is(":visible") && $(".messages-container").height() > 0) {
+                let data = {
+                    view_date: moment().format(),
+                    sender_id: sender_id
+                }
+                api.post("/messages/view_messages", data, {
+                    headers: {
+                        Authorization: jwt
+                    }
+                })
+                .then(function () {
+                    self.fillMessages(true);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+            }
+        },
+        fillMessages: function (only_fill = false) {
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage(), data = {
+                order_id: self.order.order_id
+            };
+            
+            api.post("/messages/return_messages", data, {
+                headers: {
+                    Authorization: jwt
+                }
+            })
+            .then(function(response){
+                self.messages = response.data.response.messages;
+                setTimeout(() => {
+                    self.checkMessageContentHeight();
+                    setTimeout(() => {
+                        if (!only_fill) {
+                            self.viewMessage(true);
+                        }
+                    }, )
+                }, 20);
+            }).catch(function(error){
+                console.log(error);
+            })
         },
         getOrderUser: function () {
             let self = this;
-            console.log(self.order.user_owner)
             api.get("/user/get_order_user/" + self.order.user_owner)
             .then(function(response){
                 self.order_user = response.data.response.user;
-                console.log(self.order_user)
-            }).catch(function(error){
-                console.log(error);
+                self.findCurrentStatus();
+                setTimeout(() => {
+                    self.getOrderUser();
+                }, 30 * 1000);
             })
         },
         toggleChat: function (programatic = false) {
@@ -156,7 +217,7 @@ export default {
                 minimizeIcon.removeClass("fa-window-minimize").addClass("fa-window-maximize").css("margin-top", 0);
                 chatHeader.css("border-radius", "10px");
                 setTimeout(() => {
-                    chat.css("width", "280px").css("min-width", "280px");
+                    chat.css("width", "260px").css("min-width", "260px");
                 }, 600);
             }
         },
@@ -170,14 +231,9 @@ export default {
             }, 600);
         },
         formatDate: function (date) {
-            moment.locale("pt-br");
-            let current_date = moment(moment().format()).unix(), previous_date = moment(date).unix();
+            let previous_date = moment(date).unix();
 
-            if ((current_date - previous_date) > 86400) { // Se a diferença de tempo for maior que um dia, formata com a data extensa se não formata apenas com o horario
-                return moment.unix(previous_date).format("ll");
-            }
-
-            return moment.unix(previous_date).format("LT");
+            return moment.unix(previous_date).fromNow();
         },
         countRows: function (event, keyup = false) {
             let input = $("#" + event.target.id), length = input.val().length, keycode = event.keyCode, self = this;
@@ -204,45 +260,68 @@ export default {
             }
         },
         sendMessage: function () {
-            let input = $("#message-input"), message = input.val(), self = this//, jwt = "Bearer " + self.getJwtInLocalStorage();
+            let self = this;
+            let input = $("#message-input");
+            let message = input.val();
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+
             input.val("");
-            console.log(self.order)
+
+            if (message.trim() == "") {
+                return;
+            }
+
             let data = {
                 message: message,
                 send_date: moment().format()
             }
+            
+            data["order_id"] = self.order.order_id;
+
             if (self.rabsystemsUser.id == self.user.id) {
-                data["receiver_id"] = self.order.user_owner;
-                data["receiver_name"] = self.order.user_name;
+                data["receiver_id"] = self.order_user.id;
+                data["receiver_name"] = self.order_user.name;
+                data["receiver_photo"] = self.order_user.profile_photo;
+                data["sender_photo"] = self.rabsystemsUser.profile_photo;
+                data["sender_name"] = self.rabsystemsUser.name;
+                data["sender_id"] = self.rabsystemsUser.id;
             } else {
                 data["receiver_id"] = self.rabsystemsUser.id;
                 data["receiver_name"] = self.rabsystemsUser.name;
+                data["receiver_photo"] = self.rabsystemsUser.profile_photo;
+                data["sender_photo"] = self.order_user.profile_photo;
+                data["sender_name"] = self.order_user.name;
+                data["sender_id"] = self.order_user.id;
             }
-
-            console.log(data)
-
-            /*api.post("/messages", data, {
+            api.post("/messages", data, {
                 headers: {
                     Authorization: jwt
                 }
             })
-            .then(function(response){
-                console.log(response.data)
+            .then(function(){
+                self.fillMessages();
+                $("#message-input").attr("rows", 1);
             }).catch(function(error){
                 console.log(error);
-            })*/
+            })
         }
     },
     mounted() {
-        this.getRabsystemsUser();
         setTimeout(() => {
+            this.getRabsystemsUser(true);
             this.getOrderUser();
+            this.lastChat();
+            this.fillMessages();
         }, 400);
     }
 }
 </script>
 
 <style scoped>
+
+    .viewed {
+        color: var(--blue);
+    }
 
     .out {
         background: var(--purple) !important;
@@ -255,11 +334,11 @@ export default {
 
     .rabsystems-chat {
         position: fixed;
-        bottom: 3rem;
-        right: 3rem;
+        bottom: 10px;
+        right: 10px;
         margin: auto;
         width: 50vw;
-        min-width: 250px;
+        min-width: 260px;
         max-width: 800px;
         height: 80vh;
         min-height: 500px;
@@ -301,7 +380,8 @@ export default {
         }
 
     .chat-body {
-        height: calc(100% - 98px);
+        height: calc(100% - 123px);
+        overflow: hidden;
     }
 
     .chat-footer {
@@ -323,6 +403,11 @@ export default {
             min-height: 40px;
             max-height: 100px;
         }
+
+    .messages-container {
+        height: 100%;
+        overflow-y: scroll;
+    }
 
     .input-icons {
         position: absolute;
@@ -347,9 +432,9 @@ export default {
 
     .message {
         width: 90%;
-        margin: .5rem auto;
+        margin: .7rem auto;
         background: var(--gray-high-2);
-        padding: 15px;
+        padding: 5px 10px;
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
@@ -369,6 +454,24 @@ export default {
         .message-header span {
             margin-right: 10px !important;
         }
+
+    .message-body {
+        text-align: left;
+        overflow: hidden;
+        width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical; 
+        word-break: break-all;
+        max-height: 72px;
+    }
+
+    .show-more, .show-less {
+        display: none;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+    }
 
     .view-icon {
 
@@ -410,6 +513,10 @@ export default {
 
     .online {
         background: var(--green);
+    }
+
+    .user-out {
+        background: var(--orange);
     }
 
     .owner-inbox {

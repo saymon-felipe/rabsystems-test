@@ -10,38 +10,61 @@ export const globalMethods = {
             return localStorage.getItem("rabsystems_jwt");
         },
         openChatComponent: function () {
-            let chat = $(".rabsystems-chat");
-
-            chat.show();
+            this.showChat = true;
             setTimeout(() => {
-                chat.css("opacity", 1);
-            }, 10);
+                let chat = $(".rabsystems-chat");
+                chat.show();
+                setTimeout(() => {
+                    chat.css("opacity", 1);
+                }, 10);
+            }, 20);
         },
-        removeJwtInLocalStorage: function (from_logout_button) {
-            if (!from_logout_button) {
-                this.logoutUser();
-            }
+        removeJwtInLocalStorage: function () {
             localStorage.removeItem("rabsystems_jwt");
         },
-        logoutUser: function (from_logout_button) {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-            api.patch("/user/logout", "", {
-                headers: {
-                    Authorization: jwt
-                }
-            })
+        logoutUser: function () {
+            let self = this
+            api.patch("/user/logout", {user_id: self.user.id})
             .then(function () {
-                self.removeJwtInLocalStorage(from_logout_button);
+                self.removeJwtInLocalStorage();
                 self.$router.push("/login");
+                self.$router.go();
             })
             .catch(function (error) {
                 console.log(error)
             })
         },
+        requireUser: async function() { // Função retorna o usuário pelo id.
+            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
+            if (self.$route.path != "/login" && self.$route.path != "/register") {
+                self.user = await api.get("/user/get_user", { headers: { Authorization: jwt } }).then(res => res.data.response.user);
+            }
+        },
+        getRabsystemsUser: function (recursive = false) {
+            let self = this;
+            api.get("/user/get_rabsystems_user")
+            .then(function(response){
+                self.rabsystemsUser = response.data.response.user;
+                self.requireUser();
+                if (recursive) {
+                    setTimeout(() => {
+                        self.getRabsystemsUser();
+                    }, 30 * 1000);
+                }
+            }).catch(function(error){
+                console.log(error);
+            })
+        }
+    },
+    mounted: function () {
+        this.getRabsystemsUser();
     },
     data() {
         return {
-            rabsystems_owner_id: 3
+            user: {},
+            rabsystemsUser: {},
+            user_id: null,
+            showChat: false
         }
     }
 }

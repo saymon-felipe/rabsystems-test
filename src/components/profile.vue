@@ -186,28 +186,10 @@ export default {
         return {
             changeProfile: false,
             response: null,
-            modalResponse: null,
-            user: {}
+            modalResponse: null
         }
     },
     methods: {
-        loadUser: function () {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-
-            if (self.$route.path != "/login" && self.$route.path != "/register") {
-                api.get("/user/get_user", {
-                    headers: {
-                            Authorization: jwt
-                        }
-                })
-                .then(function(response){
-                    self.user = response.data.response.user;
-                    self.isDefaultPhoto(self.user.profile_photo);
-                }).catch(function(error){
-                    console.log(error);
-                })
-            }
-        },
         isDefaultPhoto: function (url) {
             if (url.indexOf("/public/") != -1) {
                 if ($(".view-photo").length) {
@@ -522,9 +504,10 @@ export default {
                     }
             })
             .then(function(response){
-                self.response = response.data.response.action;
                 if (!from_upload) {
-                    self.$router.go();
+                    location.reload();
+                } else {
+                    self.response = response.data.response.action;
                 }
             }).catch(function(error){
                 console.log(error);

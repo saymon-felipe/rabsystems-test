@@ -1,11 +1,23 @@
 <template>
-    <section class="order-details" :style="!loading ? 'overflow-y: hidden;' : ''">
+    <section class="order-details">
         <div class="loading-page" v-if="loading"></div>
         <div class="error-page" v-if="error != null">{{ error }}</div>
         <div class="page-title">
             <h1 class="rabsystems-font">Detalhes do pedido</h1>
         </div>
         <div class="order-details-container">
+            <div class="order-more-options">
+                <i class="fas fa-ellipsis-h" v-on:click="toggleAdmin()"></i>
+            </div>
+            <div class="order-actions-admin-wrapper" v-if="show_admin" v-on:click="hideAdmin('.order-actions-admin')"></div>
+            <div class="order-actions-admin" v-if="rabsystemsUser.id == user.id">
+                <ul>
+                    <li>Gerar pagamento</li>
+                    <li>Notificar conclusão ao cliente</li>
+                    <li>Definir ordem de serviço como fechada</li>
+                    <li>Gerar nota fiscal</li>
+                </ul>
+            </div>
             <div class="animation-progress"></div>
             <div class="order-details-animation">
                 <div class="animation-line">
@@ -74,7 +86,7 @@
             </div>
         </div>
         <div class="overlay" v-on:click="closeConfirmationModal()"></div>
-        <rabsystemsChat :order="order" :user="user" />
+        <rabsystemsChat :order="order" v-if="showChat" />
     </section>
 </template>
 
@@ -97,33 +109,34 @@ export default {
             confirm_action: "",
             loading: false,
             error: null,
-            user: {},
-            rabsystemsUser: {}
+            showChat: false,
+            show_admin: false
         }
     },
     methods: {
-        loadUser: function () {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-
-            api.get("/user/get_user", {
-                headers: {
-                        Authorization: jwt
-                    }
-            })
-            .then(function(response){
-                self.user = response.data.response.user;
-            }).catch(function(error){
-                console.log(error);
-            })
+        showAdmin: function (className) {
+            let container = $(className);
+            container.show();
+            setTimeout(() => {
+                this.show_admin = true;
+                container.css("opacity", 1);
+            }, 10);
         },
-        getRabsystemsUser: function () {
-            let self = this;
-            api.get("/user/get_rabsystems_user")
-            .then(function(response){
-                self.rabsystemsUser = response.data.response.user;
-            }).catch(function(error){
-                console.log(error);
-            })
+        hideAdmin: function (className) {
+            let container = $(className);
+            container.css("opacity", 0);
+            setTimeout(() => {
+                this.show_admin = false;
+                container.hide();
+            }, 400);
+        },
+        toggleAdmin: function () {
+            let container = $(".order-actions-admin");
+            if (container.is(":visible")) {
+                this.hideAdmin(".order-actions-admin");
+                return;
+            }
+            this.showAdmin(".order-actions-admin");
         },
         getOrder: function (param) {
             let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
@@ -144,7 +157,6 @@ export default {
             })
         },
         getMomentExtended: function (date) {
-            moment.locale("pt-br");
             return moment(date).format('LLLL');
         },
         findProgressAnimation: function () {
@@ -225,19 +237,21 @@ export default {
 
             console.log("Cancelar ordem")
         },
-        talkWithCompany: function (order) {
-            this.openChatComponent(order)
+        talkWithCompany: function (target_id, order) {
+            this.openChatComponent(target_id, order)
         }
     },
     mounted() {
         this.getOrder(this.$route.params.id);
-        this.loadUser();
-        this.getRabsystemsUser();
     }
 }
 </script>
 
 <style scoped>
+    .container {
+        padding-bottom: 3rem !important;
+    }
+
     .overlay {
         position: fixed;
         top: 0;
@@ -255,7 +269,7 @@ export default {
         height: 80vh;
         max-width: 700px;
         max-height: 600px;
-        position: absolute;
+        position: fixed;
         border-radius: 10px;
         transition: all 0.4s;
         transform: translateY(-200px);
@@ -266,7 +280,7 @@ export default {
         padding: 2rem;
         opacity: 0;
         top: 0;
-        bottom: 0;
+        bottom: -10vh;
         left: 0;
         right: 0;
         margin: auto;
@@ -277,6 +291,7 @@ export default {
         .confirmation-modal .confirm-buttons {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .confirmation-modal button {
@@ -302,6 +317,7 @@ export default {
 
     .order-details {
         width: calc(100% - 225px);
+        height: 95%;
         padding: 1rem;
         text-align: center;
         background: var(--white);
@@ -485,5 +501,52 @@ export default {
             font-size: 1.4rem;
             font-weight: 700;
         }
+
+    .order-more-options, .order-actions-admin {
+        position: absolute;
+    }
+
+    .order-more-options {
+        right: 0;
+        top: -40px;
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+    .order-actions-admin-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .order-actions-admin {
+        top: 0;
+        right: 0;
+        background: var(--white);
+        z-index: 2;
+        border-radius: 10px;
+        padding: .3rem;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.4s;
+        opacity: 0;
+        display: none;
+    }
+
+        .order-actions-admin ul {
+            list-style-type: none;
+            margin: 0;
+        }
+
+            .order-actions-admin ul li {
+                margin: 5px 0;
+                cursor: pointer;
+                padding: .3rem;
+            }
+
+                .order-actions-admin ul li:hover {
+                    background: var(--gray-high);
+                }
 
 </style>

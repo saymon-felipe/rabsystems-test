@@ -35,16 +35,16 @@
                 </div>
             </div>
             <div class="orders-list">
-                <div :id="'order-' + order.id" v-for="order in orders" :key="order.id">
-                    <router-link class="order" :to="'/order-details/' + order.id">
+                <div :id="'order-' + order.order_id" v-for="(order, index) in orders" :key="index">
+                    <router-link class="order" :to="'/order-details/' + order.order_id">
+                        <td class="notification"></td>
                         <td class="order-name" :title="order.user_name"><strong>{{ order.user_name }}</strong></td>
-                        <td class="order-id">#{{ order.id }}</td>
+                        <td class="order-id">#{{ order.order_id }}</td>
                         <td class="order-date" :title="getMomentExtended(order.create_date)">{{ getMoment(order.create_date) }}</td>
                         <td class="order-title" :title="order.service">{{ order.service }}</td>
                         <td class="order-price"><strong>R$</strong> {{ order.price == 0 ? "--,--" : order.price }}</td>
                         <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
                     </router-link>
-                    
                 </div>
             </div>
         </table>
@@ -52,6 +52,7 @@
             <i class="fas fa-plus-circle"></i>
             <h5>Novo pedido</h5>
         </router-link>
+        <audio src="../assets/audio/message_notification.ogg" id="notification-audio" preload="auto"></audio>
     </section>
 </template>
 
@@ -67,44 +68,54 @@ export default {
     data() {
         return {
             orders: [],
-            user: {},
-            rabsystemsUser: {}
+            rabsystemsUser: {},
+            new_messages_notification_number: 0,
+            first_check_message: true
+        }
+    },
+    watch: {
+        user: function () {
+            this.returnOrders();
         }
     },
     methods: {
-        getRabsystemsUser: function () {
-            let self = this;
-            api.get("/user/get_rabsystems_user")
-            .then(function(response){
-                self.rabsystemsUser = response.data.response.user;
-                self.loadUser();
-            }).catch(function(error){
-                console.log(error);
-            })
-        },
-        loadUser: function () {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
+        fillNewMessageNotification: function (order_list) {
+            let play_audio = false;
 
-            if (self.$route.path != "/login" && self.$route.path != "/register") {
-                api.get("/user/get_user", {
-                    headers: {
-                            Authorization: jwt
-                        }
-                })
-                .then(function(response){
-                    self.user = response.data.response.user;
-                    self.returnOrders();
-                }).catch(function(error){
-                    console.log(error);
-                })
+            for (let i = 0; i < order_list.length; i++) {
+                let notification_element = $("#order-" + order_list[i].order_id + " .notification");
+                notification_element.attr("style", "display: flex !important");
+                play_audio = true;
+            }
+
+            if (this.first_check_message) {
+                this.new_messages_notification_number = order_list.length;
+                this.first_check_message = false;
+            }
+
+            if ((this.first_check_message && play_audio) || (this.new_messages_notification_number != order_list.length && play_audio)) {
+                this.new_messages_notification_number = order_list.length;
+                $("#notification-audio")[0].play();
+                play_audio = false;
             }
         },
+        checkNewMessages: function () {
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+
+            api.get("messages/check_order_new_message", {
+                headers: {
+                    Authorization: jwt
+                }
+            })
+            .then(function (response) {
+                self.fillNewMessageNotification(response.data.message_list);
+            })
+        },
         getMoment: function (date) {
-            moment.locale("pt-br");
             return moment(date).fromNow();
         },
         getMomentExtended: function (date) {
-            moment.locale("pt-br");
             return moment(date).format('LLLL');
         },
         showResponsiveFilter: function () {
@@ -124,7 +135,6 @@ export default {
         returnOrders: function () {
             let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
 
-            moment.locale("pt-br");
             // Status: 0 = aguardando pagamento
             // Status: 1 = Aguardando resposta
             // Status: 2 = Em andamento
@@ -139,6 +149,7 @@ export default {
                 })
                 .then(function(response){
                     self.orders = response.data.response.all_orders;
+                    self.checkNewMessages();
                 }).catch(function(error){
                     console.log(error);
                 })
@@ -150,16 +161,16 @@ export default {
                 })
                 .then(function(response){
                     self.orders = response.data.response.all_orders;
+                    self.checkNewMessages();
                 }).catch(function(error){
                     console.log(error);
                 })
             }
             
-
-            setInterval(() => {
-                //self.returnOrders();
+            setTimeout(() => {
+                self.returnOrders();
                 self.fillRelativeTime();
-            }, 60 * 1000);
+            }, 10 * 1000);
         },
         fillRelativeTime: function () {
             let self = this;
@@ -195,15 +206,55 @@ export default {
                     return "canceled";
             }
         }
-    },
-    mounted() {
-        this.getRabsystemsUser();
     }
 }
 </script>
 
 <style scoped>
-    
+    .notification {
+        /*display: flex;*/
+        display: none !important;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+        .notification::before, .notification::after {
+            content: "";
+            top: 0;
+            bottom: 0;
+            left: -5px;
+            right: 0;
+            margin: auto;
+            position: absolute;
+            width: 12px;
+            height: 12px;
+        }
+
+        .notification::before {
+            animation-name: pulse;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 1px rgba(255, 55, 55, 0.836);
+            }
+            100% {
+                box-shadow: 0 0 0 15px rgba(255, 55, 55, 0);
+            }
+        }
+
+        .notification::after {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+
     .my-orders {
         width: calc(100% - 225px);
         height: 100%;

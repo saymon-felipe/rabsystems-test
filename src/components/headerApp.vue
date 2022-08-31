@@ -17,7 +17,7 @@
                 </nav>  
                 <div class="more-options-container" title="">
                     <ul>
-                        <li v-on:click="logoutUser(true)">Sair</li>
+                        <li v-on:click="logoutUser()">Sair</li>
                     </ul>
                 </div>
             </div>
@@ -49,7 +49,6 @@ import { globalMethods } from '../js/globalMethods';
 export default {
     name: "headerApp",
     mixins: [globalMethods],
-    props: ['user'],
     data() {
         return {
             expanded: false
