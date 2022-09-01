@@ -4,9 +4,9 @@ let url_api;
 
 // Troca de ambiente da api.
 const dev_environment = "http://localhost:3000"; //Ambiente de desenvolvimento.
-const production_environment = ""; //Ambiente de produção.
+const production_environment = "18.228.224.28"; //Ambiente de produção.
 
-let test_or_prod = 0;
+let test_or_prod = 1;
 
 switch (test_or_prod) {
     case 0:
