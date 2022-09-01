@@ -15,6 +15,7 @@
                         </select>
                     </div>
                 </div>
+                <h5 class="error">Pedidos ainda não serão realizados pois o sistema está em beta.</h5>
                 <div class="form-body">
                     <textarea name="description" id="description" maxlength="5000" placeholder="Descrição" required></textarea>
                 </div>
@@ -98,7 +99,11 @@ export default {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-body {
+        margin-top: 1rem;
     }
 
     textarea, input, select {
