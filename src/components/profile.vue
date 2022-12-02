@@ -515,7 +515,6 @@ export default {
         }
     },
     mounted() {
-        this.loadUser();
         this.reloadInputs(true);
     }
 }
@@ -597,6 +596,24 @@ export default {
             object-fit: cover;
             border-radius: 10px;
         }
+
+    @media (max-width: 600px) {
+        .view-photo-container {
+            width: 98%;
+            justify-content: start;
+            height: fit-content;
+        }
+
+        .view-photo-container img {
+            height: 70%;
+        }
+    }
+
+    @media (max-width: 390px) {
+        .view-photo-container {
+            margin-top: 0px;
+        }
+    }
 
     .send {
         display: flex;
@@ -695,6 +712,7 @@ export default {
     .image-preview {
         width: 100%;
         max-height: 100%;
+        border-radius: 10px;
         object-fit: contain;
     }
 

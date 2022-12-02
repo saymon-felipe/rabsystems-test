@@ -12,7 +12,6 @@ import financial from "../components/financial.vue";
 import profile from '../components/profile';
 import support from '../components/support.vue';
 import orderDetails from '../components/orderDetails.vue';
-import changeProfile from '../components/changeProfile.vue';
 import register from '../pages/register.vue';
 import complete_registration from '../pages/complete_registration.vue';
 
@@ -48,10 +47,6 @@ const routes = [
             {
                 path: '/order-details/:id',
                 component: orderDetails
-            },
-            {
-                path: '/change-profile',
-                component: changeProfile
             }
         ]
     },

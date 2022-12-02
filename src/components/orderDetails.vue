@@ -6,16 +6,16 @@
             <h1 class="rabsystems-font">Detalhes do pedido</h1>
         </div>
         <div class="order-details-container">
-            <div class="order-more-options">
+            <div class="order-more-options" v-if="order.order_status != 4">
                 <i class="fas fa-ellipsis-h" v-on:click="toggleAdmin()"></i>
             </div>
             <div class="order-actions-admin-wrapper" v-if="show_admin" v-on:click="hideAdmin('.order-actions-admin')"></div>
             <div class="order-actions-admin" v-if="rabsystemsUser.id == user.id">
                 <ul>
-                    <li>Gerar pagamento</li>
-                    <li>Notificar conclusão ao cliente</li>
-                    <li>Definir ordem de serviço como fechada</li>
-                    <li>Gerar nota fiscal</li>
+                    <li v-if="order.price == 0" v-on:click="insertPrice()">Inserir preço</li>
+                    <li v-if="order.price != 0 && order.payment_method == ''">Gerar pagamento</li>
+                    <li v-if="order.price != 0 && order.payment_method != ''">Gerar nota fiscal</li>
+                    <li v-if="order.price != 0 && order.payment_method != ''">Notificar conclusão ao cliente</li>
                 </ul>
             </div>
             <div class="animation-progress"></div>
@@ -77,6 +77,9 @@
                 <router-link to="/my-orders" id="return">VOLTAR</router-link>
             </div>
         </div>
+        <modal v-if="showModal" :title="modalTitle" :buttonTitle="modalButtonTitle" :button2Title="modalButtonTitle2" @closeModal="closeThisModal()" @submitEvent="submitFunction()">
+            <insertPriceModalContent v-if="showInsertPrice" :order="order" @success="changePriceSuccess()" />
+        </modal>
         <div class="confirmation-modal">
             <h1>Tem certeza que deseja confirmar esta ação?</h1>
             <p>Uma vez confirmada a ação é irreversível</p>
@@ -96,12 +99,21 @@ import api from '../configs/api.js';
 import { globalMethods } from '../js/globalMethods';
 import moment from 'moment';
 import rabsystemsChat from './rabsystemsChat.vue';
+import modal from "./modal.vue";
+import insertPriceModalContent from "./insertPriceModalContent.vue";
 
 export default {
     name: "orderDetails",
     mixins: [globalMethods],
     components: {
-        rabsystemsChat
+        rabsystemsChat,
+        modal,
+        insertPriceModalContent
+    },
+    watch: {
+        showModal: function () {
+            this.toggleAdmin(true);
+        }
     },
     data() {
         return {
@@ -110,10 +122,21 @@ export default {
             loading: false,
             error: null,
             showChat: false,
-            show_admin: false
+            show_admin: false,
+            showInsertPrice: false,
+            showModal: false,
+            modalTitle: "",
+            modalButtonTitle: "",
+            modalButtonTitle2: "",
+            submitPrice: false
         }
     },
     methods: {
+        insertPrice: function () {
+            this.showModal = true;
+            this.showInsertPrice = true;
+            this.fillModalVariables("Inserir valor", "Salvar", "Cancelar");
+        },
         showAdmin: function (className) {
             let container = $(className);
             container.show();
@@ -130,13 +153,22 @@ export default {
                 container.hide();
             }, 400);
         },
-        toggleAdmin: function () {
-            let container = $(".order-actions-admin");
+        toggleAdmin: function (forceClose = false) {
+            let adminClass = ".order-actions-admin";
+            if (forceClose) {
+                this.hideAdmin(adminClass);
+            }
+            let container = $(adminClass);
             if (container.is(":visible")) {
-                this.hideAdmin(".order-actions-admin");
+                this.hideAdmin(adminClass);
                 return;
             }
-            this.showAdmin(".order-actions-admin");
+            this.showAdmin(adminClass);
+        },
+        changePriceSuccess: function () {
+            this.closeThisModal();
+            this.getOrder(this.$route.params.id);
+
         },
         getOrder: function (param) {
             let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
@@ -234,8 +266,6 @@ export default {
             }).catch(function(error){
                 console.log(error);
             })
-
-            console.log("Cancelar ordem")
         },
         talkWithCompany: function (target_id, order) {
             this.openChatComponent(target_id, order)

@@ -25,7 +25,8 @@
                         </div>
                     </div>
                     <div class="message-body"> 
-                        <span>{{ message.message }}</span>
+                        <span v-html="message.message"></span>
+                        <p v-if="message.target_type != ''" v-html="returnMessageTargetObject(message)" class="message-target"></p>
                     </div>
                     <span class="show-more" v-on:click="expandMessage('#message-' + message.message_id)">Ver mais</span>
                     <span class="show-less" v-on:click="contractMessage('#message-' + message.message_id)">Ver menos</span>
@@ -61,6 +62,15 @@ export default {
         }
     },
     methods: {
+        returnMessageTargetObject: function (message) {
+            let targetId = message.target_id;
+            let targetType = message.target_type;
+            let returnText = "";
+            if (targetType == "order") {
+                returnText = `<a href="/order-details/${targetId}">Compra ${targetId}</a>`
+            }
+            return returnText;
+        },
         findCurrentStatus: function () {
             let self = this;
             if (self.rabsystemsUser.id == self.user.id) {
@@ -462,8 +472,8 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical; 
-        word-break: break-all;
-        max-height: 72px;
+        word-break: break-word;
+        /*max-height: 72px;*/
     }
 
     .show-more, .show-less {

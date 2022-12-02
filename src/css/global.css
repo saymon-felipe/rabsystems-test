@@ -23,6 +23,50 @@
     --gray-low: #555555;
 }
 
+.primary {
+    background-color: var(--purple) !important;
+    color: var(--white) !important;
+}
+
+    .primary:hover {
+        background-color: var(--purple-low) !important;
+        color: var(--white) !important;
+    }
+
+    .primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(195, 66, 255, 0.25) !important;
+    }
+
+.secondary {
+    background-color: var(--gray-high-3) !important;
+    color: var(--black) !important;
+    border: 1px solid var(--gray-high) !important;
+}
+
+    .secondary:hover {
+        background-color: var(--gray-high-2) !important;
+    }
+
+    .secondary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(216, 216, 216, 0.25) !important;
+    }
+
+.form-group {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+    .form-group label {
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+.hidden-submit {
+    display: none;
+}
+
 @font-face {
     font-family: Rabsystems;
     src: url(../assets/fonts/Audiowide-Regular.ttf);
@@ -186,6 +230,23 @@ button:disabled {
 .error {
     color: var(--red);
 }
+
+.message-target {
+    display: block;
+    margin-top: 3px;
+    border-radius: 7px;
+    overflow: hidden;
+    width: fit-content;
+    height: fit-content;
+    margin-bottom: 0 !important;
+}
+
+    .message-target a {
+        padding: 2px 5px;
+        background: var(--blue);
+        color: inherit !important;
+        font-weight: 500;
+    }
 
 .response {
     margin-top: 1rem;

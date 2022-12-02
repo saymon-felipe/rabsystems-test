@@ -42,7 +42,7 @@
                         <td class="order-id">#{{ order.order_id }}</td>
                         <td class="order-date" :title="getMomentExtended(order.create_date)">{{ getMoment(order.create_date) }}</td>
                         <td class="order-title" :title="order.service">{{ order.service }}</td>
-                        <td class="order-price"><strong>R$</strong> {{ order.price == 0 ? "--,--" : order.price }}</td>
+                        <td class="order-price"><strong>R$</strong> {{ order.price == "" ? "--,--" : order.price }}</td>
                         <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
                     </router-link>
                 </div>
