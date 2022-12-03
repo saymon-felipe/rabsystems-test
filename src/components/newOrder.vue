@@ -51,8 +51,8 @@ export default {
                     }
             })
             .then(function(){
-                self.$router.push("/my-orders");
-                self.$router.go();
+                //self.$router.push("/my-orders");
+                //self.$router.go();
             }).catch(function(error){
                 console.log(error);
             }).then(function () {
