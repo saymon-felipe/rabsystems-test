@@ -6,19 +6,25 @@
                     <img src="../assets/img/logo-completa.png" alt="Icone rabsystems" class="site-logo-img">
                 </router-link>
             </div>
-            <div class="no-responsive-header" v-on:click="showMoreOptions()" title="Abrir menu">
-                <nav class="header">
-                    <div class="home-user">
-                        <div class="user-avatar">
-                            <img :src="user.profile_photo" class="avatar-p">
+            <div class="header-informations-container">
+                <div class="chat-container" v-on:click="toggleChatList()">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <ChatList />
+                <div class="no-responsive-header" v-on:click="showMoreOptions()" title="Abrir menu">
+                    <nav class="header">
+                        <div class="home-user">
+                            <div class="user-avatar">
+                                <img :src="user.profile_photo" class="avatar-p">
+                            </div>
+                            <h5>Olá, <span class="user-name">&nbsp;{{ user.name }}</span></h5>
                         </div>
-                        <h5>Olá, <span class="user-name">&nbsp;{{ user.name }}</span></h5>
+                    </nav>  
+                    <div class="more-options-container" title="">
+                        <ul>
+                            <li v-on:click="logoutUser()">Sair</li>
+                        </ul>
                     </div>
-                </nav>  
-                <div class="more-options-container" title="">
-                    <ul>
-                        <li v-on:click="logoutUser()">Sair</li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -45,6 +51,7 @@
 <script>
 import $ from 'jquery';
 import { globalMethods } from '../js/globalMethods';
+import ChatList from "./ChatList.vue";
 
 export default {
     name: "headerApp",
@@ -54,10 +61,30 @@ export default {
             expanded: false
         }
     },
-    mounted() {
-        $(".link:nth-child(1)").click();
+    components: {
+        ChatList
     },
     methods: {
+        toggleChatList: function () {
+            let element = $(".chat-container-list");
+            if (element.is(":visible")) {
+                this.closeChatList(element);
+            } else {
+                this.openChatList(element);
+            }
+        },
+        closeChatList: function (element) {
+            element.css("transform", "translateX(400px)");
+            setTimeout(() => {
+                element.hide();
+            }, 400);
+        },
+        openChatList: function (element) {
+            element.show();
+            setTimeout(() => {
+                element.css("transform", "translateX(0)")
+            }, 10)
+        },
         expandVerticalMenu: function () {
             let self = this;
 
@@ -103,6 +130,28 @@ export default {
         z-index: 4;
         box-shadow: 0 0 5px rgba(0,0,0,0.5);
     }
+
+    .header-informations-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .chat-container {
+        margin-right: 2rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s;
+    }
+
+        .chat-container:hover {
+            background: var(--gray-high-2);
+        }
 
     .header-container {
         padding: 1rem 0;

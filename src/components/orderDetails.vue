@@ -13,7 +13,7 @@
             <div class="order-actions-admin" v-if="rabsystemsUser.id == user.id">
                 <ul>
                     <li v-if="order.price == 0" v-on:click="insertPrice()">Inserir preço</li>
-                    <li v-if="order.price != 0 && order.payment_method == ''">Gerar pagamento</li>
+                    <li v-if="order.price != 0 && order.payment_method == ''" v-on:click="generatePayment()">Gerar pagamento</li>
                     <li v-if="order.price != 0 && order.payment_method != ''">Gerar nota fiscal</li>
                     <li v-if="order.price != 0 && order.payment_method != ''">Notificar conclusão ao cliente</li>
                 </ul>
@@ -79,6 +79,7 @@
         </div>
         <modal v-if="showModal" :title="modalTitle" :buttonTitle="modalButtonTitle" :button2Title="modalButtonTitle2" @closeModal="closeThisModal()" @submitEvent="submitFunction()">
             <insertPriceModalContent v-if="showInsertPrice" :order="order" @success="changePriceSuccess()" />
+            <generatePaymentModalContent v-if="showGeneratePayment" :order="order" @success="generatePaymentSuccess()" />
         </modal>
         <div class="confirmation-modal">
             <h1>Tem certeza que deseja confirmar esta ação?</h1>
@@ -101,6 +102,7 @@ import moment from 'moment';
 import rabsystemsChat from './rabsystemsChat.vue';
 import modal from "./modal.vue";
 import insertPriceModalContent from "./insertPriceModalContent.vue";
+import generatePaymentModalContent from "./generatePaymentModalContent.vue";
 
 export default {
     name: "orderDetails",
@@ -108,7 +110,8 @@ export default {
     components: {
         rabsystemsChat,
         modal,
-        insertPriceModalContent
+        insertPriceModalContent,
+        generatePaymentModalContent
     },
     watch: {
         showModal: function () {
@@ -124,6 +127,7 @@ export default {
             showChat: false,
             show_admin: false,
             showInsertPrice: false,
+            showGeneratePayment: false,
             showModal: false,
             modalTitle: "",
             modalButtonTitle: "",
@@ -132,6 +136,11 @@ export default {
         }
     },
     methods: {
+        generatePayment: function () {
+            this.showModal = true;
+            this.showGeneratePayment = true;
+            this.fillModalVariables("Gerar pagamento", "Salvar", "Cancelar");
+        },
         insertPrice: function () {
             this.showModal = true;
             this.showInsertPrice = true;
@@ -168,7 +177,18 @@ export default {
         changePriceSuccess: function () {
             this.closeThisModal();
             this.getOrder(this.$route.params.id);
-
+            this.resetModalVariables();
+            this.resetModalContentVariables();
+        },
+        generatePaymentSuccess: function () {
+            this.closeThisModal();
+            this.getOrder(this.$route.params.id);
+            this.resetModalVariables();
+            this.resetModalContentVariables();
+        },
+        resetModalContentVariables: function () {
+            this.showInsertPrice = false;
+            this.showGeneratePayment = false;
         },
         getOrder: function (param) {
             let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
@@ -251,7 +271,22 @@ export default {
             return self.confirm_action;
         },
         finishOrder: function () {
-            console.log("Concluir ordem")
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            let data = {
+                order_status: 3
+            }
+            api.patch("/orders/" + self.$route.params.id, data, {
+                headers: {
+                    Authorization: jwt
+                }
+            })
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
         },
         cancelOrder: function () {
             let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();

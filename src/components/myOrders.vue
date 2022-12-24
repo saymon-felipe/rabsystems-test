@@ -34,19 +34,23 @@
                     </ul>
                 </div>
             </div>
-            <div class="orders-list">
-                <div :id="'order-' + order.order_id" v-for="(order, index) in orders" :key="index">
-                    <router-link class="order" :to="'/order-details/' + order.order_id">
-                        <td class="notification"></td>
-                        <td class="order-name" :title="order.user_name"><strong>{{ order.user_name }}</strong></td>
-                        <td class="order-id">#{{ order.order_id }}</td>
-                        <td class="order-date" :title="getMomentExtended(order.create_date)">{{ getMoment(order.create_date) }}</td>
-                        <td class="order-title" :title="order.service">{{ order.service }}</td>
-                        <td class="order-price"><strong>R$</strong> {{ order.price == "" ? "--,--" : order.price }}</td>
-                        <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
-                    </router-link>
-                </div>
-            </div>
+            <tr>
+                <td>
+                    <div class="orders-list">
+                        <div :id="'order-' + order.order_id" v-for="(order, index) in orders" :key="index">
+                            <router-link class="order" :to="'/order-details/' + order.order_id">
+                                <td class="notification"></td>
+                                <td class="order-name" :title="order.user_name"><strong>{{ order.user_name }}</strong></td>
+                                <td class="order-id">#{{ order.order_id }}</td>
+                                <td class="order-date" :title="getMomentExtended(order.create_date)">{{ getMoment(order.create_date) }}</td>
+                                <td class="order-title" :title="order.service">{{ order.service }}</td>
+                                <td class="order-price"><strong>R$</strong> {{ order.price == "" ? "--,--" : order.price }}</td>
+                                <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
+                            </router-link>
+                        </div>
+                    </div>
+                </td>
+            </tr>
         </table>
         <router-link class="new-order" to="/new-order" v-if="rabsystemsUser.id != user.id">
             <i class="fas fa-plus-circle"></i>
@@ -273,7 +277,7 @@ export default {
 
     .orders-list {
         overflow-y: auto;
-        max-height: 52vh;
+        height: 60vh;
     }
 
     .responsive-filter {
@@ -308,6 +312,7 @@ export default {
     .order-list {
         margin-top: 2rem;
         width: 100%;
+        height: 80%;
         cursor: pointer;
         position: relative;
     }
