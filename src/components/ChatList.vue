@@ -12,7 +12,7 @@
                 <chatUserComponent v-for="(userItem, index) in userList" v-bind:key="index" :user="userItem" @open_chat="openChatFunction(userItem)" />
             </div>
         </div>
-        <rabsystemsChat v-if="openChat" :userProp="currentChatUser" />
+        <rabsystemsChat v-if="showChat" :userProp="currentChatUser" @closeChat="closeChatComponent()" />
     </div>
 </template>
 <script>
@@ -32,7 +32,7 @@ export default {
             loadingUser: true,
             loadingRabsystemsUser: true,
             loadingUsers: true,
-            openChat: false,
+            showChat: false,
             currentChatUser: {}
         }
     },
@@ -48,7 +48,6 @@ export default {
     },
     methods: {
         openChatFunction: function (user) {
-            this.openChat = true;
             this.currentChatUser = user;
             this.openChatComponent();
         },

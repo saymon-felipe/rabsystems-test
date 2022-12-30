@@ -12,6 +12,9 @@ export const globalMethods = {
         getJwtInLocalStorage: function () {
             return localStorage.getItem("rabsystems_jwt");
         },
+        closeChatComponent: function () {
+            this.showChat = false;
+        },
         openChatComponent: function () {
             this.showChat = true;
             setTimeout(() => {

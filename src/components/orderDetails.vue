@@ -6,7 +6,7 @@
             <h1 class="rabsystems-font">Detalhes do pedido</h1>
         </div>
         <div class="order-details-container">
-            <div class="order-more-options" v-if="order.order_status != 4">
+            <div class="order-more-options" v-if="order.order_status != 4 && rabsystemsUser.id == user.id">
                 <i class="fas fa-ellipsis-h" v-on:click="toggleAdmin()"></i>
             </div>
             <div class="order-actions-admin-wrapper" v-if="show_admin" v-on:click="hideAdmin('.order-actions-admin')"></div>
@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="overlay" v-on:click="closeConfirmationModal()"></div>
-        <rabsystemsChat :order="order" v-if="showChat" />
+        <rabsystemsChat :order="order" @closeChat="closeChatComponent()" v-if="showChat" userProp="" />
     </section>
 </template>
 

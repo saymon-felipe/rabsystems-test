@@ -186,14 +186,18 @@ export default {
         },
         fillMessages: function (only_fill = false) {
             let self = this;
-            console.log("entrou aqui")
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             let order_id = "";
+            let user_id;
             if (this.order != undefined) {
+                user_id = self.order.user_owner;
                 order_id = self.order.order_id;
+            } else {
+                user_id = self.userProp.id;
             }
             let data = {
-                order_id: order_id
+                order_id: order_id,
+                user_id: user_id
             };
             
             api.post("/messages/return_messages", data, {
@@ -226,7 +230,7 @@ export default {
                 .then(function(response){
                     self.order_user = response.data.response.user;
                     self.findCurrentStatus();
-                    this.loading = false;
+                    self.loading = false;
                     setTimeout(() => {
                         self.getOrderUser();
                     }, 30 * 1000);
@@ -253,12 +257,14 @@ export default {
             }
         },
         closeChat: function () {
-            let chat = $(".rabsystems-chat"), self = this;
+            let chat = $(".rabsystems-chat");
+            let self = this;
 
             chat.css("opacity", 0);
             setTimeout(() => {
                 self.toggleChat(true);
                 chat.hide();
+                self.$emit("closeChat", true);
             }, 600);
         },
         formatDate: function (date) {
@@ -306,8 +312,12 @@ export default {
                 message: message,
                 send_date: moment().format()
             }
-            
-            data["order_id"] = self.order.order_id;
+
+            data["order_id"] = 0;
+
+            if (self.order != undefined) {
+                data["order_id"] = self.order.order_id;
+            }
 
             if (self.rabsystemsUser.id == self.user.id) {
                 data["receiver_id"] = self.order_user.id;
