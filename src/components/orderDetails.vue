@@ -302,8 +302,8 @@ export default {
                 console.log(error);
             })
         },
-        talkWithCompany: function (target_id, order) {
-            this.openChatComponent(target_id, order)
+        talkWithCompany: function () {
+            this.openChatComponent();
         }
     },
     mounted() {

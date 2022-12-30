@@ -1,6 +1,9 @@
 <template>
     <div class="rabsystems-chat">
-        <div class="chat-header">
+        <div class="loading-wrapper" v-if="loading">
+            <div class="loading-frame"></div>
+        </div>
+        <div class="chat-header" v-if="!loading">
             <div class="destiny-user">
                 <div class="user-img-container">
                     <img :src="rabsystemsUser.id == user.id ? order_user.profile_photo : rabsystemsUser.profile_photo" class="avatar-p">
@@ -13,7 +16,7 @@
                 <i class="fas fa-times" v-on:click="closeChat()"></i>
             </div>
         </div>
-        <div class="chat-body">
+        <div class="chat-body" v-if="!loading">
             <div class="messages-container">
                 <div class="message" :id="'message-' + message.message_id" :class="message.sender_id == user.id ? 'out' : 'in'" v-for="message in messages" :key="message.message_id">
                     <div class="message-header">
@@ -34,7 +37,7 @@
             </div>
         </div>
         <div class="chat-footer">
-            <textarea name="message" id="message-input" rows="1" v-on:keydown="countRows($event)" v-on:keyup="countRows($event, true)"></textarea>
+            <textarea name="message" id="message-input" rows="1" v-on:keydown="countRows($event)" v-on:keyup="countRows($event, true)" :disabled="loading"></textarea>
             <div class="input-icons">
                 <i class="fas fa-location-arrow" v-on:click="sendMessage()"></i>
             </div>
@@ -50,7 +53,7 @@ import { globalMethods } from '../js/globalMethods';
 
 export default {
     name: "rabsystemsChat",
-    props: ['order'],
+    props: ['order', 'userProp'],
     mixins: [globalMethods],
     data() {
         return {
@@ -58,7 +61,8 @@ export default {
             order_user: {},
             rabsystemsUser: {},
             first: true,
-            current_status: ""
+            current_status: "",
+            loading: true
         }
     },
     methods: {
@@ -127,8 +131,12 @@ export default {
         lastChat: function () {
             let self = this
             let jwt = "Bearer " + self.getJwtInLocalStorage();
+            let order_id = "";
+            if (this.order != undefined) {
+                order_id = self.order.order_id;
+            }
             let data = {
-                order_id: self.order.order_id
+                order_id: order_id
             }
             
             api.post("/messages/have_new_messages", data, {
@@ -178,8 +186,14 @@ export default {
         },
         fillMessages: function (only_fill = false) {
             let self = this;
-            let jwt = "Bearer " + self.getJwtInLocalStorage(), data = {
-                order_id: self.order.order_id
+            console.log("entrou aqui")
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            let order_id = "";
+            if (this.order != undefined) {
+                order_id = self.order.order_id;
+            }
+            let data = {
+                order_id: order_id
             };
             
             api.post("/messages/return_messages", data, {
@@ -203,14 +217,21 @@ export default {
         },
         getOrderUser: function () {
             let self = this;
-            api.get("/user/get_order_user/" + self.order.user_owner)
-            .then(function(response){
-                self.order_user = response.data.response.user;
+            if (this.order == undefined) {
+                this.order_user = this.userProp;
+                this.loading = false;
                 self.findCurrentStatus();
-                setTimeout(() => {
-                    self.getOrderUser();
-                }, 30 * 1000);
-            })
+            } else {
+                api.get("/user/get_order_user/" + self.order.user_owner)
+                .then(function(response){
+                    self.order_user = response.data.response.user;
+                    self.findCurrentStatus();
+                    this.loading = false;
+                    setTimeout(() => {
+                        self.getOrderUser();
+                    }, 30 * 1000);
+                })  
+            }
         },
         toggleChat: function (programatic = false) {
             let chat = $(".rabsystems-chat"), chatHeader = $(".chat-header"), minimizeIcon = $("#chat-minimize");

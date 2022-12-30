@@ -10,7 +10,7 @@
                 <div class="chat-container" v-on:click="toggleChatList()">
                     <i class="fas fa-comment"></i>
                 </div>
-                <ChatList />
+                <ChatList :user="user" :rabsystemsUser="rabsystemsUser" v-if="!loadingChat" />
                 <div class="no-responsive-header" v-on:click="showMoreOptions()" title="Abrir menu">
                     <nav class="header">
                         <div class="home-user">
@@ -58,13 +58,39 @@ export default {
     mixins: [globalMethods],
     data() {
         return {
-            expanded: false
+            expanded: false,
+            user: {},
+            rabsystemUser: {},
+            loadingChat: true,
+            loadingUser: true,
+            loadingRabsystemsUser: true
         }
     },
     components: {
         ChatList
     },
+    watch: {
+        user: function () {
+            this.loadingUser = false;
+            this.loadingChat = this.isLoading();
+        },
+        rabsystemsUser: function () {
+            this.loadingRabsystemsUser = false;
+            this.loadingChat = this.isLoading();
+        }
+    },
+    mounted: function () {
+        this.requireUser();
+        this.getRabsystemsUser();
+    },
     methods: {
+        isLoading: function () {
+            if (this.loadingUser || this.loadingRabsystemsUser) {
+                return true;
+            } else {
+                return false;
+            }
+        },
         toggleChatList: function () {
             let element = $(".chat-container-list");
             if (element.is(":visible")) {
