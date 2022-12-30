@@ -12,9 +12,6 @@ export default {
         openChat: function (user_id) {
             this.$emit("open_chat", user_id);
         }
-    },
-    mounted: function () {
-        console.log(this.user)
     }
 }
 </script>

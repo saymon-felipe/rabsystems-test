@@ -78,6 +78,7 @@ export default {
         findCurrentStatus: function () {
             let self = this;
             if (self.rabsystemsUser.id == self.user.id) {
+                console.log(self.order_user)
                 if (self.order_user.user_status == 'online') {
                     self.current_status = "online";
                 } else if (self.order_user.user_status == "out") {
@@ -221,9 +222,9 @@ export default {
         },
         getOrderUser: function () {
             let self = this;
-            if (this.order == undefined) {
-                this.order_user = this.userProp;
-                this.loading = false;
+            if (self.order == undefined) {
+                self.order_user = self.userProp;
+                self.loading = false;
                 self.findCurrentStatus();
             } else {
                 api.get("/user/get_order_user/" + self.order.user_owner)
