@@ -7,7 +7,7 @@
             <div class="destiny-user">
                 <div class="user-img-container">
                     <img :src="rabsystemsUser.id == user.id ? order_user.profile_photo : rabsystemsUser.profile_photo" class="avatar-p">
-                    <div class="user-status" :class="current_status"></div>
+                    <div class="user-status" :class="rabsystemsUser.id == user.id ? order_user.user_status : rabsystemsUser.user_status"></div>
                 </div>
                 <h5>{{ rabsystemsUser.id == user.id ? order_user.name : rabsystemsUser.name}}</h5>
             </div>
@@ -61,13 +61,7 @@ export default {
             order_user: {},
             rabsystemsUser: {},
             first: true,
-            current_status: "",
             loading: true
-        }
-    },
-    watch: {
-        order_user: function () {
-            this.findCurrentStatus();
         }
     },
     methods: {
@@ -79,27 +73,6 @@ export default {
                 returnText = `<a href="/order-details/${targetId}">Compra ${targetId}</a>`
             }
             return returnText;
-        },
-        findCurrentStatus: function () {
-            let self = this;
-            if (self.rabsystemsUser.id == self.user.id) {
-                console.log(self.order_user)
-                if (self.order_user.user_status == 'online') {
-                    self.current_status = "online";
-                } else if (self.order_user.user_status == "out") {
-                    self.current_status = "user-out";
-                } else {
-                    self.current_status = "";
-                }
-            } else {
-                if (self.rabsystemsUser.user_status == 'online') {
-                    self.current_status = "online";
-                } else if (self.rabsystemsUser.user_status == "out") {
-                    self.current_status = "user-out";
-                } else {
-                    self.current_status = "";
-                }
-            }
         },
         checkMessageContentHeight: function () {
             let messages = $(".message");
@@ -151,7 +124,7 @@ export default {
                 }
             })
             .then(function(response){
-                if (response.data.response.have_new_messages) {
+                if (response.data.response.obj.have_new_messages) {
                     self.fillMessages();
                 }
             }).catch(function(error){
@@ -230,12 +203,10 @@ export default {
             if (self.order == undefined) {
                 self.order_user = self.userProp;
                 self.loading = false;
-                self.findCurrentStatus();
             } else {
                 api.get("/user/get_order_user/" + self.order.user_owner)
                 .then(function(response){
                     self.order_user = response.data.response.user;
-                    self.findCurrentStatus();
                     self.loading = false;
                     setTimeout(() => {
                         self.getOrderUser();
@@ -556,14 +527,6 @@ export default {
         position: absolute;
         bottom: -2px;
         right: -2px;
-    }
-
-    .online {
-        background: var(--green);
-    }
-
-    .user-out {
-        background: var(--orange);
     }
 
     .owner-inbox {

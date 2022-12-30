@@ -37,6 +37,18 @@
         box-shadow: 0 0 0 0.25rem rgba(195, 66, 255, 0.25) !important;
     }
 
+.online {
+    background: var(--green) !important;
+}
+
+.user-out {
+    background: var(--orange) !important;
+}
+
+.offline {
+    background: var(--gray-high) !important;
+}
+
 .secondary {
     background-color: var(--gray-high-3) !important;
     color: var(--black) !important;

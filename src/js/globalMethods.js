@@ -73,7 +73,7 @@ export const globalMethods = {
                 self.requireUser();
                 if (recursive) {
                     setTimeout(() => {
-                        self.getRabsystemsUser();
+                        self.getRabsystemsUser(recursive);
                     }, 30 * 1000);
                 }
             }).catch(function(error){
