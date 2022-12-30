@@ -65,6 +65,11 @@ export default {
             loading: true
         }
     },
+    watch: {
+        order_user: function () {
+            this.findCurrentStatus();
+        }
+    },
     methods: {
         returnMessageTargetObject: function (message) {
             let targetId = message.target_id;
