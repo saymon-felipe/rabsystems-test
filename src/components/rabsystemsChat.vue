@@ -6,10 +6,10 @@
         <div class="chat-header" v-if="!loading">
             <div class="destiny-user">
                 <div class="user-img-container">
-                    <img :src="rabsystemsUser.id == user.id ? order_user.profile_photo : rabsystemsUser.profile_photo" class="avatar-p">
-                    <div class="user-status" :class="rabsystemsUser.id == user.id ? order_user.user_status : rabsystemsUser.user_status"></div>
+                    <img :src="havePermission ? order_user.profile_photo : rabsystemsUser.profile_photo" class="avatar-p">
+                    <div class="user-status" :class="havePermission ? order_user.user_status : rabsystemsUser.user_status"></div>
                 </div>
-                <h5>{{ rabsystemsUser.id == user.id ? order_user.name : rabsystemsUser.name}}</h5>
+                <h5>{{ havePermission ? order_user.name : rabsystemsUser.name}}</h5>
             </div>
             <div class="header-icons">
                 <i class="fas fa-window-minimize" id="chat-minimize" v-on:click="toggleChat()"></i>
@@ -60,11 +60,21 @@ export default {
             messages: [],
             order_user: {},
             rabsystemsUser: {},
-            first: true,
-            loading: true
+            loading: true,
+            havePermission: false
+        }
+    },
+    watch: {
+        rabsystemsUser: function () {
+            this.checkPermission();
         }
     },
     methods: {
+        checkPermission: function () {
+            if (this.rabsystemsUser.id == this.user.id) {
+                this.havePermission = true;
+            }
+        },
         returnMessageTargetObject: function (message) {
             let targetId = message.target_id;
             let targetType = message.target_type;
@@ -111,14 +121,16 @@ export default {
             let self = this
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             let order_id = "";
+
             if (this.order != undefined) {
                 order_id = self.order.order_id;
             }
+            
             let data = {
                 order_id: order_id
             }
             
-            api.post("/messages/have_new_messages", data, {
+            api.post("/messages/chat_have_new_messages", data, {
                 headers: {
                     Authorization: jwt
                 }
@@ -141,8 +153,8 @@ export default {
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             let sender_id = self.order_user.id;
 
-            if (self.rabsystemsUser.id != self.user.id) {
-                sender_id = self.rabsystemsUser.id
+            if (!self.havePermission) {
+                sender_id = self.rabsystemsUser.id;
             }
 
             if ($(".rabsystems-chat").is(":visible") && $(".messages-container").height() > 0) {
@@ -186,13 +198,12 @@ export default {
             })
             .then(function(response){
                 self.messages = response.data.response.messages;
+                $("#message-input").focus();
                 setTimeout(() => {
                     self.checkMessageContentHeight();
-                    setTimeout(() => {
-                        if (!only_fill) {
-                            self.viewMessage(true);
-                        }
-                    }, )
+                    if (!only_fill) {
+                        self.viewMessage(true);
+                    }
                 }, 20);
             }).catch(function(error){
                 console.log(error);
@@ -215,7 +226,9 @@ export default {
             }
         },
         toggleChat: function (programatic = false) {
-            let chat = $(".rabsystems-chat"), chatHeader = $(".chat-header"), minimizeIcon = $("#chat-minimize");
+            let chat = $(".rabsystems-chat");
+            let chatHeader = $(".chat-header");
+            let minimizeIcon = $("#chat-minimize");
             
             if (chat.css("height") == "65px" || programatic) {
                 chat.css("width", "50vw").css("min-width", "250px");
@@ -246,11 +259,14 @@ export default {
         },
         formatDate: function (date) {
             let previous_date = moment(date).unix();
-
             return moment.unix(previous_date).fromNow();
         },
         countRows: function (event, keyup = false) {
-            let input = $("#" + event.target.id), length = input.val().length, keycode = event.keyCode, self = this;
+            let self = this;
+            let input = $("#" + event.target.id);
+            let length = input.val().length;
+            let keycode = event.keyCode;
+
             if (keycode == 13) {
                 if (keyup) {
                     if(event.shiftKey){
@@ -296,7 +312,7 @@ export default {
                 data["order_id"] = self.order.order_id;
             }
 
-            if (self.rabsystemsUser.id == self.user.id) {
+            if (self.havePermission) {
                 data["receiver_id"] = self.order_user.id;
                 data["receiver_name"] = self.order_user.name;
                 data["receiver_photo"] = self.order_user.profile_photo;
@@ -511,24 +527,6 @@ export default {
         left: 1rem;
     }
 
-    .user-img-container {
-        background: var(--white);
-        border-radius: 50%;
-        margin-right: 1rem;
-        position: relative;
-    }
-
-    .user-status, .user-status-p {
-        width: 17px;
-        height: 17px;
-        border-radius: 50%;
-        border: 2px solid var(--purple);
-        background: var(--gray-high);
-        position: absolute;
-        bottom: -2px;
-        right: -2px;
-    }
-
     .owner-inbox {
         height: 100%;
     }
@@ -549,11 +547,5 @@ export default {
         width: 40px;
         margin: .5rem 0;
         cursor: pointer;
-    }
-
-    .user-status-p {
-        width: 13px;
-        height: 13px;
-        border: 2px solid var(--white);
     }
 </style>

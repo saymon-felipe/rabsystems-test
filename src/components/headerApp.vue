@@ -41,13 +41,12 @@
             <div class="vertical-menu-footer">
                 <img src="../assets/img/icone-preto.png" class="icon-footer">
                 <div class="copyrigth">
-                    <h6>&copy; 2022 - Rabsystems</h6>
+                    <h6>&copy; 2023 - Rabsystems</h6>
                 </div>
             </div>
         </aside>
     </header>
 </template>
-
 <script>
 import $ from 'jquery';
 import { globalMethods } from '../js/globalMethods';

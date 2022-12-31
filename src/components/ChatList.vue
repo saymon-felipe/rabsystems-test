@@ -8,8 +8,8 @@
             <div class="loading-wrapper" v-if="loadingUsers">
                 <div class="loading-frame"></div>
             </div>
-            <div class="chat-users" v-if="userList.length != 0 && !loadingUsers">
-                <chatUserComponent v-for="(userItem, index) in userList" v-bind:key="index" :user="userItem" @open_chat="openChatFunction(userItem)" />
+            <div class="chat-users" v-if="userList.length != 0 && !loadingUsers && !reloadUsers">
+                <chatUserComponent v-for="(userItem, index) in userList" v-bind:key="index" :user="userItem" @open_chat="openChatFunction(userItem)" :newMessages="newMessages" />
             </div>
         </div>
         <rabsystemsChat v-if="showChat" :userProp="currentChatUser" @closeChat="closeChatComponent()" />
@@ -33,7 +33,9 @@ export default {
             loadingRabsystemsUser: true,
             loadingUsers: true,
             showChat: false,
-            currentChatUser: {}
+            currentChatUser: {},
+            newMessages: [],
+            reloadUsers: false
         }
     },
     watch: {
@@ -79,11 +81,43 @@ export default {
             .then(function (response) {
                 self.loadingUsers = false;
                 self.userList = response.data.users_list;
+                self.resetUsersList();
+                self.checkNewMessages();
+                setTimeout(() => {
+                    self.checkUsersChatList();
+                }, 10 * 1000)
             })
             .catch(function (error) {
                 console.log(error)
             })
+        },
+        resetUsersList: function () {
+            self.reloadUsers = true;
+            setTimeout(() => {
+                self.reloadUsers = false;
+            }, 1)
+        },
+        checkNewMessages: function () {
+            let self = this
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            
+            
+            api.get("/messages/have_new_messages", {
+                headers: {
+                    Authorization: jwt
+                }
+            })
+            .then(function(response){
+                console.log(response.data.responseObj.newMessagesGroup)
+                self.newMessages = response.data.responseObj.newMessagesGroup;
+                self.resetUsersList();
+            }).catch(function(error){
+                console.log(error);
+            })
         }
+    },
+    mounted: function () {
+        this.checkNewMessages();
     },
     components: {
         chatUserComponent,

@@ -93,7 +93,6 @@
         <rabsystemsChat :order="order" @closeChat="closeChatComponent()" v-if="showChat" userProp="" />
     </section>
 </template>
-
 <script>
 import $ from 'jquery';
 import api from '../configs/api.js';
