@@ -39,12 +39,12 @@
                     <div class="orders-list">
                         <div :id="'order-' + order.order_id" v-for="(order, index) in orders" :key="index">
                             <router-link class="order" :to="'/order-details/' + order.order_id">
-                                <td class="notification"></td>
+                                <td class="notification" v-if="order.order_status != 4"></td>
                                 <td class="order-name" :title="order.user_name"><strong>{{ order.user_name }}</strong></td>
                                 <td class="order-id">#{{ order.order_id }}</td>
                                 <td class="order-date" :title="getMomentExtended(order.create_date)">{{ getMoment(order.create_date) }}</td>
                                 <td class="order-title" :title="order.service">{{ order.service }}</td>
-                                <td class="order-price"><strong>R$</strong> {{ order.price == "" ? "--,--" : order.price }}</td>
+                                <td class="order-price">{{ order.price == "" ? "--,--" : order.price }}</td>
                                 <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
                             </router-link>
                         </div>
@@ -52,7 +52,7 @@
                 </td>
             </tr>
         </table>
-        <router-link class="new-order" to="/new-order" v-if="rabsystemsUser.id != user.id">
+        <router-link class="new-order" to="/new-order" v-if="!$root.havePermission">
             <i class="fas fa-plus-circle"></i>
             <h5>Novo pedido</h5>
         </router-link>
@@ -72,19 +72,17 @@ export default {
     data() {
         return {
             orders: [],
-            rabsystemsUser: {},
             new_messages_notification_number: 0,
             first_check_message: true
         }
     },
-    watch: {
-        user: function () {
-            this.returnOrders();
-        }
+    mounted: function () {
+        this.returnOrders();
     },
     methods: {
         fillNewMessageNotification: function (order_list) {
             let play_audio = false;
+            let audioElement = $("#notification-audio")[0];
 
             for (let i = 0; i < order_list.length; i++) {
                 let notification_element = $("#order-" + order_list[i].order_id + " .notification");
@@ -96,10 +94,12 @@ export default {
                 this.new_messages_notification_number = order_list.length;
                 this.first_check_message = false;
             }
-
+            
             if ((this.first_check_message && play_audio) || (this.new_messages_notification_number != order_list.length && play_audio)) {
                 this.new_messages_notification_number = order_list.length;
-                $("#notification-audio")[0].play();
+                if (audioElement != undefined) {
+                    audioElement.play();
+                }
                 play_audio = false;
             }
         },
@@ -137,15 +137,22 @@ export default {
             }
         },
         returnOrders: function () {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
 
             // Status: 0 = aguardando pagamento
             // Status: 1 = Aguardando resposta
             // Status: 2 = Em andamento
             // Status: 3 = Concluído
             // Status: 4 = Cancelado
+            if (self.$root.user.id == undefined || self.$root.rabsystemsUser.id == undefined) {
+                setTimeout(() => {
+                    self.returnOrders();
+                }, 100)
+                return;
+            }
 
-            if (self.user.id == self.rabsystemsUser.id) {
+            if (self.$root.havePermission) {
                 api.get("/orders/return_all_orders", {
                     headers: {
                             Authorization: jwt

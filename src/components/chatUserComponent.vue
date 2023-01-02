@@ -26,10 +26,7 @@ export default {
             }
             return newMessagesText;
         }
-    },
-    mounted() {
-        console.log(this.newMessages)
-    },
+    }
 }
 </script>
 <style scoped>

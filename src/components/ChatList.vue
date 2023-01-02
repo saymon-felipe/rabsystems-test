@@ -1,8 +1,8 @@
 <template>
     <div class="chat-container-list">
         <div class="chat-list-header">
-            <h1 v-if="havePermission">Clientes</h1>
-            <h1 v-if="!havePermission">Rabsystems</h1>
+            <h1 v-if="$root.havePermission">Clientes</h1>
+            <h1 v-if="!$root.havePermission">Rabsystems</h1>
         </div>
         <div class="chat-list-body">
             <div class="loading-wrapper" v-if="loadingUsers">
@@ -23,29 +23,21 @@ import rabsystemsChat from "./rabsystemsChat.vue";
 
 export default {
     name: "ChatList",
+    props: ["newMessages"],
     mixins: [globalMethods],
+
     data() {
         return {
             userList: [],
-            havePermission: false,
-            loading: true,
-            loadingUser: true,
-            loadingRabsystemsUser: true,
             loadingUsers: true,
             showChat: false,
             currentChatUser: {},
-            newMessages: [],
             reloadUsers: false
         }
     },
     watch: {
-        user: function () {
-            this.loadingUser = false;
-            this.isLoadingOnlyUsers();
-        },
-        rabsystemsUser: function () {
-            this.loadingRabsystemsUser = false;
-            this.isLoadingOnlyUsers();
+        newMessages: function () {
+            this.resetUsersList();
         }
     },
     methods: {
@@ -53,22 +45,12 @@ export default {
             this.currentChatUser = user;
             this.openChatComponent();
         },
-        isLoadingOnlyUsers: function () {
-            if (!this.loadingUser && !this.loadingRabsystemsUser) {
-                this.checkPermission();
-                this.checkUsersChatList();
-            }
-        },
-        checkPermission: function () {
-            if (this.user.id == this.rabsystemsUser.id) {
-                this.havePermission = true;
-            }
-        },
         checkUsersChatList: function () {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
-            if (!self.havePermission) {
-                self.userList.push(self.rabsystemsUser);
+            if (!self.$root.havePermission) {
+                self.userList = [];
+                self.userList.push(self.$root.rabsystemsUser);
                 self.loadingUsers = false;
                 return;
             }
@@ -79,10 +61,9 @@ export default {
                 }
             })
             .then(function (response) {
-                self.loadingUsers = false;
                 self.userList = response.data.users_list;
+                self.loadingUsers = false;
                 self.resetUsersList();
-                self.checkNewMessages();
                 setTimeout(() => {
                     self.checkUsersChatList();
                 }, 10 * 1000)
@@ -96,28 +77,10 @@ export default {
             setTimeout(() => {
                 self.reloadUsers = false;
             }, 1)
-        },
-        checkNewMessages: function () {
-            let self = this
-            let jwt = "Bearer " + self.getJwtInLocalStorage();
-            
-            
-            api.get("/messages/have_new_messages", {
-                headers: {
-                    Authorization: jwt
-                }
-            })
-            .then(function(response){
-                console.log(response.data.responseObj.newMessagesGroup)
-                self.newMessages = response.data.responseObj.newMessagesGroup;
-                self.resetUsersList();
-            }).catch(function(error){
-                console.log(error);
-            })
         }
     },
     mounted: function () {
-        this.checkNewMessages();
+        this.checkUsersChatList();
     },
     components: {
         chatUserComponent,
@@ -138,7 +101,7 @@ export default {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     transition: all 0.4s;
-    transform: translateX(400px);
+    transform: translateX(50vw);
     display: none;
 }
 

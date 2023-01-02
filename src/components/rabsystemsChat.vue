@@ -6,10 +6,10 @@
         <div class="chat-header" v-if="!loading">
             <div class="destiny-user">
                 <div class="user-img-container">
-                    <img :src="havePermission ? order_user.profile_photo : rabsystemsUser.profile_photo" class="avatar-p">
-                    <div class="user-status" :class="havePermission ? order_user.user_status : rabsystemsUser.user_status"></div>
+                    <img :src="$root.havePermission ? order_user.profile_photo : $root.rabsystemsUser.profile_photo" class="avatar-p">
+                    <div class="user-status" :class="$root.havePermission ? order_user.user_status : $root.rabsystemsUser.user_status"></div>
                 </div>
-                <h5>{{ havePermission ? order_user.name : rabsystemsUser.name}}</h5>
+                <h5>{{ $root.havePermission ? order_user.name : $root.rabsystemsUser.name}}</h5>
             </div>
             <div class="header-icons">
                 <i class="fas fa-window-minimize" id="chat-minimize" v-on:click="toggleChat()"></i>
@@ -18,7 +18,7 @@
         </div>
         <div class="chat-body" v-if="!loading">
             <div class="messages-container">
-                <div class="message" :id="'message-' + message.message_id" :class="message.sender_id == user.id ? 'out' : 'in'" v-for="message in messages" :key="message.message_id">
+                <div class="message" :id="'message-' + message.message_id" :class="message.sender_id == $root.user.id ? 'out' : 'in'" v-for="message in messages" :key="message.message_id">
                     <div class="message-header">
                         <h5>{{ message.sender_name }}</h5>
                         <span>{{ formatDate(message.send_date) }}</span>
@@ -42,6 +42,7 @@
                 <i class="fas fa-location-arrow" v-on:click="sendMessage()"></i>
             </div>
         </div>
+        <audio src="../assets/audio/new_message_alert.mp3" id="message-audio" preload="auto"></audio>
     </div>
 </template>
 
@@ -59,22 +60,10 @@ export default {
         return {
             messages: [],
             order_user: {},
-            rabsystemsUser: {},
-            loading: true,
-            havePermission: false
-        }
-    },
-    watch: {
-        rabsystemsUser: function () {
-            this.checkPermission();
+            loading: true
         }
     },
     methods: {
-        checkPermission: function () {
-            if (this.rabsystemsUser.id == this.user.id) {
-                this.havePermission = true;
-            }
-        },
         returnMessageTargetObject: function (message) {
             let targetId = message.target_id;
             let targetType = message.target_type;
@@ -130,14 +119,14 @@ export default {
                 order_id: order_id
             }
             
-            api.post("/messages/chat_have_new_messages", data, {
+            api.post("/messages/last_chat", data, {
                 headers: {
                     Authorization: jwt
                 }
             })
             .then(function(response){
                 if (response.data.response.obj.have_new_messages) {
-                    self.fillMessages();
+                    self.fillMessages(true);
                 }
             }).catch(function(error){
                 console.log(error);
@@ -148,13 +137,19 @@ export default {
                 }, 10 * 1000)
             })
         },
+        playNewMessagegAudio: function () {
+            let audioElement = $("#message-audio")[0];
+            if (audioElement != undefined) {
+                audioElement.play();
+            }
+        },
         viewMessage: function () {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             let sender_id = self.order_user.id;
 
-            if (!self.havePermission) {
-                sender_id = self.rabsystemsUser.id;
+            if (!self.$root.havePermission) {
+                sender_id = self.$root.rabsystemsUser.id;
             }
 
             if ($(".rabsystems-chat").is(":visible") && $(".messages-container").height() > 0) {
@@ -167,25 +162,47 @@ export default {
                         Authorization: jwt
                     }
                 })
-                .then(function () {
-                    self.fillMessages(true);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
             }
         },
-        fillMessages: function (only_fill = false) {
+        checkViewMessage: function () {
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            let receiver_id = self.order_user.id;
+
+            if (!self.$root.havePermission) {
+                receiver_id = self.$root.rabsystemsUser.id;
+            }
+            let data = {
+                receiver_id: receiver_id
+            }
+            api.post("/messages/check_view_messages", data, {
+                headers: {
+                    Authorization: jwt
+                }
+            })
+            .then(function (response) {
+                let haveNewMessages = response.data.returnObj.status;
+                if (haveNewMessages) {
+                    self.fillMessages();
+                }
+                setTimeout(() => {
+                    self.checkViewMessage();
+                }, 10 * 1000)
+            })
+        },
+        fillMessages: function (from_last_chat = false) {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             let order_id = "";
             let user_id;
+
             if (this.order != undefined) {
                 user_id = self.order.user_owner;
                 order_id = self.order.order_id;
             } else {
                 user_id = self.userProp.id;
             }
+
             let data = {
                 order_id: order_id,
                 user_id: user_id
@@ -201,8 +218,9 @@ export default {
                 $("#message-input").focus();
                 setTimeout(() => {
                     self.checkMessageContentHeight();
-                    if (!only_fill) {
-                        self.viewMessage(true);
+                    self.viewMessage();
+                    if (from_last_chat) {
+                        self.playNewMessagegAudio();
                     }
                 }, 20);
             }).catch(function(error){
@@ -211,6 +229,7 @@ export default {
         },
         getOrderUser: function () {
             let self = this;
+
             if (self.order == undefined) {
                 self.order_user = self.userProp;
                 self.loading = false;
@@ -312,17 +331,17 @@ export default {
                 data["order_id"] = self.order.order_id;
             }
 
-            if (self.havePermission) {
+            if (self.$root.havePermission) {
                 data["receiver_id"] = self.order_user.id;
                 data["receiver_name"] = self.order_user.name;
                 data["receiver_photo"] = self.order_user.profile_photo;
-                data["sender_photo"] = self.rabsystemsUser.profile_photo;
-                data["sender_name"] = self.rabsystemsUser.name;
-                data["sender_id"] = self.rabsystemsUser.id;
+                data["sender_photo"] = self.$root.rabsystemsUser.profile_photo;
+                data["sender_name"] = self.$root.rabsystemsUser.name;
+                data["sender_id"] = self.$root.rabsystemsUser.id;
             } else {
-                data["receiver_id"] = self.rabsystemsUser.id;
-                data["receiver_name"] = self.rabsystemsUser.name;
-                data["receiver_photo"] = self.rabsystemsUser.profile_photo;
+                data["receiver_id"] = self.$root.rabsystemsUser.id;
+                data["receiver_name"] = self.$root.rabsystemsUser.name;
+                data["receiver_photo"] = self.$root.rabsystemsUser.profile_photo;
                 data["sender_photo"] = self.order_user.profile_photo;
                 data["sender_name"] = self.order_user.name;
                 data["sender_id"] = self.order_user.id;
@@ -342,10 +361,10 @@ export default {
     },
     mounted() {
         setTimeout(() => {
-            this.getRabsystemsUser(true);
             this.getOrderUser();
             this.lastChat();
             this.fillMessages();
+            this.checkViewMessage();
         }, 400);
     }
 }

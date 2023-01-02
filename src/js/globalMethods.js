@@ -1,8 +1,14 @@
 import $ from 'jquery';
-import api from '../configs/api.js';
+//import api from '../configs/api.js';
 
 export const globalMethods = {
     methods: {
+        logoutUser: function () {
+            let self = this;
+            self.removeJwtInLocalStorage();
+            self.$router.push("/login");
+            self.$router.go();
+        },
         submitFunction: function () {
             $("#submit-informations-form").click();
         },
@@ -46,48 +52,10 @@ export const globalMethods = {
             this.modalTitle = modalTitle;
             this.modalButtonTitle = buttonTitle;
             this.modalButtonTitle2 = button2Title;
-        },
-        logoutUser: function () {
-            let self = this
-            api.patch("/user/logout", {user_id: self.user.id})
-            .then(function () {
-                self.removeJwtInLocalStorage();
-                self.$router.push("/login");
-                self.$router.go();
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-        },
-        requireUser: async function() { // Função retorna o usuário pelo id.
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-            if (self.$route.path != "/login" && self.$route.path != "/register") {
-                self.user = await api.get("/user/get_user", { headers: { Authorization: jwt } }).then(res => res.data.response.user);
-            }
-        },
-        getRabsystemsUser: function (recursive = false) {
-            let self = this;
-            api.get("/user/get_rabsystems_user")
-            .then(function(response){
-                self.rabsystemsUser = response.data.response.user;
-                self.requireUser();
-                if (recursive) {
-                    setTimeout(() => {
-                        self.getRabsystemsUser(recursive);
-                    }, 30 * 1000);
-                }
-            }).catch(function(error){
-                console.log(error);
-            })
         }
-    },
-    mounted: function () {
-        this.getRabsystemsUser();
     },
     data() {
         return {
-            user: {},
-            rabsystemsUser: {},
             user_id: null,
             showChat: false
         }

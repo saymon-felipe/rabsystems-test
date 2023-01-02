@@ -9,15 +9,18 @@
             <div class="header-informations-container">
                 <div class="chat-container" v-on:click="toggleChatList()">
                     <i class="fas fa-comment"></i>
+                    <div class="new-message-label" v-if="newMessagesLength != 0">
+                        {{ newMessagesLength }}
+                    </div>
                 </div>
-                <ChatList :user="user" :rabsystemsUser="rabsystemsUser" v-if="!loadingChat" />
+                <ChatList :user="$root.user" :rabsystemsUser="$root.rabsystemsUser" :newMessages="newMessages" />
                 <div class="no-responsive-header" v-on:click="showMoreOptions()" title="Abrir menu">
                     <nav class="header">
                         <div class="home-user">
                             <div class="user-avatar">
-                                <img :src="user.profile_photo" class="avatar-p">
+                                <img :src="$root.user.profile_photo" class="avatar-p">
                             </div>
-                            <h5>Olá, <span class="user-name">&nbsp;{{ user.name }}</span></h5>
+                            <h5>Olá, <span class="user-name">&nbsp;{{ $root.user.name }}</span></h5>
                         </div>
                     </nav>  
                     <div class="more-options-container" title="">
@@ -45,12 +48,14 @@
                 </div>
             </div>
         </aside>
+        <audio src="../assets/audio/message_notification.ogg" id="notification-audio" preload="auto"></audio>
     </header>
 </template>
 <script>
 import $ from 'jquery';
 import { globalMethods } from '../js/globalMethods';
 import ChatList from "./ChatList.vue";
+import api from '../configs/api.js';
 
 export default {
     name: "headerApp",
@@ -58,37 +63,51 @@ export default {
     data() {
         return {
             expanded: false,
-            user: {},
-            rabsystemUser: {},
-            loadingChat: true,
-            loadingUser: true,
-            loadingRabsystemsUser: true
+            newMessages: [],
+            newMessagesLength: null,
+            firstTime: true
         }
     },
     components: {
         ChatList
     },
-    watch: {
-        user: function () {
-            this.loadingUser = false;
-            this.loadingChat = this.isLoading();
-        },
-        rabsystemsUser: function () {
-            this.loadingRabsystemsUser = false;
-            this.loadingChat = this.isLoading();
-        }
-    },
     mounted: function () {
-        this.requireUser();
-        this.getRabsystemsUser();
+        this.checkNewMessages();
     },
     methods: {
-        isLoading: function () {
-            if (this.loadingUser || this.loadingRabsystemsUser) {
-                return true;
-            } else {
-                return false;
-            }
+        playNotificationAudio: function () {
+            let audioElement = $("#notification-audio")[0];
+            audioElement.play();
+        },
+        checkNewMessages: function () {
+            let self = this
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            
+            api.get("/messages/have_new_messages", {
+                headers: {
+                    Authorization: jwt
+                }
+            })
+            .then(function(response){
+                self.newMessages = response.data.responseObj.newMessagesGroup;
+                if (self.firstTime) {
+                    self.firstTime = false;
+                    self.newMessagesLength = response.data.responseObj.length;
+                    if (self.newMessagesLength > 0) {
+                        self.playNotificationAudio();
+                    }
+                } else if (self.newMessagesLength != response.data.responseObj.length) {
+                    self.newMessagesLength = response.data.responseObj.length;
+                    if (self.newMessagesLength > 0) {
+                        self.playNotificationAudio();
+                    }
+                }
+                setTimeout(() => {
+                    self.checkNewMessages();
+                }, 10 * 1000)
+            }).catch(function(error){
+                console.log(error);
+            })
         },
         toggleChatList: function () {
             let element = $(".chat-container-list");
@@ -99,7 +118,7 @@ export default {
             }
         },
         closeChatList: function (element) {
-            element.css("transform", "translateX(400px)");
+            element.css("transform", "translateX(50vw)");
             setTimeout(() => {
                 element.hide();
             }, 400);
@@ -172,10 +191,27 @@ export default {
         align-items: center;
         justify-content: center;
         transition: all 0.4s;
+        position: relative;
     }
 
         .chat-container:hover {
             background: var(--gray-high-2);
+        }
+
+        .chat-container .new-message-label {
+            position: absolute;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--white);
+            bottom: 5px;
+            right: 2px;
         }
 
     .header-container {

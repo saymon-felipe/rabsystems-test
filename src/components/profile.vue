@@ -8,7 +8,7 @@
                 <aside class="profile-container">
                     <div class="row">
                         <div class="col-lg-12 col-6 user-image">
-                            <img :src="user.profile_photo" class="profile-image" v-on:click="showDetailsContainer()">
+                            <img :src="$root.user.profile_photo" class="profile-image" v-on:click="showDetailsContainer()">
                             <div class="photo-change-details">
                                 <ul>
                                     <li v-on:click="viewPhoto()" class="view-photo">Ver foto</li>
@@ -18,7 +18,7 @@
                             </div>
                         </div>
                         <div class="col-lg-12 col-6">
-                            <h1>{{ user.name }}</h1>
+                            <h1>{{ $root.user.name }}</h1>
                             <button v-on:click="changeProfileFunc()" id="change-profile">Editar perfil</button>
                             <div class="action-buttons">
                                 <button v-on:click="cancelChangeProfile()" id="close-change-profile" class="close-change-profile">
@@ -29,7 +29,7 @@
                                 </button>
                                 <div class="loading"></div>
                             </div>
-                            <div class="response">{{response}}</div>
+                            <div class="response">{{ response }}</div>
                         </div>
                     </div>
                 </aside>
@@ -41,67 +41,67 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="name">Nome</label>
-                                    <input type="text" name="name" id="name" v-on:keydown="validateName($event)" v-model="user.name" maxlength="30" required>
+                                    <input type="text" name="name" id="name" v-on:keydown="validateName($event)" v-model="$root.user.name" maxlength="30" required>
                                 </div>
                             </div> 
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="tel-input">Telefone</label>
-                                    <div class="rabsystems-input">
-                                        <div class="flag-input">
-                                            <div class="current-flag-container"></div>
-                                            <div class="flag-list"></div>
-                                        </div>
-                                        <input type="tel" name="tel" id="tel-input" v-model="user.tel" required>
+                                <label for="tel-input">Telefone</label>
+                                <div class="rabsystems-input">
+                                    <div class="flag-input">
+                                        <div class="current-flag-container"></div>
+                                        <div class="flag-list"></div>
                                     </div>
+                                    <input type="tel" name="tel" id="tel-input" v-model="$root.user.tel" required>
+                                </div>
                             </div>
                             </div> 
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="cpf">Cpf</label>
-                                    <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)" v-model="user.cpf" required>
+                                    <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)" v-model="$root.user.cpf" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="street">Rua</label>
-                                    <input type="text" name="street" id="street" v-model="user.street" required>
+                                    <input type="text" name="street" id="street" v-model="$root.user.street" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="number">Numero</label>
-                                    <input type="number" name="number" id="number" v-model="user.number" required>
+                                    <input type="number" name="number" id="number" v-model="$root.user.number" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="complement">Complemento</label>
-                                    <input type="text" name="complement" id="complement" v-model="user.complement" required>
+                                    <input type="text" name="complement" id="complement" v-model="$root.user.complement" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="cep">Cep</label>
-                                    <input type="number" name="cep" id="cep" v-on:keydown="validaCep($event)" v-model="user.cep" required>
+                                    <input type="number" name="cep" id="cep" v-on:keydown="validaCep($event)" v-model="$root.user.cep" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="district">Bairro</label>
-                                    <input type="text" name="district" id="district" v-model="user.district" required>
+                                    <input type="text" name="district" id="district" v-model="$root.user.district" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="city">Cidade</label>
-                                    <input type="text" name="city" id="city" v-model="user.city" required>
+                                    <input type="text" name="city" id="city" v-model="$root.user.city" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="state">Estado</label>
-                                    <select name="state" id="state" v-model="user.state" required>
+                                    <select name="state" id="state" v-model="$root.user.state" required>
                                         <option value="">----</option>
                                         <option value="AC">Acre</option>
                                         <option value="AL">Alagoas</option>
@@ -136,7 +136,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="country">País</label>
-                                    <input type="text" name="country" id="country" v-model="user.country" required>
+                                    <input type="text" name="country" id="country" v-model="$root.user.country" required>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +146,7 @@
         </div>
         <div class="view-photo-container">
             <i class="fas fa-times" v-on:click="closePhotoContainer()"></i>
-            <img :src="user.profile_photo">
+            <img :src="$root.user.profile_photo">
         </div>
         <div class="upload">
             <div class="send">
@@ -163,7 +163,7 @@
                     <button type="button" id="send-photo-button" class="save-button">Enviar foto</button>
                 </form>
             </div>
-            <div class="response font-small">{{modalResponse}}</div>
+            <div class="response font-small">{{ modalResponse }}</div>
             <div class="photo-preview">
                 <img class="image-preview" alt="Pré visualização da foto">
             </div>
@@ -198,7 +198,8 @@ export default {
             }
         },
         getTelInputValue: function () { // Pega o valor do input removendo caracteres especiais e espaço para submit do formulário.
-            let ddi = $(".current-flag-container .flag-item").attr("ddi"), number = $("#tel-input").val().replace("(", "").replace(")", "").replace("-", "").replace(" ", '').replace(" ", '');
+            let ddi = $(".current-flag-container .flag-item").attr("ddi");
+            let number = $("#tel-input").val().replace("(", "").replace(")", "").replace("-", "").replace(" ", '').replace(" ", '');
 
             if (number == "") {
                 return;
@@ -211,7 +212,8 @@ export default {
             return `${ddi}${number}`;
         },
         validateCpfInput: function (event) {
-            let target = $("#" + event.target.id), keycode = event.keyCode;
+            let target = $("#" + event.target.id);
+            let keycode = event.keyCode;
 
             if (!(keycode == 8 || keycode == 46)) {
                 if (target.val().length < 11) {
@@ -269,7 +271,10 @@ export default {
             $(".input-group select").attr("disabled", false);
         },
         changeProfileFunc: function () {
-            let self = this, editButton = $("#change-profile"), closeButton = $("#close-change-profile"), saveButton = $("#save-change-profile");
+            let self = this;
+            let editButton = $("#change-profile");
+            let closeButton = $("#close-change-profile");
+            let saveButton = $("#save-change-profile");
 
             editButton.attr("disabled", "disabled").css("opacity", 0);
 
@@ -287,7 +292,10 @@ export default {
             }, 400);
         },
         cancelChangeProfile: function () {
-            let self = this, editButton = $("#change-profile"), closeButton = $("#close-change-profile"), saveButton = $("#save-change-profile");
+            let self = this;
+            let editButton = $("#change-profile");
+            let closeButton = $("#close-change-profile");
+            let saveButton = $("#save-change-profile");
 
             closeButton.css("opacity", 0);
             saveButton.css("opacity", 0);
@@ -353,7 +361,8 @@ export default {
             }, 30);
         },
         validaCep: function (event) {
-            let target = $("#" + event.target.id), keycode = event.keyCode;
+            let target = $("#" + event.target.id);
+            let keycode = event.keyCode;
 
             if (!(keycode == 8 || keycode == 46)) {
                 if (target.val().length >= 8) {
@@ -364,7 +373,6 @@ export default {
         },
         reloadInputs: function (disable) {
             $("#cpf").focus();
-            
             setTimeout(() => {
                 $("#cpf").blur();
                 setTimeout(() => {

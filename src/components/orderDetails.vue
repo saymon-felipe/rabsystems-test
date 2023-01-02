@@ -6,11 +6,11 @@
             <h1 class="rabsystems-font">Detalhes do pedido</h1>
         </div>
         <div class="order-details-container">
-            <div class="order-more-options" v-if="order.order_status != 4 && rabsystemsUser.id == user.id">
+            <div class="order-more-options" v-if="order.order_status != 4 && $root.rabsystemsUser.id == $root.user.id">
                 <i class="fas fa-ellipsis-h" v-on:click="toggleAdmin()"></i>
             </div>
             <div class="order-actions-admin-wrapper" v-if="show_admin" v-on:click="hideAdmin('.order-actions-admin')"></div>
-            <div class="order-actions-admin" v-if="rabsystemsUser.id == user.id">
+            <div class="order-actions-admin" v-if="$root.havePermission">
                 <ul>
                     <li v-if="order.price == 0" v-on:click="insertPrice()">Inserir preço</li>
                     <li v-if="order.price != 0 && order.payment_method == ''" v-on:click="generatePayment()">Gerar pagamento</li>
@@ -59,7 +59,7 @@
                         </td>
                     </tr>
                     <tr class="order-table-details">
-                        <td><strong>#</strong>{{ order.id }}</td>
+                        <td><strong>#</strong>{{ order.order_id }}</td>
                         <td>{{ getMomentExtended(order.create_date) }}</td>
                         <td>{{ order.service }}</td>
                         <td><strong>R$</strong>: {{ order.price == 0 ? "--,--" : order.price }}</td>
@@ -71,9 +71,9 @@
                 </div>
             </div>
             <div class="order-details-buttons">
-                <button v-on:click="talkWithCompany()" id="talk-with-company" v-if="order.order_status != 4">FALE COM {{ rabsystemsUser.id == user.id ? order.user_name : "A RABSYSTEMS" }}</button>
+                <button v-on:click="talkWithCompany()" id="talk-with-company" v-if="order.order_status != 4">FALE COM {{ $root.havePermission ? order.user_name : "A RABSYSTEMS" }}</button>
                 <button v-on:click="confirm_action = 'finished'; openConfirmationModal()" v-if="order.order_status == 2" id="finish-order">NOTIFICAR COMO CONCLUÍDO</button>
-                <button v-on:click="confirm_action = 'cancel'; openConfirmationModal()" id="cancel-order" v-if="order.order_status != 4">CANCELAR PEDIDO</button>
+                <button v-on:click="confirm_action = 'cancel'; openConfirmationModal()" id="cancel-order" v-if="order.order_status != 4 && order.order_status != 3">CANCELAR PEDIDO</button>
                 <router-link to="/my-orders" id="return">VOLTAR</router-link>
             </div>
         </div>
@@ -190,7 +190,8 @@ export default {
             this.showGeneratePayment = false;
         },
         getOrder: function (param) {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
 
             api.get("/orders/" + param, {
                 headers: {
@@ -211,7 +212,9 @@ export default {
             return moment(date).format('LLLL');
         },
         findProgressAnimation: function () {
-            let container = $(".animation-progress"), self = this, status = self.order.order_status;
+            let container = $(".animation-progress");
+            let self = this;
+            let status = self.order.order_status;
 
             switch (status) {
                 case 0:

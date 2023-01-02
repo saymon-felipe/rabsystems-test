@@ -17,9 +17,9 @@
                 <tr class="empty" v-if="orders.length == 0">
                     <td>Você ainda não fez nenhum pedido</td>
                 </tr>
-                <tr class="order" v-for="order in orders" :key="order.id">
-                    <td class="order-id">#{{ order.id }}</td>
-                    <td class="order-price"><strong>R$&nbsp;</strong> {{ order.price == 0 ? "--,--" : order.price }}</td>
+                <tr class="order" v-for="(order, index) in orders" :key="index">
+                    <td class="order-id">#{{ order.order_id }}</td>
+                    <td class="order-price">{{ order.price == 0 ? "--,--" : order.price }}</td>
                     <td class="buttons">
                         <button v-if="order.order_status == 0" v-on:click="payOrder(order.id)" :disabled="order.order_status == 0 ? 'disabled' : false">Pagar</button>
                         <h6 v-if="order.order_status != 0 && order.order_status != 4" class="finished">Pago</h6>
