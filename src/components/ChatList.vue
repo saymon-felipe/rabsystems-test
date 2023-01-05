@@ -50,12 +50,23 @@ export default {
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             if (!self.$root.havePermission) {
                 self.userList = [];
-                self.userList.push(self.$root.rabsystemsUser);
-                self.loadingUsers = false;
+                let jwt = "Bearer " + self.getJwtInLocalStorage();
+                api.get("/user/get_rabsystems_user?with_last_message=true", {
+                    headers: {
+                        Authorization: jwt
+                    }
+                })
+                .then(function(response){
+                    self.userList.push(response.data.user);
+                    self.loadingUsers = false;
+                    self.resetUsersList();
+                }).catch(function(error){
+                    console.log(error);
+                })
                 return;
             }
 
-            api.post("/user/return_all_users", "", {
+            api.post("/user/return_all_users?return_recent_messages=true", "", {
                 headers: {
                     Authorization: jwt
                 }

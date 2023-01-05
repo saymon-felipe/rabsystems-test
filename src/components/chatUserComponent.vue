@@ -4,17 +4,28 @@
             <img :src="user.profile_photo" class="avatar-pp online" />
             <div class="user-status" :class="user.user_status"></div>
         </div>
-        <span>{{ user.name }}</span>
+        <div class="user-informations-container">
+            <span>{{ user.name }}</span>
+            <div class="last-message-container">
+                <span class="sender-name">{{ user.sender_id == $root.user.id ? "Você" : user.sender_name }}:</span> <span class="message-content">{{ user.message }}</span> <span class="message-send-date">{{ returnSendDate(user.send_date) }}</span>
+            </div>
+        </div>
         <span class="new-message-label pulseRed" v-if="returnNewMessagesLabel(newMessages, user.id) != 0">{{ returnNewMessagesLabel(newMessages, user.id) }}</span>
     </div>
 </template>
 <script>
+import moment from 'moment';
+
 export default {
     props: ["user", "newMessages"],
     name: "chatUserComponent",
     methods: {
         openChat: function (user_id) {
             this.$emit("open_chat", user_id);
+        },
+        returnSendDate: function (send_date) {
+            let current_time = moment(send_date).fromNow();
+            return current_time;
         },
         returnNewMessagesLabel: function (newMessagesArray, userId) {
             let newMessagesText = 0;
@@ -71,5 +82,19 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.sender-name {
+    font-size: 13px;
+}
+
+.message-content {
+    font-size: 12px;
+    font-weight: 400 !important;
+}
+
+.message-send-date {
+    font-size: 12px;
+    font-weight: 600 !important;
 }
 </style>

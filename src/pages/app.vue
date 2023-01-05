@@ -67,10 +67,15 @@ export default {
         },
         getRabsystemsUser: function (recursive = false) {
             let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
             self.requireUser();
-            api.get("/user/get_rabsystems_user")
+            api.get("/user/get_rabsystems_user", {
+                headers: {
+                    Authorization: jwt
+                }
+            })
             .then(function(response){
-                self.$root.rabsystemsUser = response.data.response.user;
+                self.$root.rabsystemsUser = response.data.user;
                 if (recursive) {
                     setTimeout(() => {
                         self.getRabsystemsUser(true);
