@@ -107,7 +107,7 @@ export default {
     right: 0;
     min-width: 230px;
     max-width: 600px;
-    width: 25vw;
+    width: 80vw;
     height: calc(100% - 100px);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
@@ -130,5 +130,11 @@ export default {
     height: calc(100% - 50px);
     padding: 1rem;
     position: relative;
+}
+
+@media (max-width: 372px) {
+    .chat-list-body {
+        padding: 0.5rem;
+    }
 }
 </style>

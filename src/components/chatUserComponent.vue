@@ -84,6 +84,18 @@ export default {
     align-items: center;
 }
 
+.user-informations-container {
+    width: 100%;
+}
+
+.last-message-container {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .sender-name {
     font-size: 13px;
 }
@@ -91,10 +103,23 @@ export default {
 .message-content {
     font-size: 12px;
     font-weight: 400 !important;
+    display: block;
+    margin: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(80% - 80px);
 }
 
 .message-send-date {
     font-size: 12px;
     font-weight: 600 !important;
+    white-space: nowrap;
+}
+
+@media (max-width: 544px) {
+    .message-content {
+        max-width: calc(80% - 125px);
+    }
 }
 </style>
