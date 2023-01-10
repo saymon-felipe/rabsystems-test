@@ -7,16 +7,16 @@
             <tr class="order-list-head">
                 <td>Nome</td>
                 <td>Id</td>
-                <td>
+                <td class="sort-button" id="sort-by-date" v-on:click="sortData('date', 'sort-by-date')" sortStatus="down">
                     Data
                     <i class="fas fa-sort-down"></i>
                 </td>
                 <td>Serviço</td>
-                <td>
+                <td class="sort-button" id="sort-by-price" v-on:click="sortData('price', 'sort-by-price')" sortStatus="down">
                     Preço
                     <i class="fas fa-sort-down"></i>
                 </td>
-                <td>
+                <td class="sort-button" id="sort-by-status"  v-on:click="sortData('status', 'sort-by-status')" sortStatus="down">
                     Status
                     <i class="fas fa-sort-down"></i>
                 </td>
@@ -73,13 +73,88 @@ export default {
         return {
             orders: [],
             new_messages_notification_number: 0,
-            first_check_message: true
+            first_check_message: true,
+            sortStatus: "down",
+            sortType: ""
         }
     },
     mounted: function () {
         this.returnOrders();
     },
     methods: {
+        filterOrders: function (sortType, sortOrder) {
+            let newOrders = [];
+            console.log(this.orders)
+            switch (sortType) {
+                case "date":
+                if (sortOrder == "up") {
+                        newOrders = this.orders.sort((order1, order2) => (order1.create_date < order2.create_date) ? 1 : (order1.create_date > order2.create_date) ? -1 : 0);
+                    } else {
+                        newOrders = this.orders.sort((order1, order2) => (order1.create_date < order2.create_date) ? -1 : (order1.create_date > order2.create_date) ? 1 : 0);
+                    }
+                    break;
+                case "price":
+                    if (sortOrder == "up") {
+                        newOrders = this.orders.sort((order1, order2) => (order1.price < order2.price) ? 1 : (order1.price > order2.price) ? -1 : 0);
+                    } else {
+                        newOrders = this.orders.sort((order1, order2) => (order1.price < order2.price) ? -1 : (order1.price > order2.price) ? 1 : 0);
+                    }
+                    break;
+                case "status":
+                    if (sortOrder == "up") {
+                        newOrders = this.orders.sort((order1, order2) => (order1.order_status < order2.order_status) ? -1 : (order1.order_status > order2.order_status) ? 1 : 0);
+                    } else {
+                        newOrders = this.orders.sort((order1, order2) => (order1.order_status < order2.order_status) ? 1 : (order1.order_status > order2.order_status) ? -1 : 0);   
+                    }
+                    break;
+                
+                
+                default: 
+                    return;
+            }
+
+            this.orders = newOrders;
+        },
+        sortData: function (sortType, sortId) {
+            let element = $("#" + sortId);
+            this.sortType = sortType;
+            this.toggleSortStatus(sortType, element);
+        },
+        resetFilters: function () {
+            let elements = $(".sort-button");
+            elements.each((index, item) => {
+                let currentItem = $(item);
+                let iElement = currentItem.find("i");
+                iElement.removeClass("fa-sort-up");
+                iElement.addClass("fa-sort-down");
+                iElement.css("margin-top", "-7px");
+                currentItem.attr("sortStatus", "down").attr("indexEl", index);
+            })
+        },
+        toggleSortStatus: function (sortType, element) {
+            let status = element.attr("sortStatus");
+            let iElement = element.find("i");
+
+            this.resetFilters();
+
+            if (status == "down") {
+                this.sortStatus = "up";
+                element.attr("sortStatus", "up");
+                iElement.removeClass("fa-sort-down");
+                iElement.addClass("fa-sort-up");
+                iElement.css("margin-top", "7px");
+                this.filterOrders(sortType, this.sortStatus);
+            } else if (status == "up") {
+                this.sortStatus = "down";
+                element.attr("sortStatus", "down");
+                iElement.removeClass("fa-sort-up");
+                iElement.addClass("fa-sort-down");
+                iElement.css("margin-top", "-7px");
+                this.filterOrders(sortType, this.sortStatus);
+            } else {
+                return;
+            }
+        },
         fillNewMessageNotification: function (order_list) {
             let play_audio = false;
             let audioElement = $("#notification-audio")[0];
@@ -161,6 +236,7 @@ export default {
                 .then(function(response){
                     self.orders = response.data.obj.all_orders;
                     self.checkNewMessages();
+                    self.filterOrders(self.sortType, self.sortStatus);
                 }).catch(function(error){
                     console.log(error);
                 })
@@ -173,6 +249,7 @@ export default {
                 .then(function(response){
                     self.orders = response.data.obj.all_orders;
                     self.checkNewMessages();
+                    self.filterOrders(self.sortType, self.sortStatus);
                 }).catch(function(error){
                     console.log(error);
                 })
