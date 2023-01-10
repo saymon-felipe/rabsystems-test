@@ -66,6 +66,7 @@ export default {
                 self.$router.go();
             }).catch(function(error){
                 if (error) {
+                    self.loading = false;
                     $("#submit").attr("disabled", false);
                     self.message = "Erro no login";
                     self.responseClass = "error";
