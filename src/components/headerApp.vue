@@ -3,7 +3,8 @@
         <div class="header-container">
             <div class="site-logo">
                 <router-link to="/my-orders" style="background: none;">
-                    <img src="../assets/img/logo-completa.png" alt="Icone rabsystems" class="site-logo-img">
+                    <img src="../assets/img/logo-completa.png" alt="Icone rabsystems" class="site-logo-img-big" />
+                    <img src="../assets/img/icone.png" alt="Icone rabsystems" class="site-logo-img-small" />
                 </router-link>
             </div>
             <div class="header-informations-container">
@@ -228,8 +229,13 @@ export default {
         margin-right: 3rem;
     }
     
-    .site-logo-img {
+    .site-logo-img-big {
         max-width: 200px;
+    }
+
+    .site-logo-img-small {
+        max-width: 40px;
+        display: none;
     }
 
     .home-user {
@@ -268,7 +274,7 @@ export default {
             margin: 0 !important;
         }
 
-        .site-logo-img {
+        .site-logo-img-big {
             max-width: 120px !important;
         }
     }
@@ -421,7 +427,7 @@ export default {
     }
 
     @media (max-width: 1064px) {
-        .site-logo-img {
+        .site-logo-img-big {
             max-width: 150px;
         }
 
@@ -459,9 +465,21 @@ export default {
         }
     }
 
-    @media (max-width: 439px) {
+    @media (max-width: 482px) {
         .responsive-header-container {
             padding: 1.3rem;
+        }
+
+        .site-logo-img-small {
+            display: block;
+        }
+
+        .site-logo-img-big {
+            display: none;
+        }
+
+        .user-name {
+            max-width: 50px;
         }
     }
 
