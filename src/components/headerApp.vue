@@ -89,15 +89,15 @@ export default {
                 }
             })
             .then(function(response){
-                self.newMessages = response.data.responseObj.newMessagesGroup;
+                self.newMessages = response.data.obj.newMessagesGroup;
                 if (self.firstTime) {
                     self.firstTime = false;
-                    self.newMessagesLength = response.data.responseObj.length;
+                    self.newMessagesLength = response.data.obj.length;
                     if (self.newMessagesLength > 0) {
                         self.playNotificationAudio();
                     }
-                } else if (self.newMessagesLength != response.data.responseObj.length) {
-                    self.newMessagesLength = response.data.responseObj.length;
+                } else if (self.newMessagesLength != response.data.obj.length) {
+                    self.newMessagesLength = response.data.obj.length;
                     if (self.newMessagesLength > 0) {
                         self.playNotificationAudio();
                     }

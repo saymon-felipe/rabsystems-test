@@ -199,12 +199,12 @@ export default {
                     }
             })
             .then(function(response){
-                self.order = response.data.response.order;
+                self.order = response.data.obj.order;
                 self.loading = false;
                 self.findProgressAnimation();
             }).catch(function(error){
-                if (error.response.data) {
-                    self.error = error.response.data.error;
+                if (error.data) {
+                    self.error = error.data.message;
                 }
             })
         },
@@ -276,7 +276,8 @@ export default {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             let data = {
-                order_status: 3
+                order_status: 3,
+                type: "concluded"
             }
             api.patch("/orders/" + self.$route.params.id, data, {
                 headers: {
@@ -292,8 +293,11 @@ export default {
         },
         cancelOrder: function () {
             let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-            
-            api.patch("/orders/" + self.$route.params.id, {order_status: 4}, {
+            let data = {
+                type: "cancel",
+                order_status: 4
+            }
+            api.patch("/orders/" + self.$route.params.id, data, {
                 headers: {
                         Authorization: jwt
                     }

@@ -43,7 +43,6 @@ export default {
         }
     },
     methods: {
-        
         checkPermission: function () {
             if (this.$root.rabsystemsUser.id == this.$root.user.id) {
                 this.$root.havePermission = true;
@@ -75,7 +74,7 @@ export default {
                 }
             })
             .then(function(response){
-                self.$root.rabsystemsUser = response.data.user;
+                self.$root.rabsystemsUser = response.data.obj.user;
                 if (recursive) {
                     setTimeout(() => {
                         self.getRabsystemsUser(true);

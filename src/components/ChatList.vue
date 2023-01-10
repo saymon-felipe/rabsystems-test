@@ -57,7 +57,7 @@ export default {
                     }
                 })
                 .then(function(response){
-                    self.userList.push(response.data.user);
+                    self.userList.push(response.data.obj.user);
                     self.loadingUsers = false;
                     self.resetUsersList();
                 }).catch(function(error){

@@ -49,7 +49,7 @@ export default {
             .then(function(response){
                 $("#submit").attr("disabled", false);
 
-                self.message = response.data.response.message;
+                self.message = response.data.message;
                 self.responseClass = "success";
                 self.$router.push('/login');
                 self.$router.go();

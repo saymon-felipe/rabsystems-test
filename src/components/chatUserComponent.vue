@@ -6,7 +6,7 @@
         </div>
         <div class="user-informations-container">
             <span>{{ user.name }}</span>
-            <div class="last-message-container">
+            <div class="last-message-container" v-if="user.message != null">
                 <span class="sender-name">{{ user.sender_id == $root.user.id ? "Você" : user.sender_name }}:</span> <span class="message-content">{{ user.message }}</span> <span class="message-send-date">{{ returnSendDate(user.send_date) }}</span>
             </div>
         </div>

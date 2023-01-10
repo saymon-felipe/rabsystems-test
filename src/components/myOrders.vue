@@ -159,7 +159,7 @@ export default {
                         }
                 })
                 .then(function(response){
-                    self.orders = response.data.response.all_orders;
+                    self.orders = response.data.obj.all_orders;
                     self.checkNewMessages();
                 }).catch(function(error){
                     console.log(error);
@@ -171,7 +171,7 @@ export default {
                         }
                 })
                 .then(function(response){
-                    self.orders = response.data.response.all_orders;
+                    self.orders = response.data.obj.all_orders;
                     self.checkNewMessages();
                 }).catch(function(error){
                     console.log(error);

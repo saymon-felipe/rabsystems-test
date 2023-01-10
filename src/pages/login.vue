@@ -47,12 +47,12 @@ export default {
             .then(function(response){
                 $("#submit").attr("disabled", false);
 
-                self.message = response.data.response.message;
+                self.message = response.data.message;
                 self.responseClass = "success";
 
-                self.setJwtInLocalStorage(response.data.response.token);
+                self.setJwtInLocalStorage(response.data.obj.token);
 
-                if (response.data.response.incomplete_registration == "true") {
+                if (response.data.obj.incomplete_registration == "true") {
                     self.$router.push('/complete-registration');
                 } else {
                     self.$router.push('/my-orders');

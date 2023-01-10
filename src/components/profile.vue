@@ -11,9 +11,9 @@
                             <img :src="$root.user.profile_photo" class="profile-image" v-on:click="showDetailsContainer()">
                             <div class="photo-change-details">
                                 <ul>
-                                    <li v-on:click="viewPhoto()" class="view-photo">Ver foto</li>
+                                    <li v-on:click="viewPhoto()" class="view-photo" v-if="!defaultPhoto">Ver foto</li>
                                     <li v-on:click="showSendPhotoContainer()">Enviar foto</li>
-                                    <li v-on:click="excludePhoto()" class="view-photo">Excluir foto</li>
+                                    <li v-on:click="excludePhoto()" class="view-photo" v-if="!defaultPhoto">Excluir foto</li>
                                 </ul>
                             </div>
                         </div>
@@ -185,6 +185,7 @@ export default {
     data() {
         return {
             changeProfile: false,
+            defaultPhoto: false,
             response: null,
             modalResponse: null
         }
@@ -348,6 +349,7 @@ export default {
                         })
                         .then(function(){
                             console.log("Updated user in " + new Date());
+                            self.reloadInputs(true);
                         }).catch(function(error){
                             console.log(error);
                         }).then(function () {
@@ -515,14 +517,23 @@ export default {
                 if (!from_upload) {
                     location.reload();
                 } else {
-                    self.response = response.data.response.action;
+                    self.response = response.data.message;
                 }
             }).catch(function(error){
                 console.log(error);
             })
-        }
+        },
+        checkDefaultPhoto: function () {
+            let profile_photo = this.$root.user.profile_photo;
+            let is_default = false;
+            if (profile_photo.indexOf("/public/default-user-image.png") != -1) {
+                is_default = true;
+            }
+            this.defaultPhoto = is_default;
+        },
     },
     mounted() {
+        this.checkDefaultPhoto();
         this.reloadInputs(true);
     }
 }

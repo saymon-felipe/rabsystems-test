@@ -125,7 +125,7 @@ export default {
                 }
             })
             .then(function(response){
-                if (response.data.response.obj.have_new_messages) {
+                if (response.data.obj.have_new_messages) {
                     self.fillMessages(true);
                 }
             }).catch(function(error){
@@ -167,13 +167,13 @@ export default {
         checkViewMessage: function () {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
-            let receiver_id = self.order_user.id;
+            let sender_id = self.order_user.id;
 
             if (!self.$root.havePermission) {
-                receiver_id = self.$root.rabsystemsUser.id;
+                sender_id = self.$root.rabsystemsUser.id;
             }
             let data = {
-                receiver_id: receiver_id
+                sender_id: sender_id
             }
             api.post("/messages/check_view_messages", data, {
                 headers: {
@@ -181,7 +181,7 @@ export default {
                 }
             })
             .then(function (response) {
-                let haveNewMessages = response.data.returnObj.status;
+                let haveNewMessages = response.data.obj.status;
                 if (haveNewMessages) {
                     self.fillMessages();
                 }
@@ -214,7 +214,7 @@ export default {
                 }
             })
             .then(function(response){
-                self.messages = response.data.response.messages;
+                self.messages = response.data.obj;
                 $("#message-input").focus();
                 setTimeout(() => {
                     self.checkMessageContentHeight();
@@ -236,7 +236,7 @@ export default {
             } else {
                 api.get("/user/get_order_user/" + self.order.user_owner)
                 .then(function(response){
-                    self.order_user = response.data.response.user;
+                    self.order_user = response.data.obj.user;
                     self.loading = false;
                     setTimeout(() => {
                         self.getOrderUser();
