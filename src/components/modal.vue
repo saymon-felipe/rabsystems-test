@@ -52,6 +52,7 @@ export default {
     justify-content: center;
     top: 120px;
     z-index: 2;
+    left: 0;
 }
 
 .modal-overlay {
@@ -77,7 +78,7 @@ export default {
     border-radius: 10px;
     color: var(--black);
     padding: 1rem;
-    margin-left: -249px;
+    margin-right: -229px;
     transition: all 0.4s;
     transform: translateY(-100px);
 }
@@ -110,5 +111,12 @@ export default {
     display: flex;
     justify-content: flex-end;
     border: none;
+}
+
+@media (max-width: 876px) {
+    .modal-container {
+        margin-right: 0;
+        width: 95%;
+    }
 }
 </style>

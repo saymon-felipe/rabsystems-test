@@ -200,6 +200,10 @@ input, select, textarea {
     width: 100%;
 }
 
+textarea {
+    max-height: 400px;
+}
+
 input:disabled, select:disabled, textarea:disabled {
     background: var(--gray-high-2);
 }
@@ -435,6 +439,12 @@ button:disabled {
     }
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 876px) {
+    textarea {
+        max-height: 220px;
     }
 }
 

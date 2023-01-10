@@ -7,7 +7,7 @@
             </div>
             <div class="form-group">
                 <label for="new-order-description">Atualização de requisito</label>
-                <textarea name="order_description" id="new-order-description" v-model="order.order_description" cols="30" rows="10" placeholder="Digite a mensagem para o cliente..." required></textarea>
+                <textarea name="order_description" id="new-order-description" v-model="order.order_description" cols="30" rows="7" placeholder="Digite a mensagem para o cliente..." required></textarea>
             </div>
             <input type="submit" class="hidden-submit" id="submit-informations-form" />
         </form>
@@ -63,5 +63,4 @@ export default {
 }
 </script>
 <style scoped>
-
 </style>
