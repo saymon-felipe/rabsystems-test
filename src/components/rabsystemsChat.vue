@@ -390,7 +390,7 @@ export default {
         bottom: 10px;
         right: 10px;
         margin: auto;
-        width: 50vw;
+        width: 60vw;
         min-width: 260px;
         max-width: 800px;
         height: 80vh;
@@ -544,7 +544,15 @@ export default {
         color: var(--white);
         position: absolute;
         left: 1rem;
+        width: 65%;
     }
+
+        .destiny-user h5 {
+            width: calc(100% - 1px);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
 
     .owner-inbox {
         height: 100%;

@@ -116,6 +116,7 @@ export default {
     transition: all 0.4s;
     transform: translateX(50vw);
     display: none;
+    z-index: 999;
 }
 
 .chat-list-header {
