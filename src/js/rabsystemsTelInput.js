@@ -45,56 +45,65 @@ function mountTelInputElement () {
     } 
 }
 
-setTimeout(() => {
-    $(function () {
-        if ($(".rabsystems-input").is(":visible")) {
-            mountTelInputElement();
-        
-            let input= $("#tel-input"), flag = $(".flag-input");
-            
-            changePlaceholder(input, $(".current-flag-container .flag-item"));
-            findInputNumber();
+function initInput() {
+    let input = $(".rabsystems-input");
 
-            $(document).on("click", e => { // Ao clicar fora da div das flags o container fecha.
-                if (!flag.is(e.target) && flag.has(e.target).length === 0) {
+    if (input.length == 0) {
+        setTimeout(() => {
+            initInput();
+        }, 50)
+        return;
+    }
+
+    if (input.is(":visible")) {
+        mountTelInputElement();
+    
+        let input= $("#tel-input"), flag = $(".flag-input");
+        
+        changePlaceholder(input, $(".current-flag-container .flag-item"));
+        findInputNumber();
+
+        $(document).on("click", e => { // Ao clicar fora da div das flags o container fecha.
+            if (!flag.is(e.target) && flag.has(e.target).length === 0) {
+                closeFlagSelect();
+            }
+        })
+
+        flag.on("click", () => {
+            let inputAttr = null;
+            inputAttr = input.attr("disabled");
+            
+            if (inputAttr === undefined) {
+                if (!open) {
+                    openFlagSelect();
+                } else {
                     closeFlagSelect();
                 }
-            })
+            }
+        });
+    
+        $(".flag-item").on("click", e => { // Quando clica em uma flag, ela é retirada da lista, colocada no container principal, a flag que era principal volta pra lista, ela é re-ordenada,o placeholder do input muda conforme o país da flag e o inputé validado.
+            changeFlag(e.currentTarget.attributes.country_flag.value);
+        });
+    
+        input.on("focusout", () => { // Quando o foco sai do input o conteudo é validado.
+            findInputNumber();
+            validateInput();
+        });
+    
+        input.on("keydown", e => { // Validação para não permitir entrada de letras no input, apenas números.
+            let keyCode = e.keyCode;
+            
+            if (keyCode < 48 || keyCode > 57 && keyCode < 96 || keyCode > 105) {
+                if (keyCode != 8) {
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+}
 
-            flag.on("click", () => {
-                let inputAttr = null;
-                inputAttr = input.attr("disabled");
-                
-                if (inputAttr === undefined) {
-                    if (!open) {
-                        openFlagSelect();
-                    } else {
-                        closeFlagSelect();
-                    }
-                }
-            });
-        
-            $(".flag-item").on("click", e => { // Quando clica em uma flag, ela é retirada da lista, colocada no container principal, a flag que era principal volta pra lista, ela é re-ordenada,o placeholder do input muda conforme o país da flag e o inputé validado.
-                changeFlag(e.currentTarget.attributes.country_flag.value);
-            });
-        
-            input.on("focusout", () => { // Quando o foco sai do input o conteudo é validado.
-                findInputNumber();
-                validateInput();
-            });
-        
-            input.on("keydown", e => { // Validação para não permitir entrada de letras no input, apenas números.
-                let keyCode = e.keyCode;
-                
-                if (keyCode < 48 || keyCode > 57 && keyCode < 96 || keyCode > 105) {
-                    if (keyCode != 8) {
-                        e.preventDefault();
-                    }
-                }
-            });
-        }
-    })
-}, 50);
+initInput();
 
 function changeFlag(value, programatic = false) {
     let targetValue = value, currentFlagElement = $(".current-flag-container .flag-item");
