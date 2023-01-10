@@ -15,6 +15,7 @@
                 <span>Não é cadastrado? </span>
                 <router-link to="/register">Registre-se</router-link>
             </div>
+            <div class="loading-frame" v-if="loading"></div>
             <div class="response" :class="responseClass">{{ message }}</div>
         </div>
     </section>
@@ -31,7 +32,8 @@ export default {
     data() {
         return {
             message: "",
-            responseClass: ""
+            responseClass: "",
+            loading: false
         }
     },
     methods: {
@@ -43,15 +45,18 @@ export default {
                 return obj;
             }, {});
 
+            self.loading = true;
+
             api.post("/user/login", data)
             .then(function(response){
                 $("#submit").attr("disabled", false);
 
+                self.loading = false;
                 self.message = response.data.message;
                 self.responseClass = "success";
 
                 self.setJwtInLocalStorage(response.data.obj.token);
-
+                
                 if (response.data.obj.incomplete_registration == "true") {
                     self.$router.push('/complete-registration');
                 } else {
@@ -107,7 +112,8 @@ export default {
         margin: auto;
         width: 50vw;
         max-width: 700px;
-        height: 50vh;
+        height: fit-content;
+        min-height: 60vh;
         max-height: 600px;
         background: var(--gray-high);
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -138,6 +144,20 @@ export default {
         border: 1px solid var(--gray-high);
         padding: .3rem 1rem;
         font-size: 1.2rem;
+    }
+
+    .loading-frame {
+        width: 40px;
+        height: 40px;
+        margin-top: 1rem;
+    }
+
+    .loading-frame::after {
+        border: 7px solid var(--purple);
+        border-top: 7px solid var(--purple);
+        border-left: 7px solid var(--purple);
+        border-right: 7px solid var(--purple);
+        border-bottom: 7px solid transparent;
     }
 
     input[type="submit"] {

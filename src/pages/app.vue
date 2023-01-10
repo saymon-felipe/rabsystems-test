@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="loading-app" v-if="loadingUsers">
-            <h1>Carregando...</h1>
+            <div class="loading-wrapper" v-if="loadingUsers">
+                <div class="loading-frame"></div>
+            </div>
         </div>
         <div class="app-container" v-if="!loadingUsers">
             <div class="container">
