@@ -28,9 +28,9 @@
                 <i class="fas fa-filter" title="Filtrar por"></i>
                 <div class="responsive-filter-container">
                     <ul>
-                        <li>Data</li>
-                        <li>Preço</li>
-                        <li>Status</li>
+                        <li class="sort-button" id="sort-by-date-responsive" v-on:click="sortData('date', 'sort-by-date-responsive', true)" sortStatus="down">Data</li>
+                        <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">Preço</li>
+                        <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">Status</li>
                     </ul>
                 </div>
             </div>
@@ -115,10 +115,10 @@ export default {
 
             this.orders = newOrders;
         },
-        sortData: function (sortType, sortId) {
+        sortData: function (sortType, sortId, responsive = false) {
             let element = $("#" + sortId);
             this.sortType = sortType;
-            this.toggleSortStatus(sortType, element);
+            this.toggleSortStatus(sortType, element, responsive);
         },
         resetFilters: function () {
             let elements = $(".sort-button");
@@ -131,25 +131,33 @@ export default {
                 currentItem.attr("sortStatus", "down").attr("indexEl", index);
             })
         },
-        toggleSortStatus: function (sortType, element) {
+        toggleSortStatus: function (sortType, element, responsive) {
             let status = element.attr("sortStatus");
-            let iElement = element.find("i");
+            let iElement;
+
+            if (responsive) {
+                iElement = element.find("i");
+            }
 
             this.resetFilters();
 
             if (status == "down") {
                 this.sortStatus = "up";
                 element.attr("sortStatus", "up");
-                iElement.removeClass("fa-sort-down");
-                iElement.addClass("fa-sort-up");
-                iElement.css("margin-top", "7px");
+                if (responsive) {
+                    iElement.removeClass("fa-sort-down");
+                    iElement.addClass("fa-sort-up");
+                    iElement.css("margin-top", "7px");
+                }
                 this.filterOrders(sortType, this.sortStatus);
             } else if (status == "up") {
                 this.sortStatus = "down";
                 element.attr("sortStatus", "down");
-                iElement.removeClass("fa-sort-up");
-                iElement.addClass("fa-sort-down");
-                iElement.css("margin-top", "-7px");
+                if (responsive) {
+                    iElement.removeClass("fa-sort-up");
+                    iElement.addClass("fa-sort-down");
+                    iElement.css("margin-top", "-7px");
+                }
                 this.filterOrders(sortType, this.sortStatus);
             } else {
                 return;
