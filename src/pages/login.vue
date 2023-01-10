@@ -56,6 +56,7 @@ export default {
                 self.responseClass = "success";
 
                 self.setJwtInLocalStorage(response.data.obj.token);
+                self.setEmailInSessionStorage(data["email"]);
                 
                 if (response.data.obj.incomplete_registration == "true") {
                     self.$router.push('/complete-registration');
@@ -70,7 +71,28 @@ export default {
                     self.responseClass = "error";
                 }
             })
+        },
+        disableInputs: function () {
+            let emailElement = $("#email");
+            let passwordElement = $("#password");
+            emailElement.attr("disabled", "disabled");
+            passwordElement.attr("disabled", "disabled");
+        },
+        autoLogin: function () {
+            let jwt = this.getJwtInLocalStorage();
+            $("#email").val(this.getEmailInSessionStorage());
+            if (jwt != null) {
+                this.disableInputs();
+                this.loading = true;
+                setTimeout(() => {
+                    this.loading = false;
+                    this.$router.push("/my-orders");
+                }, 2 * 1000)
+            }
         }
+    },
+    mounted: function () {
+        this.autoLogin();
     }
 }
 </script>

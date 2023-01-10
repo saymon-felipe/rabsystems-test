@@ -48,7 +48,7 @@ export default {
             api.post("/user/register", data)
             .then(function(response){
                 $("#submit").attr("disabled", false);
-
+                self.setEmailInSessionStorage(data["email"]);
                 self.message = response.data.message;
                 self.responseClass = "success";
                 self.$router.push('/login');

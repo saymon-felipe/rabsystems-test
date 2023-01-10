@@ -9,7 +9,9 @@
                 <div class="loading-frame"></div>
             </div>
             <div class="chat-users" v-if="userList.length != 0 && !loadingUsers && !reloadUsers">
-                <chatUserComponent v-for="(userItem, index) in userList" v-bind:key="index" :user="userItem" @open_chat="openChatFunction(userItem)" :newMessages="newMessages" />
+                <div class="user-component" v-for="(userItem, index) in userList" v-bind:key="index">
+                    <chatUserComponent :user="userItem" @open_chat="openChatFunction(userItem)" :newMessages="newMessages" v-if="userItem.incomplete_registration != 'true'" />
+                </div>
             </div>
         </div>
         <rabsystemsChat v-if="showChat" :userProp="currentChatUser" @closeChat="closeChatComponent()" />

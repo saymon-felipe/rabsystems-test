@@ -1,6 +1,7 @@
 <template>
     <section class="complete-registration">
         <div class="complete-registration-container">
+            <i class="fas fa-power-off logout-icon" v-on:click="logoutUser()"></i>
             <h1 class="rabsystems-font">COMPLETE O CADASTRO</h1>
             <form id="complete-registration-form" @submit.prevent="complete_registration()">
                 <div class="row">
@@ -297,7 +298,6 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
     }
 
         .complete-registration-container h1 {
@@ -318,6 +318,14 @@ export default {
         border: 1px solid var(--gray-high);
         padding: .3rem 1rem;
         font-size: 1.2rem;
+    }
+
+    .logout-icon {
+        position: absolute;
+        top: -10vh;
+        right: 0;
+        font-size: 2rem;
+        cursor: pointer;
     }
 
     input[type="submit"] {
@@ -353,6 +361,11 @@ export default {
 
         .input, input[type="submit"] {
             font-size: 1rem;
+        }
+
+        .complete-registration {
+            background-image: url('../assets/img/icone.png');
+            background-size: 50px;
         }
     }
 </style>

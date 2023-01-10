@@ -6,7 +6,7 @@
             <h1 class="rabsystems-font">Detalhes do pedido</h1>
         </div>
         <div class="order-details-container">
-            <div class="order-more-options" v-if="order.order_status != 4 && $root.rabsystemsUser.id == $root.user.id">
+            <div class="order-more-options" v-if="order.order_status != 4 && $root.havePermission && haveActions">
                 <i class="fas fa-ellipsis-h" v-on:click="toggleAdmin()"></i>
             </div>
             <div class="order-actions-admin-wrapper" v-if="show_admin" v-on:click="hideAdmin('.order-actions-admin')"></div>
@@ -14,8 +14,7 @@
                 <ul>
                     <li v-if="order.price == 0" v-on:click="insertPrice()">Inserir preço</li>
                     <li v-if="order.price != 0 && order.payment_method == ''" v-on:click="generatePayment()">Gerar pagamento</li>
-                    <li v-if="order.price != 0 && order.payment_method != ''">Gerar nota fiscal</li>
-                    <li v-if="order.price != 0 && order.payment_method != ''">Notificar conclusão ao cliente</li>
+                    <li v-if="order.price != 0 && order.invoice_has_generated == ''">Gerar nota fiscal</li>
                 </ul>
             </div>
             <div class="animation-progress"></div>
@@ -131,10 +130,16 @@ export default {
             modalTitle: "",
             modalButtonTitle: "",
             modalButtonTitle2: "",
-            submitPrice: false
+            submitPrice: false,
+            haveActions: false
         }
     },
     methods: {
+        checkActions: function () {
+            if (this.order.price == 0 || (this.order.price != 0 && this.order.payment_method == '') || (this.order.price != 0 && this.order.invoice_has_generated == '')) {
+                this.haveActions = true;
+            }
+        },
         generatePayment: function () {
             this.showModal = true;
             this.showGeneratePayment = true;
@@ -202,6 +207,7 @@ export default {
                 self.order = response.data.obj.order;
                 self.loading = false;
                 self.findProgressAnimation();
+                self.checkActions();
             }).catch(function(error){
                 if (error.data) {
                     self.error = error.data.message;

@@ -6,11 +6,21 @@ export const globalMethods = {
         logoutUser: function () {
             let self = this;
             self.removeJwtInLocalStorage();
+            self.removeEmailInSessionStorage();
             self.$router.push("/login");
             self.$router.go();
         },
         submitFunction: function () {
             $("#submit-informations-form").click();
+        },
+        setEmailInSessionStorage: function (email) {
+            sessionStorage.setItem("email", email);
+        },
+        getEmailInSessionStorage: function () {
+            return sessionStorage.getItem("email");
+        },
+        removeEmailInSessionStorage: function () {
+            sessionStorage.removeItem("email");
         },
         setJwtInLocalStorage: function (jwt) {
             localStorage.setItem("rabsystems_jwt", jwt);
