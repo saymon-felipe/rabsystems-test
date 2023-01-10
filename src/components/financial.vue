@@ -3,15 +3,26 @@
         <div class="page-title">
             <h1 class="rabsystems-font">Financeiro</h1>
         </div>
+        <div class="responsive-filter" v-on:click="showResponsiveFilter()">
+            <i class="fas fa-filter" title="Filtrar por"></i>
+            <div class="responsive-filter-container">
+                <ul>
+                    <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">Preço</li>
+                    <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">Status</li>
+                </ul>
+            </div>
+        </div>
         <div class="charges-list">
             <table>
                 <tr class="order-list-head">
                     <td>Id</td>
-                    <td>
+                    <td class="sort-button" id="sort-by-price" v-on:click="sortData('price', 'sort-by-price')" sortStatus="down">
                         Preço
+                        <i class="fas fa-sort-down sort-icon"></i>
                     </td>
-                    <td>
+                    <td class="sort-button" id="sort-by-status"  v-on:click="sortData('status', 'sort-by-status')" sortStatus="down">
                         Situação
+                        <i class="fas fa-sort-down sort-icon"></i>
                     </td>
                 </tr>
                 <tr class="empty" v-if="orders.length == 0">
@@ -163,6 +174,11 @@ export default {
             background: var(--red-low);
         }
 
+    .charges-list {
+        overflow-y: auto;
+        height: 80vh;
+    }
+
     h6 {
         margin: 0;
     }
@@ -183,6 +199,14 @@ export default {
 
         table {
             margin-top: 2rem;
+        }
+
+        .responsive-filter {
+            display: block;
+            position: absolute;
+            top: 54px;
+            right: 59px;            
+            font-size: 1.5rem;
         }
     }
 </style>

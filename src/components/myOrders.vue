@@ -9,16 +9,16 @@
                 <td>Id</td>
                 <td class="sort-button" id="sort-by-date" v-on:click="sortData('date', 'sort-by-date')" sortStatus="down">
                     Data
-                    <i class="fas fa-sort-down"></i>
+                    <i class="fas fa-sort-down sort-icon"></i>
                 </td>
                 <td>Serviço</td>
                 <td class="sort-button" id="sort-by-price" v-on:click="sortData('price', 'sort-by-price')" sortStatus="down">
                     Preço
-                    <i class="fas fa-sort-down"></i>
+                    <i class="fas fa-sort-down sort-icon"></i>
                 </td>
                 <td class="sort-button" id="sort-by-status"  v-on:click="sortData('status', 'sort-by-status')" sortStatus="down">
                     Status
-                    <i class="fas fa-sort-down"></i>
+                    <i class="fas fa-sort-down sort-icon"></i>
                 </td>
             </tr>
             <tr class="empty" v-if="orders.length == 0">
@@ -73,96 +73,13 @@ export default {
         return {
             orders: [],
             new_messages_notification_number: 0,
-            first_check_message: true,
-            sortStatus: "down",
-            sortType: ""
+            first_check_message: true
         }
     },
     mounted: function () {
         this.returnOrders();
     },
     methods: {
-        filterOrders: function (sortType, sortOrder) {
-            let newOrders = [];
-            console.log(this.orders)
-            switch (sortType) {
-                case "date":
-                if (sortOrder == "up") {
-                        newOrders = this.orders.sort((order1, order2) => (order1.create_date < order2.create_date) ? 1 : (order1.create_date > order2.create_date) ? -1 : 0);
-                    } else {
-                        newOrders = this.orders.sort((order1, order2) => (order1.create_date < order2.create_date) ? -1 : (order1.create_date > order2.create_date) ? 1 : 0);
-                    }
-                    break;
-                case "price":
-                    if (sortOrder == "up") {
-                        newOrders = this.orders.sort((order1, order2) => (order1.price < order2.price) ? 1 : (order1.price > order2.price) ? -1 : 0);
-                    } else {
-                        newOrders = this.orders.sort((order1, order2) => (order1.price < order2.price) ? -1 : (order1.price > order2.price) ? 1 : 0);
-                    }
-                    break;
-                case "status":
-                    if (sortOrder == "up") {
-                        newOrders = this.orders.sort((order1, order2) => (order1.order_status < order2.order_status) ? -1 : (order1.order_status > order2.order_status) ? 1 : 0);
-                    } else {
-                        newOrders = this.orders.sort((order1, order2) => (order1.order_status < order2.order_status) ? 1 : (order1.order_status > order2.order_status) ? -1 : 0);   
-                    }
-                    break;
-                
-                
-                default: 
-                    return;
-            }
-
-            this.orders = newOrders;
-        },
-        sortData: function (sortType, sortId, responsive = false) {
-            let element = $("#" + sortId);
-            this.sortType = sortType;
-            this.toggleSortStatus(sortType, element, responsive);
-        },
-        resetFilters: function () {
-            let elements = $(".sort-button");
-            elements.each((index, item) => {
-                let currentItem = $(item);
-                let iElement = currentItem.find("i");
-                iElement.removeClass("fa-sort-up");
-                iElement.addClass("fa-sort-down");
-                iElement.css("margin-top", "-7px");
-                currentItem.attr("sortStatus", "down").attr("indexEl", index);
-            })
-        },
-        toggleSortStatus: function (sortType, element, responsive) {
-            let status = element.attr("sortStatus");
-            let iElement;
-
-            if (responsive) {
-                iElement = element.find("i");
-            }
-
-            this.resetFilters();
-
-            if (status == "down") {
-                this.sortStatus = "up";
-                element.attr("sortStatus", "up");
-                if (responsive) {
-                    iElement.removeClass("fa-sort-down");
-                    iElement.addClass("fa-sort-up");
-                    iElement.css("margin-top", "7px");
-                }
-                this.filterOrders(sortType, this.sortStatus);
-            } else if (status == "up") {
-                this.sortStatus = "down";
-                element.attr("sortStatus", "down");
-                if (responsive) {
-                    iElement.removeClass("fa-sort-up");
-                    iElement.addClass("fa-sort-down");
-                    iElement.css("margin-top", "-7px");
-                }
-                this.filterOrders(sortType, this.sortStatus);
-            } else {
-                return;
-            }
-        },
         fillNewMessageNotification: function (order_list) {
             let play_audio = false;
             let audioElement = $("#notification-audio")[0];
@@ -204,20 +121,6 @@ export default {
         },
         getMomentExtended: function (date) {
             return moment(date).format('LLLL');
-        },
-        showResponsiveFilter: function () {
-            if ($(".responsive-filter-container").is(":visible")) {
-                $(".responsive-filter-container").css("opacity", 0);
-                
-                setTimeout(() => {
-                    $(".responsive-filter-container").hide();
-                }, 400);
-            } else {
-                $(".responsive-filter-container").show();
-                setTimeout(() => {
-                    $(".responsive-filter-container").css("opacity", 1);
-                }, 10);
-            }
         },
         returnOrders: function () {
             let self = this;
@@ -372,40 +275,10 @@ export default {
         height: 60vh;
     }
 
-    .responsive-filter {
-        display: none;
-        position: relative;
-    }
-
-    .responsive-filter-container {
-        background: var(--white);
-        padding: 0 2rem;
-        border-radius: 7px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        position: absolute;
-        left: -550%;
-        top: 0;
-        display: none;
-        opacity: 0;
-        transition: all 0.4s;
-    }
-
-        .responsive-filter-container ul {
-            list-style: none;
-        }
-
-            .responsive-filter-container ul li {
-                display: flex;
-                justify-content: center;
-                font-size: 1.2rem;
-                margin: 1rem 0;
-            }
-
     .order-list {
         margin-top: 2rem;
         width: 100%;
         height: 80%;
-        cursor: pointer;
         position: relative;
     }
 
@@ -423,11 +296,6 @@ export default {
             justify-content: center;
             width: 15%;
         }
-
-            .order-list-head td i {
-                margin-top: -7px;
-                margin-left: 4px;
-            }
 
         .order-list-head td {
             width: 15%;

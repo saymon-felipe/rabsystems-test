@@ -742,7 +742,7 @@ export default {
     .photo-change-details {
         position: absolute;
         width: 120px;
-        bottom: -45%;
+        top: 103%;
         left: 0;
         right: 0;
         margin: auto;
