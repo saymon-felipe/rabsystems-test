@@ -23,6 +23,10 @@
     --gray-low: #555555;
 }
 
+.btn {
+    border-radius: 7px !important;
+}
+
 .primary {
     background-color: var(--purple) !important;
     color: var(--white) !important;

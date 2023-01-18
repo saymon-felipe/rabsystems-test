@@ -14,6 +14,9 @@ import support from '../components/support.vue';
 import orderDetails from '../components/orderDetails.vue';
 import register from '../pages/register.vue';
 import complete_registration from '../pages/complete_registration.vue';
+import conferencePage from "../components/conferencePage.vue";
+import createRoom from "../components/createRoom.vue";
+import room from "../components/room.vue";
 
 const routes = [
     {
@@ -35,6 +38,18 @@ const routes = [
             {
                 path: '/financial',
                 component: financial
+            },
+            {
+                path: '/rooms',
+                component: conferencePage
+            },
+            {
+                path: '/rooms/create',
+                component: createRoom
+            },
+            {
+                path: "/room/:meeting_id",
+                component: room
             },
             {
                 path: '/profile',

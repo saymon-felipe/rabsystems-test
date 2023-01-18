@@ -39,6 +39,7 @@
             <div class="vertical-menu-list">
                 <router-link class="link" to="/my-orders">Meus pedidos</router-link>
                 <router-link class="link" to="/financial">Financeiro</router-link>
+                <router-link class="link" to="/rooms">Conferências</router-link>
                 <router-link class="link" to="/profile" @click.native="$router.go()">Meu perfil</router-link>
                 <router-link class="link" to="/support">Suporte</router-link>
             </div>
