@@ -21,6 +21,10 @@ import waitToEnterRoom from "../components/waitToEnterRoom.vue";
 
 const routes = [
     {
+        path: "/room_new_window/:meeting_id",
+        component: room
+    },
+    {
         path: '/',
         component: home
     },

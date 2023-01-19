@@ -1,27 +1,55 @@
 <template>
     <div class="room-container">
-        <div class="pending_users" v-if="room.pending_participants.length != 0">
-            <img :src="room.pending_participants[0].profile_photo" class="avatar-pp">
-            <p>
-                <span class="pending-user-name">{{ room.pending_participants[0].name }}</span> 
-                deseja entrar na sala
-            </p>
-            <div class="approve-deny-icons">
-                <i class="fas fa-thumbs-up approve-icon" title="Aprovar participante" v-on:click="approveUser(room.pending_participants[0].user_id)"></i>
-                <i class="fas fa-thumbs-down deny-icon" title="Recusar participante" v-on:click="denyUser(room.pending_participants[0].user_id)"></i>
+        <div class="room-header">
+            <div class="space" v-if="room.pending_participants.length == 0">&nbsp;</div>
+            <div class="pending_users" v-if="room.pending_participants.length != 0">
+                <div class="single-pending-participant" v-if="room.pending_participants.length == 1">
+                    <img :src="room.pending_participants[0].profile_photo" class="avatar-pp" />
+                    <p>
+                        <span class="pending-user-name">{{ room.pending_participants[0].name }}</span> 
+                        deseja entrar na sala
+                    </p>
+                    <div class="approve-deny-icons">
+                        <i class="fas fa-thumbs-up approve-icon" title="Aprovar participante" v-on:click="approveUser(room.pending_participants[0].user_id)"></i>
+                        <i class="fas fa-thumbs-down deny-icon" title="Recusar participante" v-on:click="denyUser(room.pending_participants[0].user_id)"></i>
+                    </div>
+                </div>
+                <div class="more-pending-participants" v-if="room.pending_participants.length > 1">
+                    <span class="pulseRed">&nbsp;</span>
+                    <p>
+                        <span class="pending-user-name">{{ room.pending_participants[0].name }}</span>
+                        e outros <strong>{{ room.pending_participants.length - 1 }} usuários</strong> desejam entrar na sala
+                    </p>
+                    <div class="manage-pending-participants">
+                        <i class="fas fa-users-cog manage-pending-participants-icon" v-on:click="toggleManagePendingParticipantsContainer()" title="Gerenciar pedidos para entrar na sala"></i>
+                        <div class="pending-participants-container">
+                            <div class="pending-participant-item" v-for="(user, index) in room.pending_participants" v-bind:key="index">
+                                <img :src="user.profile_photo" class="avatar-pp" />
+                                <span>{{ user.name }}</span>
+                                <div class="approve-deny-icons">
+                                    <i class="fas fa-thumbs-up approve-icon" title="Aprovar participante" v-on:click="approveUser(user.user_id)"></i>
+                                    <i class="fas fa-thumbs-down deny-icon" title="Recusar participante" v-on:click="denyUser(user.user_id)"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="room-controls">
+                <div class="room-visibility" v-if="$root.havePermission" title="Tornar sala visível para todos" v-on:click="changeRoomVisibility()">
+                    <i class="fas fa-eye-slash"></i>
+                </div>
+                <div class="toggle-lock-room unlock" title="Trancar a sala" v-on:click="lockUnlockRoom()">
+                    <i class="fas fa-unlock"></i>
+                </div>
+                <div class="leave-button" title="Desligar a chamada" v-on:click="leaveRoom()">
+                    <i class="fas fa-power-off"></i>
+                </div>
             </div>
         </div>
-        <h1 class="room-name">{{ room_name }}</h1>
-        <div class="room-controls">
-            <div class="room-visibility" v-if="$root.havePermission" title="Tornar sala visível para todos" v-on:click="changeRoomVisibility()">
-                <i class="fas fa-eye-slash"></i>
-            </div>
-            <div class="toggle-lock-room unlock" title="Trancar a sala" v-on:click="lockUnlockRoom()">
-                <i class="fas fa-unlock"></i>
-            </div>
-            <div class="leave-button" title="Desligar a chamada">
-                <i class="fas fa-power-off"></i>
-            </div>
+        <div class="room-name-container" v-if="!is_new_window">
+            <h1 class="room-name">{{ room_name }}</h1>
+            <i class="fas fa-external-link-alt open-conference-in-new-window-icon" title="Abrir conferência em outra janela" v-on:click="openConferenceInNewWindow()"></i>
         </div>
         <div id="room-content"></div>
     </div>
@@ -43,10 +71,41 @@ export default {
             room_locked: false,
             room: {
                 pending_participants: []
+            },
+            is_new_window: false,
+            userName: ""
+        }
+    },
+    watch: {
+        is_new_window: function () {
+            if (this.is_new_window) {
+                let container = $(".room-container");
+                container.addClass("room-container-new-window");
+                container.removeClass("room-container");
+                document.title = "Sala - " +  this.room_name;
             }
         }
     },
     methods: {
+        leaveRoom: function () {
+            if (this.is_new_window) {
+                window.close();
+            } else {
+                this.$router.push("/rooms");
+            }
+        },
+        openConferenceInNewWindow: function () {
+            window.open("/room_new_window/" + this.meeting_id + "?rn=" + this.room_name + "&new_window=true", "_blank", "toolbar=0,location=0,menubar=0");
+            this.$router.push("/rooms");
+        },
+        toggleManagePendingParticipantsContainer: function () {
+            let element = $(".pending-participants-container");
+            if (element.is(":visible")) {
+                element.hide();
+            } else {
+                element.show();
+            }
+        },
         approveUser: function (user_id) {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
@@ -212,9 +271,12 @@ export default {
                 }
             })
             .then((response) => {
-                if (!self.$root.havePermission && response.data.returnObj.room.room_visible_to_others != 1) {
-                    self.$router.push("/rooms");
-                    return;
+                if (!self.is_new_window) {
+                    self.userName = self.$root.user.name;
+                    if (response.data.returnObj.room.creator_id != self.$root.user.id && !self.$root.havePermission && response.data.returnObj.room.room_visible_to_others != 1) {
+                        self.$router.push("/rooms");
+                        return;
+                    }
                 }
                 if (response.data.returnObj.hasCreator || response.data.returnObj.room.locked_room != 1) {
                     self.initRoom();
@@ -232,8 +294,10 @@ export default {
             this.enterRoom();
         },
         getUrlInformations: function () {
+            let urlSearch = new URLSearchParams(window.location.search);
             this.meeting_id = this.$route.params.meeting_id;
-            this.room_name = new URLSearchParams(window.location.search).get("rn");
+            this.room_name = urlSearch.get("rn");
+            this.is_new_window = urlSearch.get("new_window") != null ? urlSearch.get("new_window") : false;
             this.requireMeetingPermissionToEnter();
         },
         redirectToWaitPage: function () {
@@ -269,10 +333,15 @@ export default {
                 console.log(response.data.message);
             })
         },
+        generateUniqueName: function () {
+            let numbers = 5472;
+            let unique_name = "[Rabsystems]" +  numbers + "_" + this.room_name;
+            return unique_name;
+        },
         requireJitsi: function () {
             const domain = 'meet.jit.si';
             const options = {
-                roomName: this.room_name,
+                roomName: this.generateUniqueName(),
                 width: "100%",
                 height: "100%",
                 parentNode: document.querySelector('#room-content'),
@@ -282,6 +351,60 @@ export default {
                     audioOutput: '<deviceLabel>',
                     videoInput: '<deviceLabel>'
                 },
+                configOverwrite: {
+                    disableDeepLinking: true,
+                    preferH264: false,
+                    disableH264: true,
+                    defaultLanguage: 'ptBR',
+                    resolution: "",
+                    channelLastN: 25,  //acima deste numero de participantes faz o desligamento do video dos outros fora os que estao falando
+                    testing: {
+                        enableFirefoxSimulcast: true
+                    },
+                    toolbarButtons: [
+                        'camera',
+                        'chat',
+                        'desktop',
+                        'download',
+                        'etherpad',
+                        'feedback',
+                        'filmstrip',
+                        'fullscreen',
+                        'highlight',
+                        'invite',
+                        'linktosalesforce',
+                        'livestreaming',
+                        'microphone',
+                        'noisesuppression',
+                        'participants-pane',
+                        'profile',
+                        'raisehand',
+                        'recording',
+                        'security',
+                        'select-background',
+                        'settings',
+                        'shareaudio',
+                        'sharedvideo',
+                        'shortcuts',
+                        'stats',
+                        'tileview',
+                        'toggle-camera',
+                        'videoquality',
+                        'whiteboard',
+                    ]
+                },
+                interfaceConfigOverwrite: {
+                    filmStripOnly: false,
+                    VIDEO_LAYOUT_FIT: 'both',
+                    DISABLE_TRANSCRIPTION_SUBTITLES: true,
+                    DEFAULT_REMOTE_DISPLAY_NAME: 'Anônimo',
+                    TOOLBAR_TIMEOUT: 5000,
+                    TOOLBAR_ALWAYS_VISIBLE: false,
+                    DEFAULT_LOCAL_DISPLAY_NAME: 'Você',
+                    VERTICAL_FILMSTRIP: true,
+                    INVITATION_POWERED_BY: false,
+                    SETTINGS_SECTIONS: ['devices', 'language']
+                }
             };
             this.api = new window.JitsiMeetExternalAPI(domain, options);
         },
@@ -330,15 +453,22 @@ export default {
 }
 </script>
 <style scoped>
-.room-container {
-    width: calc(100% - 225px);
-    height: 100%;
+
+.room-container-new-window {
+    height: 100vh;
+}
+
+.room-container-new-window, .room-container {
     padding: 1rem;
-    padding-top: 2rem;
     text-align: center;
     background: var(--white);
+}
+.room-container {
+    width: calc(100% - 225px);
     position: absolute;
     right: 0;
+    height: 100%;
+    padding-top: 2rem;
 }
 
 @media (max-width: 876px) {
@@ -347,14 +477,33 @@ export default {
     }
 }
 
+.room-container-new-window .room-header {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.room-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.room-name-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #room-content {
-    height: calc(100% - 80px);
+    height: calc(100% - 130px);
+}
+
+.room-container-new-window #room-content {
+    height: calc(100% - 60px);
 }
 
 .room-controls {
-    position: absolute;
-    right: 1rem;
-    top: 2.3rem;
     display: flex;
     align-items: center;
 }
@@ -423,6 +572,8 @@ export default {
 
 .approve-deny-icons {
     margin: 0 .5rem;
+    display: flex;
+    align-items: center;
 }
 
     .approve-deny-icons i {
@@ -445,4 +596,88 @@ export default {
         .deny-icon:hover {
             color: var(--red-low);
         }
+
+.single-pending-participant {
+    display: flex;
+    align-items: center;
+}
+
+.more-pending-participants {
+    position: relative;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.pulseRed::before {
+    background: var(--red);
+}
+
+.pulseRed {
+    left: 0;
+    position: absolute;
+}
+
+.manage-pending-participants {
+    position: relative;
+}
+
+.pending-participants-container {
+    display: none;
+}
+
+.manage-pending-participants {
+    margin-left: 1rem;
+}
+
+.manage-pending-participants-icon {
+    font-size: 25px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.4s;
+}
+
+    .manage-pending-participants-icon:hover {
+        background: var(--gray-high-2);
+    }
+
+.pending-participants-container {
+    position: absolute;
+    background: var(--white);
+    padding: .5rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.pending-participant-item {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    cursor: pointer;
+    padding: .5rem;
+}
+
+    .pending-participant-item:hover {
+        background: var(--gray-high-2);
+    }
+
+    .pending-participant-item span {
+        margin-left: .5rem;
+        white-space: nowrap;
+        width: 100px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: left;
+    }
+
+.open-conference-in-new-window-icon {
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 1rem;
+}
 </style>
