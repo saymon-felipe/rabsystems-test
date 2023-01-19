@@ -17,6 +17,7 @@ import complete_registration from '../pages/complete_registration.vue';
 import conferencePage from "../components/conferencePage.vue";
 import createRoom from "../components/createRoom.vue";
 import room from "../components/room.vue";
+import waitToEnterRoom from "../components/waitToEnterRoom.vue";
 
 const routes = [
     {
@@ -46,6 +47,10 @@ const routes = [
             {
                 path: '/rooms/create',
                 component: createRoom
+            },
+            {
+                path: '/rooms/wait/:meeting_id',
+                component: waitToEnterRoom
             },
             {
                 path: "/room/:meeting_id",

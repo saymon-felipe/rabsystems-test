@@ -21,6 +21,7 @@ export default {
     mixins: [globalMethods],
     methods: {
         createRoomFunction: function () {
+            let self = this;
             let roomName = $("#room-name").val();
             let meeting_id = Math.random().toString().replace("0.", "");
             let creator_id = this.$root.user.id;
@@ -39,8 +40,16 @@ export default {
             })
             .then(function (response) {
                 console.log(response.data.message);
+                api.post("/rooms/enter_room", data, {
+                    headers: {
+                        Authorization: jwt
+                    }
+                })
+                .then((response2) => {
+                    console.log(response2.data.message);
+                    self.$router.push("/room/" + meeting_id + "?rn=" + roomName);
+                })
             })
-            this.$router.push("/room/" + meeting_id + "?rn=" + roomName);
         }
     }
 }
