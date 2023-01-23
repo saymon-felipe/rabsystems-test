@@ -552,6 +552,7 @@ export default {
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+            text-align: left;
         }
 
     .owner-inbox {
