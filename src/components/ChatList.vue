@@ -32,7 +32,6 @@ export default {
         return {
             userList: [],
             loadingUsers: true,
-            showChat: false,
             currentChatUser: {},
             reloadUsers: false
         }
@@ -45,7 +44,10 @@ export default {
     methods: {
         openChatFunction: function (user) {
             this.currentChatUser = user;
-            this.openChatComponent();
+            this.closeChatComponent();
+            setTimeout(() => {
+                this.openChatComponent();
+            }, 10)
         },
         checkUsersChatList: function () {
             let self = this;

@@ -18,25 +18,56 @@
         </div>
         <div class="chat-body" v-if="!loading">
             <div class="messages-container">
-                <div class="message" :id="'message-' + message.message_id" :class="message.sender_id == $root.user.id ? 'out' : 'in'" v-for="message in messages" :key="message.message_id">
-                    <div class="message-header">
-                        <h5>{{ message.sender_name }}</h5>
-                        <span>{{ formatDate(message.send_date) }}</span>
-                        <div class="view-icon" :class='message.view_date.length != 2 ? "viewed" : ""'>
-                            <i class="fas fa-check"></i>
-                            <i class="fas fa-check"></i>
+                <div class="message-wrapper" v-for="message in messages" :key="message.message_id" :class="message.reference_message_id != 0 ? 'with-reply' : ''">
+                    <div class="replied-message" v-if="message.reference_message_id != 0" :class="message.sender_id == $root.user.id ? 'out' : 'in'">
+                        <div class="replied-message-inner" v-on:click="goToReferencedMessage(message.reference_message_id)">
+                            <div class="replied-message-header">
+                                <h5>{{ message.reference_message_sender_id == $root.user.id ? 'Você' : message.reference_message_sender_name }}</h5>
+                                <span>{{ formatDate(message.reference_message_send_date) }}</span>
+                            </div>
+                            <div class="replied-message-body">
+                            <span v-html="message.reference_message_content"></span> 
+                            </div>
                         </div>
                     </div>
-                    <div class="message-body"> 
-                        <span v-html="message.message"></span>
-                        <p v-if="message.target_type != ''" v-html="returnMessageTargetObject(message)" class="message-target"></p>
+                    <div class="message" :id="'message-' + message.message_id" :class="message.sender_id == $root.user.id ? 'out' : 'in'">
+                        <div class="message-header">
+                            <h5>{{ message.sender_name }}</h5>
+                            <span>{{ formatDate(message.send_date) }}</span>
+                            <div class="view-icon" :class='message.view_date.length != 2 ? "viewed" : ""'>
+                                <i class="fas fa-check"></i>
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <div class="message-body"> 
+                            <span v-html="message.message"></span>
+                            <p v-if="message.target_type != ''" v-html="returnMessageTargetObject(message)" class="message-target"></p>
+                        </div>
+                        <span class="show-more" v-on:click="expandMessage('#message-' + message.message_id)">Ver mais</span>
+                        <span class="show-less" v-on:click="contractMessage('#message-' + message.message_id)">Ver menos</span>
+                        <div class="message-actions" v-on:click="openMessageOptionsContainer('#message-' + message.message_id)">
+                            <span>...</span>
+                        </div>
+                        <div class="message-actions-container">
+                            <ul>
+                                <li v-on:click="replyMessage(message)">Responder</li>
+                            </ul>
+                        </div>
                     </div>
-                    <span class="show-more" v-on:click="expandMessage('#message-' + message.message_id)">Ver mais</span>
-                    <span class="show-less" v-on:click="contractMessage('#message-' + message.message_id)">Ver menos</span>
                 </div>
             </div>
+            <div class="message-options-wrapper" v-if="messageOptionsOpened" v-on:click="closeMessageOptionsContainer()"></div>
         </div>
         <div class="chat-footer">
+            <div class="reply-message-container" v-if="replyMessageObj.reference_message_id != null">
+                <div class="reply-message-header">
+                    <i class="fas fa-times" v-on:click="clearReplyMessage()"></i>
+                </div>
+                <div class="reply-message-body">
+                    <span class="reply-message-sender-name">{{ replyMessageObj.reference_message_sender_id == $root.user.id ? "Você" : replyMessageObj.reference_message_sender_name }}</span>
+                    <span v-html="replyMessageObj.reference_message_content" class="reply-message"></span>
+                </div>
+            </div>
             <textarea name="message" id="message-input" rows="1" v-on:keydown="countRows($event)" v-on:keyup="countRows($event, true)" :disabled="loading"></textarea>
             <div class="input-icons">
                 <i class="fas fa-location-arrow" v-on:click="sendMessage()"></i>
@@ -60,10 +91,87 @@ export default {
         return {
             messages: [],
             order_user: {},
-            loading: true
+            loading: true,
+            messageOptionsOpened: false,
+            replyMessageObj: {
+                reference_message_id: null,
+                reference_message_sender_id: null,
+                reference_message_content: "",
+                reference_message_send_date: "",
+                reference_message_sender_name: ""
+            }
         }
     },
     methods: {
+        blinkCurrentMessageWrapper: function (messageWrapper) {
+            messageWrapper.css("background", "var(--blue-high-2)");
+            setTimeout(() => {
+                messageWrapper.css("background", "transparent");
+            }, 400)
+        },
+        goToReferencedMessage: function (referenced_message_id) {
+            let messages = $(".message");
+            for (let i = 0; i < messages.length; i++) {
+                let currentMessage = $(messages[i]);
+                let currentMessageId = currentMessage.attr("id").split("-")[1];
+                
+                if (currentMessageId == referenced_message_id) {
+                    let bodyHeight = $(".messages-container").height();
+                    let scrollHeight = $(".messages-container").prop("scrollHeight");
+                    let currentMessagePosition = Math.floor(Math.abs(currentMessage.offset().top)) + Math.floor(bodyHeight) + 350;
+                    $(".messages-container").animate({
+                        scrollTop: scrollHeight - currentMessagePosition
+                    }, 1000);
+                    setTimeout(() => {
+                        this.blinkCurrentMessageWrapper(currentMessage.parent());
+                    }, 1000)
+                }
+            }
+        },
+        clearReplyMessage: function () {
+            this.replyMessageObj = {
+                reference_message_id: null,
+                reference_message_content: "",
+                reference_message_send_date: "",
+                reference_message_sender_name: ""
+            }
+        },
+        setMessageOptionsPosition: function (messageElement, chatBodyElement, messageOptionsContainer) {
+            let positions = messageElement.offset();
+            if (positions.top > chatBodyElement.height()) {
+                messageOptionsContainer.css("bottom", "90%");
+            }
+        },
+        closeMessageOptionsContainer: function () {
+            let messagesOptionsContainer = $(".message-actions-container");
+            this.messageOptionsOpened = false;
+            messagesOptionsContainer.hide();
+        },
+        openMessageOptionsContainer: function (message_element_id) {
+            let message = $(message_element_id);
+            let chatBody = $(".chat-body");
+            let messageOptionsContainer = $(message_element_id + " .message-actions-container");
+            this.messageOptionsOpened = true;
+            this.setMessageOptionsPosition(message, chatBody, messageOptionsContainer);
+            messageOptionsContainer.show();
+        },
+        returnReplyMessage: function (message) {
+            let replyMessage = {
+                reference_message_id: message.message_id,
+                reference_message_content: message.message,
+                reference_message_send_date: message.send_date,
+                reference_message_sender_name: message.sender_name,
+                reference_message_sender_id: message.sender_id
+            }
+
+            return replyMessage;
+        },
+        replyMessage: function (message) {
+            this.replyMessageObj = "";
+            this.replyMessageObj = this.returnReplyMessage(message);
+            $("#message-input").focus();
+            this.closeMessageOptionsContainer();
+        },
         returnMessageTargetObject: function (message) {
             let targetId = message.target_id;
             let targetType = message.target_type;
@@ -137,7 +245,7 @@ export default {
                 }, 10 * 1000)
             })
         },
-        playNewMessagegAudio: function () {
+        playNewMessageAudio: function () {
             let audioElement = $("#message-audio")[0];
             if (audioElement != undefined) {
                 audioElement.play();
@@ -164,6 +272,18 @@ export default {
                 })
             }
         },
+        checkIfMyMessagesHaveBeenViewed: function () {
+            let notViewed = false;
+            for (let i = 0; i < this.messages.length; i++) {
+                let currentMessage = this.messages[i];
+                if (currentMessage.view_date == '""' ) {
+                    notViewed = true;
+                }
+            }
+            if (notViewed) {
+                this.fillMessages();
+            }
+        },
         checkViewMessage: function () {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
@@ -175,16 +295,16 @@ export default {
             let data = {
                 sender_id: sender_id
             }
-            api.post("/messages/check_view_messages", data, {
+            api.post("/messages/check_view_my_messages", data, {
                 headers: {
                     Authorization: jwt
                 }
             })
             .then(function (response) {
-                let haveNewMessages = response.data.obj.status;
-                if (haveNewMessages) {
-                    self.fillMessages();
-                }
+                let viewedMessages = response.data.returnObj.viewedMessages;
+                if (viewedMessages) {
+                    self.checkIfMyMessagesHaveBeenViewed();
+                } 
                 setTimeout(() => {
                     self.checkViewMessage();
                 }, 10 * 1000)
@@ -220,7 +340,7 @@ export default {
                     self.checkMessageContentHeight();
                     self.viewMessage();
                     if (from_last_chat) {
-                        self.playNewMessagegAudio();
+                        self.playNewMessageAudio();
                     }
                 }, 20);
             }).catch(function(error){
@@ -331,6 +451,20 @@ export default {
                 data["order_id"] = self.order.order_id;
             }
 
+            if (this.replyMessageObj.reference_message_id != null) {
+                data["reference_message_id"] = this.replyMessageObj.reference_message_id;
+                data["reference_message_content"] = this.replyMessageObj.reference_message_content;
+                data["reference_message_send_date"] = this.replyMessageObj.reference_message_send_date;
+                data["reference_message_sender_name"] = this.replyMessageObj.reference_message_sender_name;
+                data["reference_message_sender_id"] = this.replyMessageObj.reference_message_sender_id;
+            } else {
+                data["reference_message_id"] = 0;
+                data["reference_message_content"] = "";
+                data["reference_message_send_date"] = "";
+                data["reference_message_sender_name"] = "";
+                data["reference_message_sender_id"] = 0;
+            }
+
             if (self.$root.havePermission) {
                 data["receiver_id"] = self.order_user.id;
                 data["receiver_name"] = self.order_user.name;
@@ -353,6 +487,7 @@ export default {
             })
             .then(function(){
                 self.fillMessages();
+                self.clearReplyMessage();
                 $("#message-input").attr("rows", 1);
             }).catch(function(error){
                 console.log(error);
@@ -402,6 +537,7 @@ export default {
         transition: all 0.6s ease-in-out;
         opacity: 0;
         display: none;
+        overflow: hidden;
     }
 
     .chat-header {
@@ -435,6 +571,7 @@ export default {
     .chat-body {
         height: calc(100% - 123px);
         overflow: hidden;
+        position: relative;
     }
 
     .chat-footer {
@@ -485,11 +622,12 @@ export default {
 
     .message {
         width: 90%;
-        margin: .7rem auto;
+        margin: 0.5rem 1rem;
         background: var(--gray-high-2);
         padding: 5px 10px;
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        position: relative;
     }
 
     .message-header {
@@ -575,5 +713,162 @@ export default {
         width: 40px;
         margin: .5rem 0;
         cursor: pointer;
+    }
+
+    .message-wrapper:hover .message-actions {
+        display: flex;
+    }
+
+    .message-actions {
+        position: absolute;
+        right: -35px;
+        font-size: 25px;
+        font-weight: 600;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        bottom: 0;
+        top: 0;
+        margin: auto;
+        /*display: flex;*/
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--black);
+        display: none;
+    }
+
+        .message-actions:hover {
+            background: var(--gray-high-2);
+        }
+
+        .message-actions span {
+            margin-top: -14px;
+        }
+
+    .message-actions-container {
+        position: absolute;
+        right: 0;
+        background: var(--white);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        padding: .3rem;
+        border-radius: 10px;
+        z-index: 999;
+        display: none;
+    }
+
+        .message-actions-container ul {
+            list-style: none;
+            margin: 0;
+        }
+
+            .message-actions-container ul li {
+                cursor: pointer;
+                padding: .3rem;
+                margin: 2px 0;
+                color: var(--black);
+            }
+
+                .message-actions-container ul li:hover {
+                    background: var(--gray-high-2);
+                }
+
+    .message-options-wrapper {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    .message-wrapper {
+        transition: all 0.4s;
+        padding: 0.1rem 0;
+    }
+
+    .reply-message-container {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        background: var(--white);
+        height: fit-content;
+        max-height: 200px;
+        width: 100%;
+        padding: .5rem;
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .reply-message-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 5px;
+    }
+
+        .reply-message-header i {
+            cursor: pointer;
+        }
+
+    .reply-message-body {
+        background: var(--gray-high-2);
+        height: calc(100% - 20px);
+        padding: .5rem;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .reply-message-sender-name {
+        color: var(--purple);
+    }
+
+    .reply-message {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+    .replied-message {
+        width: 90%;
+        margin: 0.7rem 1rem;
+        margin-bottom: -18px;
+        padding: .4rem;
+        border-radius: 10px 10px 0 0;
+        background: var(--gray-high-2);
+        padding-bottom: 1rem;
+        box-shadow: 0 0 15px rgb(0 0 0 / 30%);
+    }
+
+    .replied-message-header {
+        display: flex;
+        align-items: center;
+    }
+
+        .replied-message-header h5 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-right: 0.5rem !important;
+        }
+
+        .replied-message-header span {
+            font-size: 13px;
+        }
+
+    .replied-message-inner {
+        padding: .4rem;
+        border-radius: 5px;
+        background: var(--white);
+        color: var(--black);
+        cursor: pointer;
+    }
+
+    @media (max-width: 928px) {
+        .message-actions {
+            display: none !important;
+        }
+
+        .message {
+            margin: .7rem auto;
+        }
     }
 </style>
