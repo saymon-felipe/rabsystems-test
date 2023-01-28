@@ -64,6 +64,9 @@ export default {
                     self.userList.push(response.data.obj.user);
                     self.loadingUsers = false;
                     self.resetUsersList();
+                    setTimeout(() => {
+                        self.checkUsersChatList();
+                    }, 10 * 1000)
                 }).catch(function(error){
                     console.log(error);
                 })

@@ -54,6 +54,9 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="new-messages-indicator">
+                        <span>Novas mensagens</span>
+                    </div>
                 </div>
             </div>
             <div class="message-options-wrapper" v-if="messageOptionsOpened" v-on:click="closeMessageOptionsContainer()"></div>
@@ -99,7 +102,8 @@ export default {
                 reference_message_content: "",
                 reference_message_send_date: "",
                 reference_message_sender_name: ""
-            }
+            },
+            firstTimeOpeningChat: true
         }
     },
     methods: {
@@ -119,12 +123,17 @@ export default {
                     let bodyHeight = $(".messages-container").height();
                     let scrollHeight = $(".messages-container").prop("scrollHeight");
                     let currentMessagePosition = Math.floor(Math.abs(currentMessage.offset().top)) + Math.floor(bodyHeight) + 350;
-                    $(".messages-container").animate({
-                        scrollTop: scrollHeight - currentMessagePosition
-                    }, 1000);
-                    setTimeout(() => {
+                    
+                    if (Math.abs(currentMessage.offset().top - bodyHeight) > bodyHeight - 100) {
+                        $(".messages-container").animate({
+                            scrollTop: scrollHeight - currentMessagePosition
+                        }, 1000);
+                        setTimeout(() => {
+                            this.blinkCurrentMessageWrapper(currentMessage.parent());
+                        }, 1000)    
+                    } else {
                         this.blinkCurrentMessageWrapper(currentMessage.parent());
-                    }, 1000)
+                    }
                 }
             }
         },
@@ -240,9 +249,11 @@ export default {
                 console.log(error);
             })
             .then(function () {
-                setTimeout(() => {
-                    self.lastChat();
-                }, 10 * 1000)
+                if ($(".rabsystems-chat").is(":visible")) {
+                    setTimeout(() => {
+                        self.lastChat();
+                    }, 10 * 1000)
+                }
             })
         },
         playNewMessageAudio: function () {
@@ -305,16 +316,30 @@ export default {
                 if (viewedMessages) {
                     self.checkIfMyMessagesHaveBeenViewed();
                 } 
-                setTimeout(() => {
-                    self.checkViewMessage();
-                }, 10 * 1000)
+                if ($(".rabsystems-chat").is(":visible")) {
+                    setTimeout(() => {
+                        self.checkViewMessage();
+                    }, 10 * 1000)
+                }  
             })
+        },
+        setLastChatReceived: function (last_chat_received_id) {
+            localStorage.setItem("last_chat_received", last_chat_received_id);
+        },
+        getLastChatReceived: function() {
+            let lastChatReceived = localStorage.getItem("last_chat_received");
+            return lastChatReceived;
+        },
+        showNewMessagesIndicator: function (last_chat_received_id) {
+            let newMessageIndicator = $("#message-" + last_chat_received_id).parent().find(".new-messages-indicator");
+            newMessageIndicator.show();
         },
         fillMessages: function (from_last_chat = false) {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             let order_id = "";
             let user_id;
+            let lastChatReceived = self.getLastChatReceived();
 
             if (this.order != undefined) {
                 user_id = self.order.user_owner;
@@ -335,8 +360,19 @@ export default {
             })
             .then(function(response){
                 self.messages = response.data.obj;
+                let lastMessage = self.messages[self.messages.length - 1];
+                if (lastMessage.message_id != lastChatReceived && lastMessage.sender_id != self.$root.user.id && self.firstTimeOpeningChat) {
+                    setTimeout(() => {
+                        self.goToReferencedMessage(lastChatReceived);
+                        self.showNewMessagesIndicator(lastChatReceived);
+                    }, 30)
+                }
+                if (self.firstTimeOpeningChat) {
+                    self.firstTimeOpeningChat = false;
+                }
                 $("#message-input").focus();
                 setTimeout(() => {
+                    self.setLastChatReceived(lastMessage.message_id);
                     self.checkMessageContentHeight();
                     self.viewMessage();
                     if (from_last_chat) {
@@ -358,9 +394,11 @@ export default {
                 .then(function(response){
                     self.order_user = response.data.obj.user;
                     self.loading = false;
-                    setTimeout(() => {
-                        self.getOrderUser();
-                    }, 30 * 1000);
+                    if ($(".rabsystems-chat").is(":visible")) {
+                        setTimeout(() => {
+                            self.getOrderUser();
+                        }, 30 * 1000);
+                    }
                 })  
             }
         },
@@ -480,6 +518,9 @@ export default {
                 data["sender_name"] = self.order_user.name;
                 data["sender_id"] = self.order_user.id;
             }
+
+            $(".new-messages-indicator").hide(); //Esconder todos os indicadores de nova mensagem
+
             api.post("/messages", data, {
                 headers: {
                     Authorization: jwt
@@ -830,7 +871,7 @@ export default {
     }
     .replied-message {
         width: 90%;
-        margin: 0.7rem 1rem;
+        margin: 0.5rem 1rem;
         margin-bottom: -18px;
         padding: .4rem;
         border-radius: 10px 10px 0 0;
@@ -862,13 +903,52 @@ export default {
         cursor: pointer;
     }
 
+    .new-messages-indicator {
+        margin: 1rem auto 0;
+        text-align: center;
+        color: var(--blue-low);
+        font-weight: 500;
+        position: relative;
+        display: none;
+    }
+
+        .new-messages-indicator span {
+            background: var(--white);
+            padding: 0 10px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .new-messages-indicator:before {
+            left: 20px;
+        }
+
+        .new-messages-indicator:after {
+            right: 20px;
+        }
+
+        .new-messages-indicator:before, .new-messages-indicator:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            width: 23%;
+            height: 1px;
+            background: var(--blue-low);
+        }
+
     @media (max-width: 928px) {
         .message-actions {
             display: none !important;
         }
 
-        .message {
-            margin: .7rem auto;
+        .message, .replied-message {
+            margin: .5rem auto;
+        }
+
+        .replied-message {
+            margin-bottom: -18px;
         }
     }
 </style>
