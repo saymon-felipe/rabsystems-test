@@ -6,10 +6,10 @@
         <div class="chat-header" v-if="!loading">
             <div class="destiny-user">
                 <div class="user-img-container">
-                    <img :src="$root.havePermission ? order_user.profile_photo : $root.rabsystemsUser.profile_photo" class="avatar-p">
-                    <div class="user-status" :class="$root.havePermission ? order_user.user_status : $root.rabsystemsUser.user_status"></div>
+                    <img :src="order_user.profile_photo" class="avatar-p">
+                    <div class="user-status" :class="order_user.user_status"></div>
                 </div>
-                <h5>{{ $root.havePermission ? order_user.name : $root.rabsystemsUser.name}}</h5>
+                <h5>{{ order_user.name }}</h5>
             </div>
             <div class="header-icons">
                 <i class="fas fa-window-minimize" id="chat-minimize" v-on:click="toggleChat()"></i>
@@ -385,22 +385,24 @@ export default {
         },
         getOrderUser: function () {
             let self = this;
+            let requestedUserId;
 
             if (self.order == undefined) {
-                self.order_user = self.userProp;
-                self.loading = false;
+                requestedUserId = self.userProp.id;
             } else {
-                api.get("/user/get_order_user/" + self.order.user_owner)
-                .then(function(response){
-                    self.order_user = response.data.obj.user;
-                    self.loading = false;
-                    if ($(".rabsystems-chat").is(":visible")) {
-                        setTimeout(() => {
-                            self.getOrderUser();
-                        }, 30 * 1000);
-                    }
-                })  
+                requestedUserId = self.order.user_owner;
             }
+
+            api.get("/user/get_order_user/" + requestedUserId)
+            .then(function(response){
+                self.order_user = response.data.obj.user;
+                self.loading = false;
+                if ($(".rabsystems-chat").is(":visible")) {
+                    setTimeout(() => {
+                        self.getOrderUser();
+                    }, 30 * 1000);
+                }
+            })  
         },
         toggleChat: function (programatic = false) {
             let chat = $(".rabsystems-chat");

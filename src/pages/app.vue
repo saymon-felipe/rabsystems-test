@@ -70,7 +70,7 @@ export default {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
             self.requireUser();
-            api.get("/user/get_rabsystems_user", {
+            api.get("/user/get_rabsystems_user?with_last_message=true", {
                 headers: {
                     Authorization: jwt
                 }
