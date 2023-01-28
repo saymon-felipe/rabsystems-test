@@ -359,26 +359,28 @@ export default {
                 }
             })
             .then(function(response){
-                self.messages = response.data.obj;
-                let lastMessage = self.messages[self.messages.length - 1];
-                if (lastMessage.message_id != lastChatReceived && lastMessage.sender_id != self.$root.user.id && self.firstTimeOpeningChat) {
-                    setTimeout(() => {
-                        self.goToReferencedMessage(lastChatReceived);
-                        self.showNewMessagesIndicator(lastChatReceived);
-                    }, 30)
-                }
-                if (self.firstTimeOpeningChat) {
-                    self.firstTimeOpeningChat = false;
-                }
-                $("#message-input").focus();
-                setTimeout(() => {
-                    self.setLastChatReceived(lastMessage.message_id);
-                    self.checkMessageContentHeight();
-                    self.viewMessage();
-                    if (from_last_chat) {
-                        self.playNewMessageAudio();
+                if ($(".rabsystems-chat").is(":visible")) {
+                    self.messages = response.data.obj;
+                    let lastMessage = self.messages[self.messages.length - 1];
+                    if (lastMessage.message_id != lastChatReceived && lastMessage.sender_id != self.$root.user.id && self.firstTimeOpeningChat) {
+                        setTimeout(() => {
+                            self.goToReferencedMessage(lastChatReceived);
+                            self.showNewMessagesIndicator(lastChatReceived);
+                        }, 30)
                     }
-                }, 20);
+                    if (self.firstTimeOpeningChat) {
+                        self.firstTimeOpeningChat = false;
+                    }
+                    $("#message-input").focus();
+                    setTimeout(() => {
+                        self.setLastChatReceived(lastMessage.message_id);
+                        self.checkMessageContentHeight();
+                        self.viewMessage();
+                        if (from_last_chat) {
+                            self.playNewMessageAudio();
+                        }
+                    }, 20);
+                }
             }).catch(function(error){
                 console.log(error);
             })
