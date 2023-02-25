@@ -23,9 +23,11 @@
 <script>
 import $ from 'jquery';
 import api from '../configs/api.js';
+import { globalMethods } from '../js/globalMethods';
 
 export default {
     name: "register",
+    mixins: [globalMethods],
     data() {
         return {
             message: "",
