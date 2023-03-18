@@ -842,6 +842,7 @@ export default {
         padding: .5rem;
         border-radius: 10px 10px 0 0;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        z-index: 4;
     }
 
     .reply-message-header {

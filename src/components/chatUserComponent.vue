@@ -1,7 +1,7 @@
 <template>
     <div class="chat-user-list-container" v-on:click="openChat(user.id)">
         <div class="user-img-container">
-            <img :src="user.profile_photo" class="avatar-pp online" />
+            <img :src="user.profile_photo" class="avatar-pp" />
             <div class="user-status" :class="user.user_status"></div>
         </div>
         <div class="user-informations-container">

@@ -36,6 +36,9 @@
                 </div>
             </div>
             <div class="room-controls">
+                <!--<div class="invite-users" title="Convidar usuários para a conferência" v-on:click="inviteUsers()">
+                    <i class="fas fa-users"></i>
+                </div>-->
                 <div class="room-visibility" v-if="$root.havePermission" title="Tornar sala visível para todos" v-on:click="changeRoomVisibility()">
                     <i class="fas fa-eye-slash"></i>
                 </div>
@@ -51,6 +54,9 @@
             <h1 class="room-name">{{ room_name }}</h1>
             <i class="fas fa-external-link-alt open-conference-in-new-window-icon" title="Abrir conferência em outra janela" v-on:click="openConferenceInNewWindow()"></i>
         </div>
+        <modal v-if="showModal" :title="modalTitle" :buttonTitle="modalButtonTitle" :button2Title="modalButtonTitle2" @closeModal="closeThisModal()" @submitEvent="submitFunction()">
+            <inviteUsersModalContent v-if="showInviteUsers" @success="closeThisModal()" />
+        </modal>
         <div id="room-content"></div>
     </div>
 </template>
@@ -58,10 +64,16 @@
 import api from '../configs/api';
 import { globalMethods } from '../js/globalMethods';
 import $ from 'jquery';
+import inviteUsersModalContent from "./inviteUsersModalContent.vue";
+import modal from "./modal.vue";
 
 export default {
     name: "room",
     mixins: [globalMethods],
+    components: {
+        inviteUsersModalContent,
+        modal,
+    },
     data() {
         return {
             room_name: "",
@@ -73,7 +85,12 @@ export default {
                 pending_participants: []
             },
             is_new_window: false,
-            userName: ""
+            userName: "",
+            showInviteUsers: false,
+            modalTitle: "",
+            modalButtonTitle: "",
+            modalButtonTitle2: "",
+            showModal: false
         }
     },
     watch: {
@@ -87,6 +104,15 @@ export default {
         }
     },
     methods: {
+        inviteUsers: function () {
+            this.openInviteUsersModal();
+        },
+        openInviteUsersModal: function () {
+            this.resetModalVariables();
+            this.fillModalVariables("Convidar usuários", "", "");
+            this.showModal = true;
+            this.showInviteUsers = true;
+        },
         leaveRoom: function () {
             if (this.is_new_window) {
                 window.close();
@@ -545,7 +571,16 @@ export default {
         background: var(--blue);
     }
 
-.toggle-lock-room, .leave-button, .room-visibility {
+.invite-users {
+    color: var(--white);
+    background: var(--purple);
+}
+
+    .invite-users:hover {
+        background: var(--purple-low);
+    }
+
+.toggle-lock-room, .leave-button, .room-visibility, .invite-users {
     display: flex;
     align-items: center;
     justify-content: center;
