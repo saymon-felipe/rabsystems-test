@@ -392,7 +392,6 @@ export default {
                         disable: false,
                         notifyAllParticipants: true
                     },
-                    prejoinPageEnabled: false,
                     toolbarButtons: [
                         'camera',
                         'chat',
@@ -439,8 +438,6 @@ export default {
                 }
             };
             this.api = new window.JitsiMeetExternalAPI(domain, options);
-            this.api.executeCommand('displayName', this.userName);
-            this.api.executeCommand('avatarUrl', this.userAvatar);
         },
         pingMeeting: function (recursive = true) {
             let self = this;
