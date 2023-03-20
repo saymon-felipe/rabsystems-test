@@ -86,6 +86,7 @@ export default {
             },
             is_new_window: false,
             userName: "",
+            userAvatar: "",
             showInviteUsers: false,
             modalTitle: "",
             modalButtonTitle: "",
@@ -299,6 +300,7 @@ export default {
             .then((response) => {
                 if (!self.is_new_window) {
                     self.userName = self.$root.user.name;
+                    self.userAvatar = self.$root.user.profile_photo;
                     if (response.data.returnObj.room.creator_id != self.$root.user.id && !self.$root.havePermission && response.data.returnObj.room.room_visible_to_others != 1) {
                         self.$router.push("/rooms");
                         return;
@@ -360,8 +362,7 @@ export default {
             })
         },
         generateUniqueName: function () {
-            let numbers = 5472;
-            let unique_name = "[Rabsystems]" +  numbers + "_" + this.room_name;
+            let unique_name = "[Rabsystems] 5472_" + this.room_name;
             return unique_name;
         },
         requireJitsi: function () {
@@ -391,6 +392,7 @@ export default {
                         disable: false,
                         notifyAllParticipants: true
                     },
+                    prejoinPageEnabled: false,
                     toolbarButtons: [
                         'camera',
                         'chat',
@@ -437,6 +439,8 @@ export default {
                 }
             };
             this.api = new window.JitsiMeetExternalAPI(domain, options);
+            this.api.executeCommand('displayName', this.userName);
+            this.api.executeCommand('avatarUrl', this.userAvatar);
         },
         pingMeeting: function (recursive = true) {
             let self = this;
