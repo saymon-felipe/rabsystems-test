@@ -387,6 +387,10 @@ export default {
                     testing: {
                         enableFirefoxSimulcast: true
                     },
+                    localRecording: {
+                        disable: false,
+                        notifyAllParticipants: true
+                    },
                     toolbarButtons: [
                         'camera',
                         'chat',
