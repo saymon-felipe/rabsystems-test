@@ -44,7 +44,7 @@ export default {
 .chat-user-list-container {
     cursor: pointer;
     margin: 10px 0;
-    padding: 7px;
+    padding: 7px 0;
     display: flex;
     align-items: center;
     position: relative;
@@ -55,7 +55,7 @@ export default {
     }
 
     .chat-user-list-container img {
-        margin-right: .7rem;
+        margin-right: 5px;
     }
 
     .chat-user-list-container span {
@@ -63,11 +63,15 @@ export default {
     }
 
 .user-img-container {
-    width: 40px;
+    flex-grow: auto;
+    position: relative;
 }
 
 .user-status {
     border: 2px solid var(--white);
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 .new-message-label {
@@ -85,22 +89,24 @@ export default {
 }
 
 .user-informations-container {
-    width: 100%;
+    padding-left: 10px;
+    width: calc(100% - 45px);
 }
 
 .last-message-container {
     display: flex;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .sender-name {
     font-size: 13px;
 }
 
+.sender-name, .message-send-date {
+    flex-grow: auto;
+}
+
 .message-content {
+    flex-grow: 1;
     font-size: 12px;
     font-weight: 400 !important;
     display: block;
@@ -108,18 +114,11 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: calc(80% - 80px);
 }
 
 .message-send-date {
     font-size: 12px;
     font-weight: 600 !important;
     white-space: nowrap;
-}
-
-@media (max-width: 544px) {
-    .message-content {
-        max-width: calc(80% - 125px);
-    }
 }
 </style>

@@ -112,14 +112,14 @@ export default {
     position: fixed;
     top: 100px;
     right: 0;
-    min-width: 230px;
+    min-width: 270px;
     max-width: 600px;
-    width: 80vw;
+    width: 98vw;
     height: calc(100% - 100px);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     transition: all 0.4s;
-    transform: translateX(50vw);
+    transform: translateX(100%);
     display: none;
     z-index: 999;
 }

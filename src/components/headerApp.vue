@@ -15,6 +15,7 @@
                     </div>
                 </div>
                 <ChatList :user="$root.user" :rabsystemsUser="$root.rabsystemsUser" :newMessages="newMessages" />
+                <div class="chat-wrapper" v-on:click="toggleChatList()"></div>
                 <div class="no-responsive-header" v-on:click="showMoreOptions()" title="Abrir menu">
                     <nav class="header">
                         <div class="home-user">
@@ -26,9 +27,10 @@
                     </nav>  
                     <div class="more-options-container" title="">
                         <ul>
-                            <li v-on:click="logoutUser()">Sair</li>
+                            <li v-on:click="logoutUser()" class="logout-user-button">Sair</li>
                         </ul>
                     </div>
+                    <div class="leave-app-wrapper" v-on:click="showMoreOptions()"></div>
                 </div>
             </div>
         </div>
@@ -113,20 +115,23 @@ export default {
         },
         toggleChatList: function () {
             let element = $(".chat-container-list");
+            let chatWrapper = $(".chat-wrapper");
             if (element.is(":visible")) {
-                this.closeChatList(element);
+                this.closeChatList(element, chatWrapper);
             } else {
-                this.openChatList(element);
+                this.openChatList(element, chatWrapper);
             }
         },
-        closeChatList: function (element) {
-            element.css("transform", "translateX(50vw)");
+        closeChatList: function (element, chatWrapper) {
+            element.css("transform", "translateX(100%)");
             setTimeout(() => {
                 element.hide();
+                chatWrapper.hide();
             }, 400);
         },
-        openChatList: function (element) {
+        openChatList: function (element, chatWrapper) {
             element.show();
+            chatWrapper.show();
             setTimeout(() => {
                 element.css("transform", "translateX(0)")
             }, 10)
@@ -147,15 +152,18 @@ export default {
         },
         showMoreOptions: function () {
             let container = $(".more-options-container");
+            let moreOptionsWrapper = $(".leave-app-wrapper");
 
             if (container.is(":visible")) {
                 container.css("opacity", 0);
 
                 setTimeout(() => {
                     container.hide();
+                    moreOptionsWrapper.hide();
                 }, 400);
             } else {
                 container.show();
+                moreOptionsWrapper.show();
 
                 setTimeout(() => {
                     container.css("opacity", 1);
@@ -167,6 +175,17 @@ export default {
 </script>
 
 <style scoped>
+
+    .leave-app-wrapper {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        display: none;
+    }
+
     header {
         background: var(--white);
         position: fixed;
@@ -303,6 +322,7 @@ export default {
         opacity: 0;
         display: none;
         right: 0;
+        z-index: 3;
     }
 
         .more-options-container ul {
@@ -425,6 +445,16 @@ export default {
     .icon-footer {
         width: 40px;
         margin: auto;
+    }
+
+    .chat-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: none;
+        z-index: 2;
     }
 
     @media (max-width: 1064px) {
