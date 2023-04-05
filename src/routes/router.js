@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-import home from "../pages/home.vue";
 import appPage from "../pages/app.vue";
 import myOrders from "../components/myOrders.vue";
 import login from "../pages/login.vue";
@@ -25,8 +24,8 @@ const routes = [
         component: room
     },
     {
-        path: '/',
-        component: home
+        path: '',
+        redirect: '/login'
     },
     {
         path: '/app',
