@@ -736,6 +736,7 @@ export default {
             text-overflow: ellipsis;
             overflow: hidden;
             text-align: left;
+            margin-left: 10px !important;
         }
 
     .owner-inbox {
