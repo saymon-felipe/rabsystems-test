@@ -155,6 +155,11 @@ export const globalMethods = {
             } else {
                 return;
             }
+        },
+        setNewLanguage: function (language) {
+            if (language != "") {
+                this.$i18n.locale = language;    
+            }
         }
     },
     data() {

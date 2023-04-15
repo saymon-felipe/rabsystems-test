@@ -36,14 +36,6 @@ export default {
             newMessages: []
         }
     },
-    watch: {
-        rabsystemsUser: function () {
-            this.loadingRabsystemsUser = false;
-        },
-        user: function () {
-            this.loadingUser = false;
-        }
-    },
     methods: {
         checkPermission: function () {
             if (this.$root.rabsystemsUser.id == this.$root.user.id) {
@@ -54,6 +46,7 @@ export default {
             if (this.$root.rabsystemsUser != undefined && this.$root.user != undefined) {
                 this.loadingUsers = false;
                 this.checkPermission();
+                this.setNewLanguage(this.$root.user.language);
             } else {
                 setTimeout(() => {
                     this.checkData();

@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from "../src/routes/router.js";
 import $ from 'jquery';
 import api from './configs/api.js';
+import i18n from './js/i18n/i18n.js';
 
 Vue.config.productionTip = false;
 
@@ -11,6 +12,7 @@ let firstLoad = true;
 
 new Vue({
   router,
+  i18n,
   render: h => h(App),
 }).$mount('#app')
 

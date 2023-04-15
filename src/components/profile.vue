@@ -139,6 +139,16 @@
                                     <input type="text" name="country" id="country" v-model="$root.user.country" required>
                                 </div>
                             </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="input-group">
+                                    <label for="country">Idioma</label>
+                                    <select name="language" id="language" v-model="$root.user.language" required>
+                                        <option value="">-- Idioma --</option>
+                                        <option value="pt">Português</option>
+                                        <option value="en">Inglês</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -353,6 +363,7 @@ export default {
                         }).catch(function(error){
                             console.log(error);
                         }).then(function () {
+                            self.setNewLanguage(data["language"]);
                             self.cancelChangeProfile();
                             $(".loading").hide();
                         })

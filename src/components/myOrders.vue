@@ -5,7 +5,7 @@
         </div>
         <table class="order-list">
             <tr class="order-list-head">
-                <td>Nome</td>
+                <td>{{ $t("my_orders.name") }}</td>
                 <td>Id</td>
                 <td class="sort-button" id="sort-by-date" v-on:click="sortData('date', 'sort-by-date')" sortStatus="down">
                     Data
