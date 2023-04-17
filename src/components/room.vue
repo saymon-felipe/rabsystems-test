@@ -7,28 +7,30 @@
                     <img :src="room.pending_participants[0].profile_photo" class="avatar-pp" />
                     <p>
                         <span class="pending-user-name">{{ room.pending_participants[0].name }}</span> 
-                        deseja entrar na sala
+                        {{ $t("room.want_enter") }}
                     </p>
                     <div class="approve-deny-icons">
-                        <i class="fas fa-thumbs-up approve-icon" title="Aprovar participante" v-on:click="approveUser(room.pending_participants[0].user_id)"></i>
-                        <i class="fas fa-thumbs-down deny-icon" title="Recusar participante" v-on:click="denyUser(room.pending_participants[0].user_id)"></i>
+                        <i class="fas fa-thumbs-up approve-icon" :title="$t('room.approve_participant')" v-on:click="approveUser(room.pending_participants[0].user_id)"></i>
+                        <i class="fas fa-thumbs-down deny-icon" :title="$t('room.decline_participant')" v-on:click="denyUser(room.pending_participants[0].user_id)"></i>
                     </div>
                 </div>
                 <div class="more-pending-participants" v-if="room.pending_participants.length > 1">
                     <span class="pulseRed">&nbsp;</span>
                     <p>
-                        <span class="pending-user-name">{{ room.pending_participants[0].name }}</span>
-                        e outros <strong>{{ room.pending_participants.length - 1 }} usuários</strong> desejam entrar na sala
+                        <span class="pending-user-name">
+                            {{ room.pending_participants[0].name }}
+                            <span v-html="$t('room.other_participants', { length: room.pending_participants.length - 1 })"></span>
+                        </span>
                     </p>
                     <div class="manage-pending-participants">
-                        <i class="fas fa-users-cog manage-pending-participants-icon" v-on:click="toggleManagePendingParticipantsContainer()" title="Gerenciar pedidos para entrar na sala"></i>
+                        <i class="fas fa-users-cog manage-pending-participants-icon" v-on:click="toggleManagePendingParticipantsContainer()" :title="$t('room.manage_requests')"></i>
                         <div class="pending-participants-container">
                             <div class="pending-participant-item" v-for="(user, index) in room.pending_participants" v-bind:key="index">
                                 <img :src="user.profile_photo" class="avatar-pp" />
                                 <span>{{ user.name }}</span>
                                 <div class="approve-deny-icons">
-                                    <i class="fas fa-thumbs-up approve-icon" title="Aprovar participante" v-on:click="approveUser(user.user_id)"></i>
-                                    <i class="fas fa-thumbs-down deny-icon" title="Recusar participante" v-on:click="denyUser(user.user_id)"></i>
+                                    <i class="fas fa-thumbs-up approve-icon" :title="$t('room.approve_participant')" v-on:click="approveUser(user.user_id)"></i>
+                                    <i class="fas fa-thumbs-down deny-icon" :title="$t('room.decline_participant')" v-on:click="denyUser(user.user_id)"></i>
                                 </div>
                             </div>
                         </div>
@@ -39,20 +41,20 @@
                 <!--<div class="invite-users" title="Convidar usuários para a conferência" v-on:click="inviteUsers()">
                     <i class="fas fa-users"></i>
                 </div>-->
-                <div class="room-visibility" v-if="$root.havePermission" title="Tornar sala visível para todos" v-on:click="changeRoomVisibility()">
+                <div class="room-visibility" v-if="$root.havePermission" :title="$t('room.turn_room_visible')" v-on:click="changeRoomVisibility()">
                     <i class="fas fa-eye-slash"></i>
                 </div>
-                <div class="toggle-lock-room unlock" title="Trancar a sala" v-on:click="lockUnlockRoom()">
+                <div class="toggle-lock-room unlock" :title="$t('room.lock_room')" v-on:click="lockUnlockRoom()">
                     <i class="fas fa-unlock"></i>
                 </div>
-                <div class="leave-button" title="Desligar a chamada" v-on:click="leaveRoom()">
+                <div class="leave-button" :title="$t('room.turn_off_call')" v-on:click="leaveRoom()">
                     <i class="fas fa-power-off"></i>
                 </div>
             </div>
         </div>
         <div class="room-name-container" v-if="!is_new_window">
             <h1 class="room-name">{{ room_name }}</h1>
-            <i class="fas fa-external-link-alt open-conference-in-new-window-icon" title="Abrir conferência em outra janela" v-on:click="openConferenceInNewWindow()"></i>
+            <i class="fas fa-external-link-alt open-conference-in-new-window-icon" :title="$t('room.external_conference')" v-on:click="openConferenceInNewWindow()"></i>
         </div>
         <modal v-if="showModal" :title="modalTitle" :buttonTitle="modalButtonTitle" :button2Title="modalButtonTitle2" @closeModal="closeThisModal()" @submitEvent="submitFunction()">
             <inviteUsersModalContent v-if="showInviteUsers" @success="closeThisModal()" />
@@ -100,7 +102,7 @@ export default {
                 let container = $(".room-container");
                 container.addClass("room-container-new-window");
                 container.removeClass("room-container");
-                document.title = "Sala - " +  this.room_name;
+                document.title = this.$i18n.t("room.room") + this.room_name;
             }
         }
     },
@@ -110,7 +112,7 @@ export default {
         },
         openInviteUsersModal: function () {
             this.resetModalVariables();
-            this.fillModalVariables("Convidar usuários", "", "");
+            this.fillModalVariables(this.$i18n.t("room.invite_users"), "", "");
             this.showModal = true;
             this.showInviteUsers = true;
         },
@@ -175,13 +177,13 @@ export default {
             let container = $(".toggle-lock-room");
             let element = container.find("i");
             if (lock) {
-                element.attr("title", "Destrancar a sala");
+                element.attr("title", this.$i18n.t("room.unlock_room"));
                 element.removeClass("fa-unlock");
                 element.addClass("fa-lock");
                 container.removeClass("unlock");
                 container.addClass("lock");
             } else {
-                element.attr("title", "Trancar a sala");
+                element.attr("title", this.$i18n.t("room.lock_room"));
                 element.removeClass("fa-lock");
                 element.addClass("fa-unlock");
                 container.removeClass("lock");
@@ -224,11 +226,11 @@ export default {
         changeRoomVisibilityStyle: function (visible) {
             let element = $(".room-visibility i");
             if (visible) {
-                element.attr("title", "Tornar sala invisível para todos");
+                element.attr("title", this.$i18n.t("room.turn_room_invisible"));
                 element.removeClass("fa-eye-slash");
                 element.addClass("fa-eye");
             } else {
-                element.attr("title", "Tornar sala visível para todos");
+                element.attr("title", this.$i18n.t("room.turn_room_visible"));
                 element.removeClass("fa-eye");
                 element.addClass("fa-eye-slash");
             }
@@ -362,7 +364,7 @@ export default {
             })
         },
         generateUniqueName: function () {
-            let unique_name = "[Rabsystems] 5472_" + this.room_name;
+            let unique_name = "[Rabsystems] " + this.room_name;
             return unique_name;
         },
         requireJitsi: function () {
@@ -372,7 +374,7 @@ export default {
                 width: "100%",
                 height: "100%",
                 parentNode: document.querySelector('#room-content'),
-                lang: 'pt-br',
+                lang: this.$i18n.locale,
                 devices: {
                     audioInput: '<deviceLabel>',
                     audioOutput: '<deviceLabel>',
@@ -382,7 +384,7 @@ export default {
                     disableDeepLinking: true,
                     preferH264: false,
                     disableH264: true,
-                    defaultLanguage: 'ptBR',
+                    defaultLanguage: "en",
                     resolution: "",
                     channelLastN: 25,  //acima deste numero de participantes faz o desligamento do video dos outros fora os que estao falando
                     testing: {

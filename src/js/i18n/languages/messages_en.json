@@ -1,5 +1,76 @@
 {
     "my_orders": {
-        "name": "Name"
+        "name": "Name",
+        "id": "Id",
+        "date": "Date",
+        "service": "Service",
+        "price": "Price",
+        "status": "Status",
+        "empty_orders": "You haven't placed any orders yet.",
+        "site": "Site",
+        "web_system": "WEB System",
+        "web_design": "WEB Design",
+        "waiting_answer": "Waiting answer",
+        "waiting_payment": "Waiting payment",
+        "in_progress": "In progress",
+        "finished": "Finished",
+        "canceled": "Canceled",
+        "my_orders": "My requests",
+        "new_order": "New request"
+    },
+    "new_order": {
+        "new_order": "New request",
+        "service_type": "Service type",
+        "website_creation": "Website creation",
+        "web_system_creation": "Creation of web systems",
+        "web_design_creation": "Design of websites and systems",
+        "description": "Description",
+        "send": "Send"
+    },
+    "header": {
+        "rabsystems_icon": "Rabsystems icon",
+        "open_menu": "Open menu",
+        "greetings": "Hello",
+        "exit": "Exit",
+        "my_orders": "My requests",
+        "financial": "Financial",
+        "conferences": "Conferences",
+        "my_profile": "My profile",
+        "support": "Support"
+    },
+    "financial": {
+        "financial": "Financial",
+        "id": "Id",
+        "price": "Price",
+        "status": "Status",
+        "situation": "Situation",
+        "dint_order": "You haven't placed any orders yet.",
+        "paid": "Paid out",
+        "canceled": "Canceled",
+        "pay": "Pay"
+    },
+    "conferences": {
+        "conferences": "Conferences",
+        "conferences_empty": "No conferences in progress",
+        "start_conference": "Start a conference"
+    },
+    "create_room": {
+        "create_room": "Create room",
+        "enter_room_name": "Enter the room name"
+    },
+    "room": {
+        "want_enter": "want to enter the room",
+        "approve_participant": "Approve participant",
+        "decline_participant": "Decline participant",
+        "other_participants": "and other <strong>{length} users</strong> want to join the room",
+        "manage_requests": "Manage requests to join the room",
+        "turn_room_visible": "Make room visible to everyone",
+        "lock_room": "Lock the room",
+        "turn_off_call": "Turn of the call",
+        "external_conference": "Open conference in another window",
+        "room": "Room - ",
+        "invite_users": "Invite users",
+        "unlock_room": "Unlock the room",
+        "turn_room_invisible": "Make room invisible to everyone"
     }
 }

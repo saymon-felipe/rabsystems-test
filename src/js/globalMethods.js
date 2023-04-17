@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import moment from 'moment';
 //import api from '../configs/api.js';
 
 export const globalMethods = {
@@ -157,9 +158,12 @@ export const globalMethods = {
             }
         },
         setNewLanguage: function (language) {
-            if (language != "") {
-                this.$i18n.locale = language;    
+            let localeLanguage = language;
+            if (localeLanguage == "") {
+                localeLanguage = navigator.language.split("-")[0];
             }
+            this.$i18n.locale = localeLanguage;
+            moment.locale(localeLanguage);
         }
     },
     data() {

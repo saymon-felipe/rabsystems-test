@@ -8,8 +8,10 @@ const messages = {
     en: require('./languages/messages_en.json')
 }
 
+let navigatorLanguage = navigator.language.split("-")[0];
+
 const i18n = new VueI18n({
-  locale: navigator.language,
+  locale: navigatorLanguage,
   fallback: true,
   fallbackLocale: 'en',
   messages

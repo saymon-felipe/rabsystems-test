@@ -1,36 +1,36 @@
 <template>
     <section class="my-orders">
         <div class="page-title">
-            <h1 class="rabsystems-font">Meus pedidos</h1>
+            <h1 class="rabsystems-font">{{ $t("my_orders.my_orders") }}</h1>
         </div>
         <table class="order-list">
             <tr class="order-list-head">
                 <td>{{ $t("my_orders.name") }}</td>
-                <td>Id</td>
+                <td>{{ $t("my_orders.id") }}</td>
                 <td class="sort-button" id="sort-by-date" v-on:click="sortData('date', 'sort-by-date')" sortStatus="down">
-                    Data
+                    {{ $t("my_orders.date") }}
                     <i class="fas fa-sort-down sort-icon"></i>
                 </td>
-                <td>Serviço</td>
+                <td>{{ $t("my_orders.service") }}</td>
                 <td class="sort-button" id="sort-by-price" v-on:click="sortData('price', 'sort-by-price')" sortStatus="down">
-                    Preço
+                    {{ $t("my_orders.price") }}
                     <i class="fas fa-sort-down sort-icon"></i>
                 </td>
                 <td class="sort-button" id="sort-by-status"  v-on:click="sortData('status', 'sort-by-status')" sortStatus="down">
-                    Status
+                    {{ $t("my_orders.status") }}
                     <i class="fas fa-sort-down sort-icon"></i>
                 </td>
             </tr>
             <tr class="empty" v-if="orders.length == 0">
-                <td>Você ainda não fez nenhum pedido</td>
+                <td>{{ $t("my_orders.empty_orders") }}</td>
             </tr>
             <div class="responsive-filter" v-on:click="showResponsiveFilter()">
                 <i class="fas fa-filter" title="Filtrar por"></i>
                 <div class="responsive-filter-container">
                     <ul>
-                        <li class="sort-button" id="sort-by-date-responsive" v-on:click="sortData('date', 'sort-by-date-responsive', true)" sortStatus="down">Data</li>
-                        <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">Preço</li>
-                        <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">Status</li>
+                        <li class="sort-button" id="sort-by-date-responsive" v-on:click="sortData('date', 'sort-by-date-responsive', true)" sortStatus="down">{{ $t("my_orders.date") }}</li>
+                        <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">{{ $t("my_orders.price") }}</li>
+                        <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">{{ $t("my_orders.status") }}</li>
                     </ul>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                                 <td class="order-name" :title="order.user_name"><strong>{{ order.user_name }}</strong></td>
                                 <td class="order-id">#{{ order.order_id }}</td>
                                 <td class="order-date" :title="getMomentExtended(order.create_date)">{{ getMoment(order.create_date) }}</td>
-                                <td class="order-title" :title="order.service">{{ order.service }}</td>
+                                <td class="order-title" :title="returnOrderService(order.service)">{{ returnOrderService(order.service) }}</td>
                                 <td class="order-price">{{ order.price == "" ? "--,--" : order.price }}</td>
                                 <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
                             </router-link>
@@ -54,7 +54,7 @@
         </table>
         <router-link class="new-order" to="/new-order" v-if="!$root.havePermission">
             <i class="fas fa-plus-circle"></i>
-            <h5>Novo pedido</h5>
+            <h5>{{ $t("my_orders.new_order") }}</h5>
         </router-link>
         <audio src="../assets/audio/message_notification.ogg" id="notification-audio" preload="auto"></audio>
     </section>
@@ -80,6 +80,21 @@ export default {
         this.returnOrders();
     },
     methods: {
+        returnOrderService: function (service) {
+            let returnService = "";
+            switch (service) {
+                case "site":
+                    returnService = this.$i18n.t("my_orders.site");
+                    break;
+                case "web-system":
+                    returnService = this.$i18n.t("my_orders.web_system");
+                    break;
+                case "web-design":
+                    returnService = this.$i18n.t("my_orders.web_design");
+                    break;
+            }
+            return returnService;
+        },
         fillNewMessageNotification: function (order_list) {
             let play_audio = false;
             let audioElement = $("#notification-audio")[0];
@@ -180,15 +195,15 @@ export default {
         findStatus: function (status) {
             switch (status) {
                 case 0:
-                    return "Aguardando resposta";
+                    return this.$i18n.t("my_orders.waiting_answer");
                 case 1:
-                    return "Aguardando pagamento";
+                    return this.$i18n.t("my_orders.waiting_payment");
                 case 2:
-                    return "Em andamento";
+                    return this.$i18n.t("my_orders.in_progress");
                 case 3:
-                    return "Concluído"
+                    return this.$i18n.t("my_orders.finished");
                 case 4: 
-                    return "Cancelado";
+                    return this.$i18n.t("my_orders.canceled");
             }
         },
         findStatusClass: function (status) {

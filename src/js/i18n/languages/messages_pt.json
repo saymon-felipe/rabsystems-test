@@ -1,5 +1,76 @@
 {
     "my_orders": {
-        "name": "Nome"
+        "name": "Nome",
+        "id": "Id",
+        "date": "Data",
+        "service": "Serviço",
+        "price": "Preço",
+        "status": "Status",
+        "empty_orders": "Você ainda não fez nenhum pedido.",
+        "site": "Site",
+        "web_system": "Sistema WEB",
+        "web_design": "Design WEB",
+        "waiting_answer": "Aguardando resposta",
+        "waiting_payment": "Aguardando pagamento",
+        "in_progress": "Em andamento",
+        "finished": "Concluído",
+        "canceled": "Cancelado",
+        "my_orders": "Meus pedidos",
+        "new_order": "Novo pedido"
+    },
+    "new_order": {
+        "new_order": "Novo pedido",
+        "service_type": "Tipo de serviço",
+        "website_creation": "Criação de sites",
+        "web_system_creation": "Criação de sistemas web",
+        "web_design_creation": "Criação de design de sites e sistemas",
+        "description": "Descrição",
+        "send": "Enviar"
+    },
+    "header": {
+        "rabsystems_icon": "Ícone Rabsystems",
+        "open_menu": "Abrir menu",
+        "greetings": "Olá",
+        "exit": "Sair",
+        "my_orders": "Meus pedidos",
+        "financial": "Financeiro",
+        "conferences": "Conferências",
+        "my_profile": "Meu perfil",
+        "support": "Suporte"
+    },
+    "financial": {
+        "financial": "Financeiro",
+        "id": "Id",
+        "price": "Preço",
+        "status": "Status",
+        "situation": "Situação",
+        "dint_order": "Você ainda não fez nenhum pedido.",
+        "paid": "Pago",
+        "canceled": "Cancelado",
+        "pay": "Pagar"
+    },
+    "conferences": {
+        "conferences": "Conferências",
+        "conferences_empty": "Sem conferências em andamento",
+        "start_conference": "Iniciar uma conferência"
+    },
+    "create_room": {
+        "create_room": "Criar sala",
+        "enter_room_name": "Digite o nome da sala"
+    },
+    "room": {
+        "want_enter": "deseja entrar na sala",
+        "approve_participant": "Aprovar participante",
+        "decline_participant": "Recusar participante",
+        "other_participants": "e outros <strong>{length} usuários</strong> desejam entrar na sala",
+        "manage_requests": "Gerenciar pedidos para entrar na sala",
+        "turn_room_visible": "Tornar sala visível para todos",
+        "lock_room": "Trancar a sala",
+        "turn_off_call": "Desligar a chamada",
+        "external_conference": "Abrir conferência em outra janela",
+        "room": "Sala - ",
+        "invite_users": "Convidar usuários",
+        "unlock_room": "Destrancar a sala",
+        "turn_room_invisible": "Tornar sala invisível para todos"
     }
 }

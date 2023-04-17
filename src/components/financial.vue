@@ -1,40 +1,40 @@
 <template>
     <section class="financial">
         <div class="page-title">
-            <h1 class="rabsystems-font">Financeiro</h1>
+            <h1 class="rabsystems-font">{{ $t("financial.financial") }}</h1>
         </div>
         <div class="responsive-filter" v-on:click="showResponsiveFilter()">
             <i class="fas fa-filter" title="Filtrar por"></i>
             <div class="responsive-filter-container">
                 <ul>
-                    <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">Preço</li>
-                    <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">Status</li>
+                    <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">{{ $t("financial.price") }}</li>
+                    <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">{{ $t("financial.status") }}</li>
                 </ul>
             </div>
         </div>
         <div class="charges-list">
             <table>
                 <tr class="order-list-head">
-                    <td>Id</td>
+                    <td>{{ $t("financial.id") }}</td>
                     <td class="sort-button" id="sort-by-price" v-on:click="sortData('price', 'sort-by-price')" sortStatus="down">
-                        Preço
+                        {{ $t("financial.price") }}
                         <i class="fas fa-sort-down sort-icon"></i>
                     </td>
                     <td class="sort-button" id="sort-by-status"  v-on:click="sortData('status', 'sort-by-status')" sortStatus="down">
-                        Situação
+                        {{ $t("financial.situation") }}
                         <i class="fas fa-sort-down sort-icon"></i>
                     </td>
                 </tr>
                 <tr class="empty" v-if="orders.length == 0">
-                    <td>Você ainda não fez nenhum pedido</td>
+                    <td>{{ $t("financial.dint_order") }}</td>
                 </tr>
                 <tr class="order" v-for="(order, index) in orders" :key="index">
                     <td class="order-id">#{{ order.order_id }}</td>
                     <td class="order-price">{{ order.price == 0 ? "--,--" : order.price }}</td>
                     <td class="buttons">
-                        <button v-if="order.order_status == 0" v-on:click="payOrder(order.id)" :disabled="order.order_status == 0 ? 'disabled' : false">Pagar</button>
-                        <h6 v-if="order.order_status != 0 && order.order_status != 4" class="finished">Pago</h6>
-                        <h6 v-if="order.order_status == 4" class="canceled">Cancelado</h6>
+                        <button v-if="order.order_status == 0" v-on:click="payOrder(order.id)" :disabled="order.order_status == 0 ? 'disabled' : false">{{ $t("financial.pay") }}</button>
+                        <h6 v-if="order.order_status != 0 && order.order_status != 4" class="finished">{{ $t("financial.paid") }}</h6>
+                        <h6 v-if="order.order_status == 4" class="canceled">{{ $t("financial.canceled") }}</h6>
                     </td>
                 </tr>
             </table>

@@ -3,8 +3,8 @@
         <div class="header-container">
             <div class="site-logo">
                 <router-link to="/my-orders" style="background: none;">
-                    <img src="../assets/img/logo-completa.png" alt="Icone rabsystems" class="site-logo-img-big" />
-                    <img src="../assets/img/icone.png" alt="Icone rabsystems" class="site-logo-img-small" />
+                    <img src="../assets/img/logo-completa.png" :alt="$t('header.rabsystems_icon')" class="site-logo-img-big" />
+                    <img src="../assets/img/icone.png" :alt="$t('header.rabsystems_icon')" class="site-logo-img-small" />
                 </router-link>
             </div>
             <div class="header-informations-container">
@@ -16,18 +16,18 @@
                 </div>
                 <ChatList :user="$root.user" :rabsystemsUser="$root.rabsystemsUser" :newMessages="newMessages" />
                 <div class="chat-wrapper" v-on:click="toggleChatList()"></div>
-                <div class="no-responsive-header" v-on:click="showMoreOptions()" title="Abrir menu">
+                <div class="no-responsive-header" v-on:click="showMoreOptions()" :title="$t('header.open_menu')">
                     <nav class="header">
                         <div class="home-user">
                             <div class="user-avatar">
                                 <img :src="$root.user.profile_photo" class="avatar-p">
                             </div>
-                            <h5>Olá, <span class="user-name">&nbsp;{{ $root.user.name }}</span></h5>
+                            <h5>{{ $t("header.greetings") }}, <span class="user-name">&nbsp;{{ $root.user.name }}</span></h5>
                         </div>
                     </nav>  
                     <div class="more-options-container" title="">
                         <ul>
-                            <li v-on:click="logoutUser()" class="logout-user-button">Sair</li>
+                            <li v-on:click="logoutUser()" class="logout-user-button">{{ $t("header.exit") }}</li>
                         </ul>
                     </div>
                     <div class="leave-app-wrapper" v-on:click="showMoreOptions()"></div>
@@ -39,11 +39,11 @@
                 <i class="fas fa-bars"></i>
             </div>
             <div class="vertical-menu-list">
-                <router-link class="link" to="/my-orders">Meus pedidos</router-link>
-                <router-link class="link" to="/financial">Financeiro</router-link>
-                <router-link class="link" to="/rooms">Conferências</router-link>
-                <router-link class="link" to="/profile" @click.native="$router.go()">Meu perfil</router-link>
-                <router-link class="link" to="/support">Suporte</router-link>
+                <router-link class="link" to="/my-orders">{{ $t("header.my_orders") }}</router-link>
+                <router-link class="link" to="/financial">{{ $t("header.financial") }}</router-link>
+                <router-link class="link" to="/rooms">{{ $t("header.conferences") }}</router-link>
+                <router-link class="link" to="/profile" @click.native="$router.go()">{{ $t("header.my_profile") }}</router-link>
+                <router-link class="link" to="/support">{{ $t("header.support") }}</router-link>
             </div>
             <div class="vertical-menu-footer">
                 <img src="../assets/img/icone-preto.png" class="icon-footer">

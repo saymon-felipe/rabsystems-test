@@ -1,25 +1,25 @@
 <template>
     <section class="new-order">
         <div class="new-order-title">
-            <h1 class="rabsystems-font">Novo pedido</h1>
+            <h1 class="rabsystems-font">{{ $t("new_order.new_order") }}</h1>
         </div>
         <div class="new-order-form">
             <form action="new-order" @submit.prevent="submitNewOrderForm()">
                 <div class="form-header">
                     <div class="form-input">
                         <select name="service" id="service" required>
-                            <option value="">-- Tipo de serviço --</option>
-                            <option value="Formatação">Formatação de computador</option>
-                            <option value="Manutenção">Manutenção de computador</option>
-                            <option value="Sistema WEB">Criação ou manutenção de sistema WEB</option>
+                            <option value="">-- {{ $t("new_order.service_type") }} --</option>
+                            <option value="site">{{ $t("new_order.website_creation") }}</option>
+                            <option value="web-system">{{ $t("new_order.web_system_creation") }}</option>
+                            <option value="web-design">{{ $t("new_order.web_design_creation") }}</option>
                         </select>
                     </div>
                 </div>
-                <h5 class="error">Pedidos ainda não serão realizados pois o sistema está em beta.</h5>
+                <h5 class="error" style="display: none;">Pedidos ainda não serão realizados pois o sistema está em beta.</h5>
                 <div class="form-body">
-                    <textarea name="description" id="description" maxlength="5000" placeholder="Descrição" required></textarea>
+                    <textarea name="description" id="description" maxlength="5000" :placeholder="$t('new_order.description')" required></textarea>
                 </div>
-                <input type="submit" value="Enviar">
+                <input type="submit" :value="$t('new_order.send')">
             </form>
             <div class="loading"></div>
         </div>

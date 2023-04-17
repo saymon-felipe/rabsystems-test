@@ -2,18 +2,18 @@
     <div class="conference-page">
         <div class="ongoing-conferences">
             <div class="page-title">
-                <h1 class="rabsystems-font">Conferências em andamento</h1>
+                <h1 class="rabsystems-font">{{ $t("conferences.conferences") }}</h1>
             </div>
             <div class="rooms-in-conference">
                 <roomsComponent v-for="(room, index) in rooms" v-bind:key="index" :room="room" />
                 <div class="no-rooms" v-if="rooms.length == 0">
-                    <p>Sem conferências em andamento</p>
+                    <p>{{ $t("conferences.conferences_empty") }}</p>
                 </div>
             </div>
         </div>
         <div class="create-a-conference">
             <router-link class="btn primary" to="/rooms/create">
-                Iniciar uma conferência
+                {{ $t("conferences.start_conference") }}
             </router-link>
         </div>
     </div>

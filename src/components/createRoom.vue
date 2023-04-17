@@ -1,12 +1,12 @@
 <template>
     <div class="create-room">
         <div class="page-title">
-            <h1 class="rabsystems-font">Criar sala</h1>
+            <h1 class="rabsystems-font">{{ $t("create_room.create_room") }}</h1>
         </div>      
         <div class="room-informations">
             <form @submit.prevent="createRoomFunction()">
-                <input type="text" id="room-name" placeholder="Digite o nome da sala" required>
-                <button type="submit" class="btn primary">Criar sala</button>
+                <input type="text" id="room-name" :placeholder="$t('create_room.enter_room_name')" required>
+                <button type="submit" class="btn primary">{{ $t("create_room.create_room") }}</button>
             </form>
         </div>
     </div>
