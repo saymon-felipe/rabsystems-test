@@ -52,7 +52,9 @@
     "conferences": {
         "conferences": "Conferências",
         "conferences_empty": "Sem conferências em andamento",
-        "start_conference": "Iniciar uma conferência"
+        "start_conference": "Iniciar uma conferência",
+        "join_conference": "Clique para entrar na conferência",
+        "locked_room": "Sala trancada, clique aqui para pedir para entrar"
     },
     "create_room": {
         "create_room": "Criar sala",
@@ -72,5 +74,83 @@
         "invite_users": "Convidar usuários",
         "unlock_room": "Destrancar a sala",
         "turn_room_invisible": "Tornar sala invisível para todos"
+    },
+    "my_profile": {
+        "my_profile": "Meu perfil",
+        "see_photo": "Ver foto",
+        "send_picture": "Enviar foto",
+        "delete_photo": "Excluir foto",
+        "edit_profile": "Editar perfil",
+        "name": "Nome",
+        "phone": "Telefone",
+        "identification_number": "Número de identificação (CPF)",
+        "street": "Rua",
+        "house_number": "Número da casa",
+        "complement": "Complemento",
+        "zip_code": "CEP",
+        "district": "Bairro",
+        "city": "Cidade",
+        "state": "Estado",
+        "country": "País",
+        "language": "Idioma",
+        "portuguese": "Português",
+        "english": "Inglês",
+        "photo_preview": "Pré visualização da foto",
+        "unsupported_file_type": "Tipo de arquivo não suportado",
+        "file_too_large": "Arquivo muito grande (limite 2mb)"
+    },
+    "support": {
+        "support": "Suporte",
+        "contact_reason": "Motivo do contato",
+        "name": "Nome",
+        "technical_assistance": "Assistência técnica",
+        "sugestion_text": "Sugestão, dúvida ou reclamação",
+        "requests": "Pedidos",
+        "others": "Outros",
+        "description": "Descrição",
+        "send": "Enviar"
+    },
+    "login": {
+        "login": "LOGIN",
+        "email": "Email",
+        "password": "Senha",
+        "not_registered": "Não é cadastrado?",
+        "register": "Registre-se",
+        "login_error": "Erro no login"
+    },
+    "register": {
+        "register": "REGISTRE-SE",
+        "email": "Email",
+        "password": "Senha",
+        "register_button": "REGISTRAR",
+        "already_registered": "Ja é cadastrado?",
+        "sign_in": "Faça login",
+        "registration_error": "Erro no cadastro",
+        "complete_registration": "COMPLETE O CADASTRO",
+        "name": "Nome",
+        "phone": "Telefone",
+        "identification_number": "Número de identificação (CPF)",
+        "street": "Rua",
+        "house_number": "Número da casa",
+        "complement": "Complemento",
+        "zip_code": "CEP",
+        "district": "Bairro",
+        "city": "Cidade",
+        "state": "Estado",
+        "country": "País",
+        "language": "Idioma",
+        "complete_registration_button": "COMPLETAR REGISTRO",
+        "error_completing_registration": "Erro ao completar o cadastro",
+        "check_fields": "Verifique os campos!"
+    },
+    "chat": {
+        "customers": "Clientes",
+        "view_more": "Ver mais",
+        "see_less": "Ver menos",
+        "reply": "Responder",
+        "new_messages": "Novas mensagens",
+        "you": "Você",
+        "purchase": "Compra",
+        "type_here": "Digite aqui..."
     }
 }

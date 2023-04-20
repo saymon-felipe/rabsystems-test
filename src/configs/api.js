@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios from 'axios';
+import { globalMethods } from '../js/globalMethods';
 
 let url_api;
 
@@ -17,8 +18,13 @@ switch (test_or_prod) {
         break;
 }
 
-const api = axios.create({
+let api = axios.create({
     baseURL: url_api
 });
+
+let currentLanguage = localStorage.getItem("lang");
+
+api.defaults.headers.common['Authorization'] = `Bearer ${globalMethods.methods.getJwtInLocalStorage()}`;
+api.defaults.headers.common['Accept-Language'] = `${currentLanguage};q=0.9,en;q=0.8`;
 
 export default api

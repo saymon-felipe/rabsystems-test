@@ -77,6 +77,7 @@ export default {
 .new-message-label {
     position: absolute;
     right: 0;
+    top: 3px;
     background: var(--red);
     color: var(--white);
     font-size: 14px;

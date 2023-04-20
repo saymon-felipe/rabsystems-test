@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import moment from 'moment';
-//import api from '../configs/api.js';
+import api from '../configs/api.js';
 
 export const globalMethods = {
     methods: {
@@ -163,8 +163,143 @@ export const globalMethods = {
                 localeLanguage = navigator.language.split("-")[0];
             }
             this.$i18n.locale = localeLanguage;
+            this.setNewLanguageInLocalStorage(localeLanguage);
             moment.locale(localeLanguage);
-        }
+        },
+        setNewLanguageInLocalStorage: function (language) {
+            localStorage.setItem("lang", language);
+        },
+        excludePhoto: function (from_upload = false) {
+            let self = this;
+
+            api.patch("/user/exclude_photo", "")
+            .then(function(response){
+                if (!from_upload) {
+                    location.reload();
+                } else {
+                    self.response = response.data.message;
+                }
+            }).catch(function(error){
+                console.log(error);
+            })
+        },
+        validateCpfInput: function (event) {
+            let target = $("#" + event.target.id);
+            let keycode = event.keyCode;
+
+            if (!(keycode == 8 || keycode == 46)) {
+                if (target.val().length < 11) {
+                    if (!(keycode >= 48 && keycode <= 57 || keycode >= 96 && keycode <= 105)) {
+                        event.preventDefault();
+                        return;
+                    }
+                } else {
+                    event.preventDefault();
+                    return;
+                }
+            }
+        },
+        disableInputs: function () {
+            $(".input-group input").attr("disabled", "disabled");
+            $(".input-group select").attr("disabled", "disabled");
+        },
+        validateName: function (event) {
+            let keycode = event.keyCode;
+
+            if (keycode >= 48 && keycode <= 57 || keycode >= 96 && keycode <= 105) {
+                event.preventDefault();
+                return;
+            }
+        },
+        formatCpf: function (event) {
+            let target = $("#" + event.target.id), newValue = "";
+
+            if (target.val().length == 11) {
+                for (let i in target.val()) {
+                    if (i == 3 || i == 6) {
+                        newValue += "." + target.val()[i];
+                    } else if (i == 9) {
+                        newValue += "-" + target.val()[i];
+                    } else {
+                        newValue += target.val()[i];
+                    }
+                }
+
+                target.val(newValue);
+            }
+        },
+        restoreCpf: function (event) {
+            let target = $("#" + event.target.id);
+
+            if (target.val().length < 14) {
+                target.val(target.val().replace(".", "").replace(".", "").replace("-", ""));
+            }
+        },
+        getTelInputValue: function() { // Pega o valor do input removendo caracteres especiais e espaço para submit do formulário.
+            let ddi = $(".current-flag-container .flag-item").attr("ddi");
+            let number = $("#tel-input").val().replace("(", "").replace(")", "").replace("-", "").replace(" ", '').replace(" ", '');
+
+            if (number == "") {
+                return;
+            }
+
+            return `${ddi}${number}`;
+        },
+        validaCep: function (event) {
+            let target = $("#" + event.target.id);
+            let keycode = event.keyCode;
+
+            if (!(keycode == 8 || keycode == 46)) {
+                if (target.val().length >= 8) {
+                    event.preventDefault();
+                    return;
+                }
+            }         
+        },
+        refreshJwt: function () {
+            let self = this;
+
+            api.post("/user/refresh_jwt", "")
+            .then(function(response){
+                let refreshedToken = response.data.returnObj.token;
+                self.setJwtInLocalStorage(refreshedToken);
+            }).catch(function(error){
+                console.log(error);
+            })
+        },
+        checkIfUserIsAuthenticated: function () {
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+            if (window.location.pathname != "/register") {
+                if (jwt == "Bearer null") {
+                    self.logoutUser();
+                } else {
+                    let user_out = $("body").hasClass("hidden");
+                    api.post("/user/check_jwt", {user_out: user_out})
+                    .then(function(response){
+                        console.log("Authenticated user. JWT check in " + new Date());
+                        if (response.data.user.incomplete_registration == "true") {
+                            if (self.$route.path != "/complete-registration") {
+                                self.$router.push("/complete-registration");
+                            }
+                        } else {
+                            if (window.location.pathname == "/login") {
+                                setTimeout(() => {
+                                    self.$router.push('/my-orders');
+                                }, 2 * 1000)
+                            }
+                            setTimeout(() => {
+                                self.checkIfUserIsAuthenticated();
+                            }, 60 * 1000); // Repetição da função a cada 20 segundos
+                        }
+                        
+                    }).catch(function(){
+                        console.log("Unauthenticated user. JWT check in " + new Date());
+                        self.logoutUser();
+                    })
+                }
+            }
+        },
     },
     data() {
         return {

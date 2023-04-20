@@ -1,7 +1,7 @@
 <template>
     <div class="chat-container-list">
         <div class="chat-list-header">
-            <h1 v-if="$root.havePermission">Clientes</h1>
+            <h1 v-if="$root.havePermission">{{ $t("chat.customers") }}</h1>
             <h1 v-if="!$root.havePermission">Rabsystems</h1>
         </div>
         <div class="chat-list-body">

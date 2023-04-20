@@ -1,19 +1,19 @@
 <template>
     <section class="login">
         <div class="login-container">
-            <h1 class="rabsystems-font">LOGIN</h1>
+            <h1 class="rabsystems-font">{{ $t("login.login") }}</h1>
             <form action="login" @submit.prevent="login()">
                 <div class="input-group">
-                    <input class="input" type="email" name="email" id="email" placeholder="Email" required>
+                    <input class="input" type="email" name="email" id="email" :placeholder="$t('login.email')" required>
                 </div>
                 <div class="input-group">
-                    <input class="input" type="password" name="password" id="password" placeholder="Senha" required>
+                    <input class="input" type="password" name="password" id="password" :placeholder="$t('login.password')" required>
                 </div>
-                <input type="submit" id="submit" value="LOGIN">
+                <input type="submit" id="submit" :value="$t('login.login')">
             </form>
             <div class="go-to-register">
-                <span>Não é cadastrado? </span>
-                <router-link to="/register">Registre-se</router-link>
+                <span>{{ $t("login.not_registered") }} </span>
+                <router-link to="/register">{{ $t("login.register") }}</router-link>
             </div>
             <div class="loading-frame" v-if="loading"></div>
             <div class="response" :class="responseClass">{{ message }}</div>
@@ -68,7 +68,7 @@ export default {
                 if (error) {
                     self.loading = false;
                     $("#submit").attr("disabled", false);
-                    self.message = "Erro no login";
+                    self.message = this.$i18n.t("login.login_error");
                     self.responseClass = "error";
                 }
             })
@@ -85,10 +85,7 @@ export default {
             if (jwt != null) {
                 this.disableInputs();
                 this.loading = true;
-                setTimeout(() => {
-                    this.loading = false;
-                    this.$router.push("/my-orders");
-                }, 2 * 1000)
+                this.checkIfUserIsAuthenticated();
             }
         }
     },

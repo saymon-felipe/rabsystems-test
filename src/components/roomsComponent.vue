@@ -14,8 +14,8 @@
                 </div>
             </div>
             <div class="room-actions">
-                <i v-if="room.locked_room != 1" class="fas fa-video" title="Clique para entrar na conferência" v-on:click="enterRoom()"></i>
-                <i v-if="room.locked_room == 1" class="fas fa-lock lock-icon" title="Sala trancada, clique aqui para pedir para entrar" v-on:click="enterRoom()"></i>
+                <i v-if="room.locked_room != 1" class="fas fa-video" :title="$t('conferences.join_conference')" v-on:click="enterRoom()"></i>
+                <i v-if="room.locked_room == 1" class="fas fa-lock lock-icon" :title="$t('conferences.locked_room')" v-on:click="enterRoom()"></i>
             </div>
         </div>
     </div>

@@ -22,7 +22,7 @@
                     <div class="replied-message" v-if="message.reference_message_id != 0" :class="message.sender_id == $root.user.id ? 'out' : 'in'">
                         <div class="replied-message-inner" v-on:click="goToReferencedMessage(message.reference_message_id)">
                             <div class="replied-message-header">
-                                <h5>{{ message.reference_message_sender_id == $root.user.id ? 'Você' : message.reference_message_sender_name }}</h5>
+                                <h5>{{ message.reference_message_sender_id == $root.user.id ? $t("chat.you") : message.reference_message_sender_name }}</h5>
                                 <span>{{ formatDate(message.reference_message_send_date) }}</span>
                             </div>
                             <div class="replied-message-body">
@@ -43,19 +43,19 @@
                             <span v-html="message.message"></span>
                             <p v-if="message.target_type != ''" v-html="returnMessageTargetObject(message)" class="message-target"></p>
                         </div>
-                        <span class="show-more" v-on:click="expandMessage('#message-' + message.message_id)">Ver mais</span>
-                        <span class="show-less" v-on:click="contractMessage('#message-' + message.message_id)">Ver menos</span>
+                        <span class="show-more" v-on:click="expandMessage('#message-' + message.message_id)">{{ $t("chat.view_more") }}</span>
+                        <span class="show-less" v-on:click="contractMessage('#message-' + message.message_id)">{{ $t("chat.see_less") }}</span>
                         <div class="message-actions" v-on:click="openMessageOptionsContainer('#message-' + message.message_id)">
                             <span>...</span>
                         </div>
                         <div class="message-actions-container">
                             <ul>
-                                <li v-on:click="replyMessage(message)">Responder</li>
+                                <li v-on:click="replyMessage(message)">{{ $t("chat.reply") }}</li>
                             </ul>
                         </div>
                     </div>
                     <div class="new-messages-indicator">
-                        <span>Novas mensagens</span>
+                        <span>{{ $t("chat.new_messages") }}</span>
                     </div>
                 </div>
             </div>
@@ -67,11 +67,11 @@
                     <i class="fas fa-times" v-on:click="clearReplyMessage()"></i>
                 </div>
                 <div class="reply-message-body">
-                    <span class="reply-message-sender-name">{{ replyMessageObj.reference_message_sender_id == $root.user.id ? "Você" : replyMessageObj.reference_message_sender_name }}</span>
+                    <span class="reply-message-sender-name">{{ replyMessageObj.reference_message_sender_id == $root.user.id ? $t("chat.you") : replyMessageObj.reference_message_sender_name }}</span>
                     <span v-html="replyMessageObj.reference_message_content" class="reply-message"></span>
                 </div>
             </div>
-            <textarea name="message" id="message-input" rows="1" v-on:keydown="countRows($event)" v-on:keyup="countRows($event, true)" :disabled="loading"></textarea>
+            <textarea name="message" id="message-input" rows="1" v-on:keydown="countRows($event)" v-on:keyup="countRows($event, true)" :disabled="loading" :placeholder="$t('chat.type_here')"></textarea>
             <div class="input-icons">
                 <i class="fas fa-location-arrow" v-on:click="sendMessage()"></i>
             </div>
@@ -186,7 +186,7 @@ export default {
             let targetType = message.target_type;
             let returnText = "";
             if (targetType == "order") {
-                returnText = `<a href="/order-details/${targetId}">Compra ${targetId}</a>`
+                returnText = `<a href="/order-details/${targetId}">${this.$i18n.t("chat.purchase")} ${targetId}</a>`
             }
             return returnText;
         },

@@ -1,7 +1,7 @@
 <template>
     <section class="profile" v-on:click="hideDetailsContainer($event)">
         <div class="page-title">
-            <h1 class="rabsystems-font">Meu perfil</h1>
+            <h1 class="rabsystems-font">{{ $t("my_profile.my_profile") }}</h1>
         </div>
         <div class="row">
             <div class="col-lg-4 col-md-12">
@@ -11,15 +11,15 @@
                             <img :src="$root.user.profile_photo" class="profile-image" v-on:click="showDetailsContainer()">
                             <div class="photo-change-details">
                                 <ul>
-                                    <li v-on:click="viewPhoto()" class="view-photo" v-if="!defaultPhoto">Ver foto</li>
-                                    <li v-on:click="showSendPhotoContainer()">Enviar foto</li>
-                                    <li v-on:click="excludePhoto()" class="view-photo" v-if="!defaultPhoto">Excluir foto</li>
+                                    <li v-on:click="viewPhoto()" class="view-photo" v-if="!defaultPhoto">{{ $t("my_profile.see_photo") }}</li>
+                                    <li v-on:click="showSendPhotoContainer()">{{ $t("my_profile.send_picture") }}</li>
+                                    <li v-on:click="excludePhoto()" class="view-photo" v-if="!defaultPhoto">{{ $t("my_profile.delete_photo") }}</li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-lg-12 col-6">
                             <h1>{{ $root.user.name }}</h1>
-                            <button v-on:click="changeProfileFunc()" id="change-profile">Editar perfil</button>
+                            <button v-on:click="changeProfileFunc()" id="change-profile">{{ $t("my_profile.edit_profile") }}</button>
                             <div class="action-buttons">
                                 <button v-on:click="cancelChangeProfile()" id="close-change-profile" class="close-change-profile">
                                     <i class="fas fa-times"></i>
@@ -40,13 +40,13 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="name">Nome</label>
+                                    <label for="name">{{ $t("my_profile.name") }}</label>
                                     <input type="text" name="name" id="name" v-on:keydown="validateName($event)" v-model="$root.user.name" maxlength="30" required>
                                 </div>
                             </div> 
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                <label for="tel-input">Telefone</label>
+                                <label for="tel-input">{{ $t("my_profile.phone") }}</label>
                                 <div class="rabsystems-input">
                                     <div class="flag-input">
                                         <div class="current-flag-container"></div>
@@ -58,49 +58,55 @@
                             </div> 
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="cpf">Cpf</label>
-                                    <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)" v-model="$root.user.cpf" required>
+                                    <label for="cpf">{{ $t("my_profile.identification_number") }}</label>
+                                    <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)" v-model="$root.user.cpf">
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="street">Rua</label>
+                                    <label for="street">{{ $t("my_profile.street") }}</label>
                                     <input type="text" name="street" id="street" v-model="$root.user.street" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="number">Numero</label>
+                                    <label for="number">{{ $t("my_profile.house_number") }}</label>
                                     <input type="number" name="number" id="number" v-model="$root.user.number" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="complement">Complemento</label>
+                                    <label for="complement">{{ $t("my_profile.complement") }}</label>
                                     <input type="text" name="complement" id="complement" v-model="$root.user.complement" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="cep">Cep</label>
+                                    <label for="cep">{{ $t("my_profile.zip_code") }}</label>
                                     <input type="number" name="cep" id="cep" v-on:keydown="validaCep($event)" v-model="$root.user.cep" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="district">Bairro</label>
+                                    <label for="district">{{ $t("my_profile.district") }}</label>
                                     <input type="text" name="district" id="district" v-model="$root.user.district" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="city">Cidade</label>
+                                    <label for="city">{{ $t("my_profile.city") }}</label>
                                     <input type="text" name="city" id="city" v-model="$root.user.city" required>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-6 col-sm-12" v-if="$i18n.locale != 'pt'">
                                 <div class="input-group">
-                                    <label for="state">Estado</label>
+                                    <label for="country">{{ $t("my_profile.state") }}</label>
+                                    <input type="text" name="state" id="state" v-model="$root.user.state" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12" v-if="$i18n.locale == 'pt'">
+                                <div class="input-group">
+                                    <label for="state">{{ $t("my_profile.state") }}</label>
                                     <select name="state" id="state" v-model="$root.user.state" required>
                                         <option value="">----</option>
                                         <option value="AC">Acre</option>
@@ -135,17 +141,17 @@
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="country">País</label>
+                                    <label for="country">{{ $t("my_profile.country") }}</label>
                                     <input type="text" name="country" id="country" v-model="$root.user.country" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
-                                    <label for="country">Idioma</label>
+                                    <label for="country">{{ $t("my_profile.language") }}</label>
                                     <select name="language" id="language" v-model="$root.user.language" required>
-                                        <option value="">-- Idioma --</option>
-                                        <option value="pt">Português</option>
-                                        <option value="en">Inglês</option>
+                                        <option value="">-- {{ $t("my_profile.language") }} --</option>
+                                        <option value="pt">{{ $t("my_profile.portuguese") }}</option>
+                                        <option value="en">{{ $t("my_profile.english") }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -158,29 +164,10 @@
             <i class="fas fa-times" v-on:click="closePhotoContainer()"></i>
             <img :src="$root.user.profile_photo">
         </div>
-        <div class="upload">
-            <div class="send">
-                <form class="send-photo" method="post" enctype="multipart/form-data">
-                    <div class="input-file-custom">
-                        <label for="photo" id="upload-button">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            Upload
-                        </label>
-                        <span>JPG, PNG</span>
-                    </div>
-                    <h6 class="file-name"></h6>
-                    <input type="file" name="photo" id="photo" @change.prevent="sendPhoto($event)" title="Envie uma foto nos formatos PNG ou JPG">
-                    <button type="button" id="send-photo-button" class="save-button">Enviar foto</button>
-                </form>
-            </div>
-            <div class="response font-small">{{ modalResponse }}</div>
-            <div class="photo-preview">
-                <img class="image-preview" alt="Pré visualização da foto">
-            </div>
-            <button>Remover foto</button>
-            <div class="loading"></div>
-        </div>
-        <div class="overlay" v-on:click="closePhotoContainer(); hideSendPhotoContainer()"></div>
+        <modal v-if="showModal" :title="modalTitle" buttonTitle="" button2Title="" @closeModal="closeThisModal()" @submitEvent="submitFunction()">
+            <sendPhotoModalContent @success="hideSendPhotoContainer()" />
+        </modal>
+        <div class="overlay" v-on:click="closePhotoContainer()"></div>
     </section>
 </template>
 
@@ -188,16 +175,32 @@
 import $ from 'jquery';
 import { globalMethods } from '../js/globalMethods';
 import api from '../configs/api.js';
+import modal from "./modal.vue";
+import sendPhotoModalContent from "./sendPhotoModalContent.vue";
 
 export default {
     name: "profile",
     mixins: [globalMethods],
+    components: {
+        modal,
+        sendPhotoModalContent
+    },
     data() {
         return {
             changeProfile: false,
             defaultPhoto: false,
             response: null,
-            modalResponse: null
+            showModal: false,
+            modalTitle: ""
+        }
+    },
+    watch: {
+        showModal: function () {
+            if (this.showModal) {
+                this.showDetailsContainer();
+            } else {
+                this.hideDetailsContainer();
+            }
         }
     },
     methods: {
@@ -207,72 +210,6 @@ export default {
                     $(".view-photo").hide();
                 }
             }
-        },
-        getTelInputValue: function () { // Pega o valor do input removendo caracteres especiais e espaço para submit do formulário.
-            let ddi = $(".current-flag-container .flag-item").attr("ddi");
-            let number = $("#tel-input").val().replace("(", "").replace(")", "").replace("-", "").replace(" ", '').replace(" ", '');
-
-            if (number == "") {
-                return;
-            }
-
-            if (number.indexOf("+") != -1) {
-                return `${number}`;
-            }
-
-            return `${ddi}${number}`;
-        },
-        validateCpfInput: function (event) {
-            let target = $("#" + event.target.id);
-            let keycode = event.keyCode;
-
-            if (!(keycode == 8 || keycode == 46)) {
-                if (target.val().length < 11) {
-                    if (!(keycode >= 48 && keycode <= 57 || keycode >= 96 && keycode <= 105)) {
-                        event.preventDefault();
-                        return;
-                    }
-                } else {
-                    event.preventDefault();
-                    return;
-                }
-            }
-        },
-        validateName: function (event) {
-            let keycode = event.keyCode;
-
-            if (keycode >= 48 && keycode <= 57 || keycode >= 96 && keycode <= 105) {
-                event.preventDefault();
-                return;
-            }
-        },
-        formatCpf: function (event) {
-            let target = $("#" + event.target.id), newValue = "";
-
-            if (target.val().length == 11) {
-                for (let i in target.val()) {
-                    if (i == 3 || i == 6) {
-                        newValue += "." + target.val()[i];
-                    } else if (i == 9) {
-                        newValue += "-" + target.val()[i];
-                    } else {
-                        newValue += target.val()[i];
-                    }
-                }
-
-                target.val(newValue);
-            }
-        },
-        restoreCpf: function (event) {
-            let target = $("#" + event.target.id);
-
-            if (target.val().length < 14) {
-                target.val(target.val().replace(".", "").replace(".", "").replace("-", ""));
-            }
-        },
-        disableInputs: function () {
-            $(".input-group input").attr("disabled", "disabled");
-            $(".input-group select").attr("disabled", "disabled");
         },
         enableInputs: function () {
             let self = this;
@@ -319,9 +256,6 @@ export default {
                 setTimeout(() => {
                     editButton.attr("disabled", false).css("opacity", 1);
                     self.disableInputs();
-                    setTimeout(() => {
-                        location.reload();
-                    }, 400);
                 }, 10);
             }, 400);
         },
@@ -341,13 +275,14 @@ export default {
 
                 let empty = false;
                 for (let i in data) {
-                    if (data[i] == "") {
+                    if (data[i] == "" && i != "cpf") {
                         empty = true;
                         self.response = "Não pode haver campos vazios!";
                     }
                 }
+                
                 if (!empty) {
-                    if ($("#tel-input").attr("is_valid") == "true" && $("#cpf").val().length == 14) {
+                    if ($("#tel-input").attr("is_valid") == "true") {
                         let jwt = "Bearer " + self.getJwtInLocalStorage();
 
                         $(".loading").show();
@@ -372,17 +307,6 @@ export default {
                     }
                 }
             }, 30);
-        },
-        validaCep: function (event) {
-            let target = $("#" + event.target.id);
-            let keycode = event.keyCode;
-
-            if (!(keycode == 8 || keycode == 46)) {
-                if (target.val().length >= 8) {
-                    event.preventDefault();
-                    return;
-                }
-            }         
         },
         reloadInputs: function (disable) {
             $("#cpf").focus();
@@ -436,103 +360,12 @@ export default {
             }, 400);
         },
         showSendPhotoContainer: function () {
-            $(".upload").show();
-
-            setTimeout(() => {
-                $(".upload").css("transform", "translateY(0)").css("opacity", 1);
-            }, 10);
-            
-            $(".overlay").show();
-        },
-        resetPhotoInput: function () {
-            $(".image-preview").attr("src", "");
-            $(".photo-preview").css("display", "none");
-            $('.file-name').html("").hide();
-            $("#send-photo-button").hide();
-            $("#photo").val("");
-        },
-        sendPhoto: function (event) {
-            let formData = new FormData, self = this;
-
-            $(".file-name").show();
-            self.modalResponse = "";
-
-            let filePath = $("#photo").val(); // Busca o nome o nome do arquivo e o exibe.
-            let fileSplited = filePath.split('\\');
-            let fileName = fileSplited[fileSplited.length - 1];
-            $('.file-name').html(fileName);
-
-            let file = event.target.files.item(0);
-
-            if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png") { // Se o arquivo tiver um desses formatos (PNG, JPG E JPEG), a imagem é exibida no modal e é permitida a requisição para o servidor, se não aparece a mensagem (arquivo não suportado).
-                let adress = new FileReader();
-
-                $("#send-photo-button").show();
-                formData.set("user_imagem", file);
-                adress.readAsDataURL(file);
-                adress.onloadend = () => {
-                    $(".image-preview").attr("src", adress.result);
-                    $(".photo-preview").css("display", "flex");
-                };
-
-                $("#send-photo-button").on("click", () => {
-                    self.uploadPhoto(formData); // Faz a requisição de upload de foto.
-                });
-            } else {
-                $(".image-preview").attr("src", "");
-                $(".photo-preview").css("display", "none");
-                self.modalResponse = "Tipo de arquivo não suportado";
-            }
-        },
-        uploadPhoto: function (formData) {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-            self.excludePhoto(true);
-
-            self.modalResponse = "";
-            $(".loading").show();
-
-            api.patch("/user/change_photo", formData, {
-                headers: {
-                        Authorization: jwt
-                    }
-            })
-            .then(function(){
-                self.hideSendPhotoContainer();
-                self.$router.go();
-            }).catch(function(error){
-                self.modalResponse = "Arquivo muito grande (limite 2mb)";
-                console.log(error);
-            }).then(function () {
-                $(".loading").hide();
-            })
+            this.showModal = true;
+            this.fillModalVariables(this.$i18n.t("my_profile.send_picture"), "", "");
         },
         hideSendPhotoContainer: function () {
-            let self = this;
-            $(".upload").css("transform", "translateY(-100px)").css("opacity", 0);
-            
-            setTimeout(() => {
-                self.resetPhotoInput();
-                $(".upload").hide();
-                $(".overlay").hide();
-            }, 400); 
-        },
-        excludePhoto: function (from_upload = false) {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-
-            api.patch("/user/exclude_photo", "", {
-                headers: {
-                        Authorization: jwt
-                    }
-            })
-            .then(function(response){
-                if (!from_upload) {
-                    location.reload();
-                } else {
-                    self.response = response.data.message;
-                }
-            }).catch(function(error){
-                console.log(error);
-            })
+            this.closeThisModal();
+            this.resetModalVariables();
         },
         checkDefaultPhoto: function () {
             let profile_photo = this.$root.user.profile_photo;
@@ -551,6 +384,32 @@ export default {
 </script>
 
 <style scoped>
+
+.view-photo-container {
+    width: 80%;
+    height: 90%;
+    max-width: 800px;
+    max-height: 600px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background: var(--white);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s;
+    transform: translateY(-100px);
+    opacity: 0;
+    display: none;
+    z-index: 4;
+}
     .profile {
         width: calc(100% - 225px);
         height: 100%;
@@ -587,45 +446,19 @@ export default {
             }
     }
 
-    .view-photo-container, .upload {
-        width: 80%;
-        height: 90%;
-        max-width: 800px;
-        max-height: 600px;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        background: var(--white);
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 1.5rem;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.4s;
-        transform: translateY(-100px);
-        opacity: 0;
-        display: none;
-        z-index: 4;
+    .view-photo-container i {
+        align-self: flex-end;
+        margin-bottom: 1rem;
+        cursor: pointer;
     }
 
-        .view-photo-container i {
-            align-self: flex-end;
-            margin-bottom: 1rem;
-            cursor: pointer;
-        }
-
-        .view-photo-container img {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            object-fit: cover;
-            border-radius: 10px;
-        }
+    .view-photo-container img {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        object-fit: cover;
+        border-radius: 10px;
+    }
 
     @media (max-width: 600px) {
         .view-photo-container {
@@ -643,107 +476,6 @@ export default {
         .view-photo-container {
             margin-top: 0px;
         }
-    }
-
-    .send {
-        display: flex;
-        justify-content: center;
-    }
-
-    .send-photo {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        justify-content: center;
-        overflow: hidden;
-        height: auto;
-    }
-
-    .upload button {
-        display: none;
-    }
-
-    .input-file-custom {
-        margin: 0 1rem;
-    }
-
-        .input-file-custom span {
-            display: block;
-            text-align: center;
-        }
-
-    #upload-button {
-        background: var(--blue);
-        color: white;
-        border-radius: 5px;
-        padding: 5px 20px;
-        cursor: pointer;
-    }
-
-        #upload-button:hover {
-            background: var(--blue-low);
-        }
-
-    .file-name {
-        margin-right: 1rem;
-        height: 34px;
-        display: none;
-        align-items: center;
-        max-width: 15ch;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    input[type='file'] {
-        display: none;
-    }
-
-    .save-button {
-        padding: 5px 15px;
-        text-align: center;
-        background: var(--green);
-        color: white;
-        text-transform: uppercase;
-        font-weight: 500;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-        .save-button:hover {
-            background: var(--green-low);
-        }
-
-    .response {
-        margin-top: 1rem;
-        text-align: center;
-        font-size: 1.3rem;
-        text-transform: uppercase;
-        font-weight: 600;
-        letter-spacing: 2px;
-        color: var(--red);
-    }
-
-    .font-small {
-        font-size: .9rem!important;
-    }
-
-    .photo-preview {
-        display: none;
-        /*display: flex;*/
-        align-items: center;
-        justify-content: center;
-        margin-top: 1rem;
-        height: calc(100% - 130px);
-        overflow: hidden;
-    }
-
-    .image-preview {
-        width: 100%;
-        max-height: 100%;
-        border-radius: 10px;
-        object-fit: contain;
     }
 
     .user-image {

@@ -34,6 +34,7 @@ if ($(document).length) {
   }
   findPageVisibility();
 }
+
 let hidden;
 function findPageVisibility() {
   let visibilityChange;
@@ -106,8 +107,6 @@ function pesquisaCep(value, target) {
     $("#city").val(dados.localidade);
     $("#state").val(dados.uf);
     });
-  } else {
-    target.addClass("invalid-number");
   }
 }
 
@@ -118,3 +117,19 @@ $("#cep").on("focusout", event => {
 function getJwtInLocalStorage() {
   return localStorage.getItem("rabsystems_jwt");
 }
+
+let globalLanguage = localStorage.getItem("lang");
+
+function checkIfLangIsChanged() {
+  let localLanguage = localStorage.getItem("lang");
+  if (localLanguage != globalLanguage) {
+    globalLanguage = localLanguage;
+    location.reload();
+  } else {
+    setTimeout(() => {
+      checkIfLangIsChanged();
+    }, 1000)
+  }
+}
+
+checkIfLangIsChanged();

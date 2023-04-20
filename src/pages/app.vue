@@ -54,20 +54,15 @@ export default {
             }
         },
         requireUser: async function() { // Função retorna o usuário pelo id.
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
+            let self = this;
             if (self.$route.path != "/login" && self.$route.path != "/register") {
-                self.$root.user = await api.get("/user/get_user", { headers: { Authorization: jwt } }).then(res => res.data.response.user);
+                self.$root.user = await api.get("/user/get_user").then(res => res.data.response.user);
             }
         },
         getRabsystemsUser: function (recursive = false) {
             let self = this;
-            let jwt = "Bearer " + self.getJwtInLocalStorage();
             self.requireUser();
-            api.get("/user/get_rabsystems_user?with_last_message=true", {
-                headers: {
-                    Authorization: jwt
-                }
-            })
+            api.get("/user/get_rabsystems_user?with_last_message=true")
             .then(function(response){
                 self.$root.rabsystemsUser = response.data.obj.user;
                 if (recursive) {
@@ -79,36 +74,7 @@ export default {
                 console.log(error);
             })
         },
-        checkIfUserIsAuthenticated: function () {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-            if (window.location.pathname != "/login" && window.location.pathname != "/register") {
-                if (jwt == "Bearer null") {
-                    self.logoutUser();
-                } else {
-                    let user_out = $("body").hasClass("hidden");
-                    api.post("/user/check_jwt", {user_out: user_out}, {
-                        headers: {
-                                Authorization: jwt
-                            }
-                    })
-                    .then(function(response){
-                        console.log("Authenticated user. JWT check in " + new Date());
-                        if (response.data.user.incomplete_registration == "true") {
-                            if (self.$route.path != "/complete-registration") {
-                                self.$router.push("/complete-registration");
-                            }
-                        } else {
-                            setTimeout(() => {
-                                self.checkIfUserIsAuthenticated();
-                            }, 60 * 1000); // Repetição da função a cada 20 segundos
-                        }
-                    }).catch(function(){
-                        console.log("Unauthenticated user. JWT check in " + new Date());
-                        self.logoutUser();
-                    })
-                }
-            }
-        },
+        
         isDefaultPhoto: function (url) {
             if (url.indexOf("/public/") != -1) {
                 if ($(".view-photo").length) {
@@ -118,12 +84,12 @@ export default {
         }
    },
    mounted() {
-    moment.locale("pt-br");
-    setTimeout(() => {
-        this.checkIfUserIsAuthenticated();
-        this.getRabsystemsUser(true);
-        this.checkData();
-    }, 20);
+        moment.locale("pt-br");
+        setTimeout(() => {
+            this.checkIfUserIsAuthenticated();
+            this.getRabsystemsUser(true);
+            this.checkData();
+        }, 20);
    },
 }
 </script>

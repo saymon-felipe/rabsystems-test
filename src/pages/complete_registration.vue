@@ -2,18 +2,18 @@
     <section class="complete-registration">
         <div class="complete-registration-container">
             <i class="fas fa-power-off logout-icon" v-on:click="logoutUser()"></i>
-            <h1 class="rabsystems-font">COMPLETE O CADASTRO</h1>
+            <h1 class="rabsystems-font">{{ $t("complete_registration.complete_registration") }}</h1>
             <form id="complete-registration-form" @submit.prevent="complete_registration()">
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="name">Nome</label>
+                            <label for="name">{{ $t("complete_registration.name") }}</label>
                             <input type="text" name="name" id="name" v-on:keydown="validateName($event)" maxlength="30" required>
                         </div>
                     </div> 
                     <div class="col-md-6 col-sm-12">
                     <div class="input-group">
-                            <label for="tel-input">Telefone</label>
+                            <label for="tel-input">{{ $t("complete_registration.phone") }}</label>
                             <div class="rabsystems-input">
                                 <div class="flag-input">
                                     <div class="current-flag-container"></div>
@@ -25,49 +25,55 @@
                     </div> 
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="cpf">Cpf</label>
-                            <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)" required>
+                            <label for="cpf">{{ $t("complete_registration.identification_number") }}</label>
+                            <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="street">Rua</label>
+                            <label for="street">{{ $t("complete_registration.street") }}</label>
                             <input type="text" name="street" id="street" required>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="number">Numero</label>
+                            <label for="number">{{ $t("complete_registration.house_number") }}</label>
                             <input type="number" name="number" id="number" required>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="complement">Complemento</label>
+                            <label for="complement">{{ $t("complete_registration.complement") }}</label>
                             <input type="text" name="complement" id="complement" required>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="cep">Cep</label>
+                            <label for="cep">{{ $t("complete_registration.zip_code") }}</label>
                             <input type="number" name="cep" id="cep" v-on:keydown="validaCep($event)" required>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="district">Bairro</label>
+                            <label for="district">{{ $t("complete_registration.district") }}</label>
                             <input type="text" name="district" id="district" required>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="city">Cidade</label>
+                            <label for="city">{{ $t("complete_registration.city") }}</label>
                             <input type="text" name="city" id="city" required>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-6 col-sm-12" v-if="$i18n.locale != 'pt'">
                         <div class="input-group">
-                            <label for="state">Estado</label>
+                            <label for="country">{{ $t("complete_registration.state") }}</label>
+                            <input type="text" name="state" id="state" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12" v-if="$i18n.locale == 'pt'">
+                        <div class="input-group">
+                            <label for="state">{{ $t("complete_registration.state") }}</label>
                             <select name="state" id="state" required>
                                 <option value="">----</option>
                                 <option value="AC">Acre</option>
@@ -102,12 +108,12 @@
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="country">País</label>
-                            <input type="text" name="country" id="country" value="Brasil" required>
+                            <label for="country">{{ $t("complete_registration.country") }}</label>
+                            <input type="text" name="country" id="country" required>
                         </div>
                     </div>
                 </div>
-                <input type="submit" value="COMPLETAR REGISTRO">
+                <input type="submit" :value="$t('complete_registration.complete_registration_button')">
             </form>
             <div class="response"></div>
             <div class="loading"></div>
@@ -124,29 +130,19 @@ export default {
     name: "complete_registration",
     mixins: [globalMethods],
     methods: {
-        getTelInputValue: function() { // Pega o valor do input removendo caracteres especiais e espaço para submit do formulário.
-            let ddi = $(".current-flag-container .flag-item").attr("ddi"), number = $("#tel-input").val().replace("(", "").replace(")", "").replace("-", "").replace(" ", '').replace(" ", '');
-
-            if (number == "") {
-                return;
-            }
-
-            return `${ddi}${number}`;
-        },
         complete_registration: function () {
             let self = this;
 
             $(".response").html("").removeClass("error");
             $(".loading").show();
 
-            if ($("#tel-input").attr("is_valid") == "true" && $("#cpf").val().length == 14) {
+            if ($("#tel-input").attr("is_valid") == "true") {
                 let data = $("#complete-registration-form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
                     obj[item.name] = item.value;
                     return obj;
                 }, {});
 
                 data["tel"] = self.getTelInputValue();
-                data["cpf"] = self.getCpf();
                 self.disableInputs();
 
                 api.patch("/user/complete_registration", data, {
@@ -158,93 +154,19 @@ export default {
                     $("#submit").attr("disabled", false);
                     $(".loading").hide();
                     self.enableInputs();
+                    self.refreshJwt();
                     self.$router.push('/my-orders');
                 }).catch(function(error){
                     if (error) {
                         $("#submit").attr("disabled", false);
-                        self.message = "Erro ao completar o cadastro";
+                        self.message = this.$i18n.t("complete_registration.error_completing_registration");
                         self.responseClass = "error";
                     }
                 })
             } else {
                 $(".loading").hide();
-                $(".response").html("Verifique os campos!").addClass("error");
+                $(".response").html(this.$i18n.t("complete_registration.check_fields")).addClass("error");
             }
-
-            
-        },
-        validaCep: function (event) {
-            let target = $("#" + event.target.id), keycode = event.keyCode;
-
-            if (!(keycode == 8 || keycode == 46)) {
-                if (target.val().length >= 8) {
-                    event.preventDefault();
-                    return;
-                }
-            }           
-        },
-        formatCpf: function (event) {
-            let target = $("#" + event.target.id), newValue = "";
-
-            target.removeClass("invalid-number");
-
-            if (target.val().length == 11) {
-                for (let i in target.val()) {
-                    if (i == 3 || i == 6) {
-                        newValue += "." + target.val()[i];
-                    } else if (i == 9) {
-                        newValue += "-" + target.val()[i];
-                    } else {
-                        newValue += target.val()[i];
-                    }
-                }
-
-                target.val(newValue);
-                return;
-            }
-
-            if (target.val().length < 14) {
-                target.addClass("invalid-number");
-            }
-            
-        },
-        restoreCpf: function (event) {
-            let target = $("#" + event.target.id);
-
-            if (target.val().length < 14) {
-                target.val(target.val().replace(".", "").replace(".", "").replace("-", ""));
-            }
-        },
-        getCpf: function () {
-            let cpf = $("#cpf").val()
-            return cpf.replace(".", "").replace(".", "").replace("-", "");
-        },
-        validateCpfInput: function (event) {
-            let target = $("#" + event.target.id), keycode = event.keyCode;
-
-            if (!(keycode == 8 || keycode == 46)) {
-                if (target.val().length < 11) {
-                    if (!(keycode >= 48 && keycode <= 57 || keycode >= 96 && keycode <= 105)) {
-                        event.preventDefault();
-                        return;
-                    }
-                } else {
-                    event.preventDefault();
-                    return;
-                }
-            }
-        },
-        validateName: function (event) {
-            let keycode = event.keyCode;
-
-            if (keycode >= 48 && keycode <= 57 || keycode >= 96 && keycode <= 105) {
-                event.preventDefault();
-                return;
-            }
-        },
-        disableInputs: function () {
-            $(".input-group input").attr("disabled", "disabled");
-            $(".input-group select").attr("disabled", "disabled");
         },
         enableInputs: function () {
             $(".input-group input").attr("disabled", false);

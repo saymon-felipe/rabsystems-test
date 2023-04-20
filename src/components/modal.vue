@@ -99,7 +99,7 @@ export default {
 
 .modal-body {
     overflow-y: auto;
-    min-height: calc(100% - 95px);
+    height: calc(100% - 55px);
 }
 
 .modal-footer {

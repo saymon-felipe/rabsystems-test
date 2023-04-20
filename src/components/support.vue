@@ -2,7 +2,7 @@
     <section class="support">
         <div>
             <div class="page-title">
-                <h1 class="rabsystems-font">Suporte</h1>
+                <h1 class="rabsystems-font">{{ $t("support.support") }}</h1>
             </div>
             <div class="row">
                 <div class="col-12">
@@ -12,26 +12,26 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-md-6">
                                         <div class="form-input">
-                                            <input type="text" name="name" id="name" placeholder="Nome" required>
+                                            <input type="text" name="name" id="name" :placeholder="$t('support.name')" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="form-input">
                                             <select name="contact-option" id="contact-option" required>
-                                                <option value="">-- Motivo do contato --</option>
-                                                <option value="formatting">Assistência técnica</option>
-                                                <option value="pc-assembly">Sugestão, dúvida ou reclamação</option>
-                                                <option value="maintenance">Pedidos</option>
-                                                <option value="internet-system">Outros</option>
+                                                <option value="">-- {{ $t("support.contact_reason") }} --</option>
+                                                <option value="formatting">{{ $t("support.technical_assistance") }}</option>
+                                                <option value="pc-assembly">{{ $t("support.sugestion_text") }}</option>
+                                                <option value="maintenance">{{ $t("support.requests") }}</option>
+                                                <option value="internet-system">{{ $t("support.others") }}</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-body">
-                                <textarea name="description" id="description" maxlength="5000" placeholder="Descrição" required></textarea>
+                                <textarea name="description" id="description" maxlength="5000" :placeholder="$t('support.description')" required></textarea>
                             </div>
-                            <input type="submit" value="Enviar">
+                            <input type="submit" :value="$t('support.send')">
                         </form>
                         <div class="loading"></div>
                     </div>

@@ -52,7 +52,9 @@
     "conferences": {
         "conferences": "Conferences",
         "conferences_empty": "No conferences in progress",
-        "start_conference": "Start a conference"
+        "start_conference": "Start a conference",
+        "join_conference": "Click do join the conference",
+        "locked_room": "Room locked, click here to ask to enter"
     },
     "create_room": {
         "create_room": "Create room",
@@ -72,5 +74,85 @@
         "invite_users": "Invite users",
         "unlock_room": "Unlock the room",
         "turn_room_invisible": "Make room invisible to everyone"
+    },
+    "my_profile": {
+        "my_profile": "My profile",
+        "see_photo": "See photo",
+        "send_picture": "Send picture",
+        "delete_photo": "Delete photo",
+        "edit_profile": "Edit profile",
+        "name": "Name",
+        "phone": "Phone",
+        "identification_number": "Identification number (SSN)",
+        "street": "Street",
+        "house_number": "House number",
+        "complement": "Complement",
+        "zip_code": "Zip code",
+        "district": "District",
+        "city": "City",
+        "state": "State",
+        "country": "Country",
+        "language": "Language",
+        "portuguese": "Portuguese",
+        "english": "English",
+        "photo_preview": "Photo preview",
+        "unsupported_file_type": "Unsupported file type",
+        "file_too_large": "File to large (2mb limit)"
+    },
+    "support": {
+        "support": "Support",
+        "contact_reason": "Reason for contact",
+        "name": "Name",
+        "technical_assistance": "Technical assistance",
+        "sugestion_text": "Suggestion, question or complaint",
+        "requests": "Requests",
+        "others": "Others",
+        "description": "Description",
+        "send": "Send"
+    },
+    "login": {
+        "login": "LOGIN",
+        "email": "E-mail",
+        "password": "Password",
+        "not_registered": "Not registered?",
+        "register": "Register",
+        "login_error": "Login error"
+    },
+    "register": {
+        "register": "REGISTER",
+        "email": "E-mail",
+        "password": "Password",
+        "register_button": "REGISTER",
+        "already_registered": "Already registered?",
+        "sign_in": "Sign in",
+        "registration_error": "Registration error"
+    },
+    "complete_registration": {
+        "complete_registration": "COMPLETE THE REGISTRATION",
+        "name": "Name",
+        "phone": "Phone",
+        "identification_number": "Identification number (SSN)",
+        "street": "Street",
+        "house_number": "House number",
+        "complement": "Complement",
+        "zip_code": "Zip code",
+        "district": "District",
+        "city": "City",
+        "state": "State",
+        "country": "Country",
+        "language": "Language",
+        "complete_registration_button": "COMPLETE REGISTRATION",
+        "error_completing_registration": "Error completing registration",
+        "check_fields": "Check the fields!"
+    },
+    "chat": {
+        "customers": "Customers",
+        "view_more": "View more",
+        "see_less": "See less",
+        "reply": "Reply",
+        "new_messages": "New messages",
+        "you": "You",
+        "purchase": "Purchase",
+        "type_here": "Type here..."
     }
 }

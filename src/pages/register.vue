@@ -1,19 +1,19 @@
 <template>
     <section class="register">
         <div class="register-container">
-            <h1 class="rabsystems-font">REGISTRE-SE</h1>
+            <h1 class="rabsystems-font">{{ $t("register.register") }}</h1>
             <form action="login" @submit.prevent="register()">
                 <div class="input-group">
-                    <input class="input" type="email" name="email" id="email" placeholder="Email" v-on:focusout="validateEmailInput($event)" required>
+                    <input class="input" type="email" name="email" id="email" :placeholder="$t('register.email')" v-on:focusout="validateEmailInput($event)" required>
                 </div>
                 <div class="input-group">
-                    <input class="input" type="password" name="password" id="password" placeholder="Senha" required>
+                    <input class="input" type="password" name="password" id="password" :placeholder="$t('register.password')" required>
                 </div>
-                <input type="submit" value="REGISTRO" id="submit">
+                <input type="submit" :value="$t('register.register_button')" id="submit">
             </form>
             <div class="go-to-login">
-                <span>Ja é cadastrado? </span>
-                <router-link to="/login">Faça login</router-link>
+                <span>{{ $t("register.already_registered") }} </span>
+                <router-link to="/login">{{ $t("register.sign_in") }}</router-link>
             </div>
             <div class="response" :class="responseClass">{{ message }}</div>
         </div>
@@ -58,7 +58,7 @@ export default {
             }).catch(function(error){
                 if (error) {
                     $("#submit").attr("disabled", false);
-                    self.message = "Erro no cadastro";
+                    self.message = this.$i18n.t("register.registration_error");
                     self.responseClass = "error";
                 }
             })
