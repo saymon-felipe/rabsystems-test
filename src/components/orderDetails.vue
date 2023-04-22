@@ -3,7 +3,7 @@
         <div class="loading-page" v-if="loading"></div>
         <div class="error-page" v-if="error != null">{{ error }}</div>
         <div class="page-title">
-            <h1 class="rabsystems-font">Detalhes do pedido</h1>
+            <h1 class="rabsystems-font">{{ $t("order_details.order_details") }}</h1>
         </div>
         <div class="order-details-container">
             <div class="order-more-options" v-if="order.order_status != 4 && $root.havePermission && haveActions">
@@ -12,8 +12,8 @@
             <div class="order-actions-admin-wrapper" v-if="show_admin" v-on:click="hideAdmin('.order-actions-admin')"></div>
             <div class="order-actions-admin" v-if="$root.havePermission">
                 <ul>
-                    <li v-if="order.price == 0" v-on:click="insertPrice()">Inserir preço</li>
-                    <li v-if="order.price != 0 && order.payment_method == ''" v-on:click="generatePayment()">Gerar pagamento</li>
+                    <li v-if="order.price == 0" v-on:click="insertPrice()">{{ $t("order_details.enter_price") }}</li>
+                    <li v-if="order.price != 0 && order.payment_method == ''" v-on:click="generatePayment()">{{ $t("order_details.generate_payment") }}</li>
                     <li v-if="order.price != 0 && order.invoice_has_generated == ''">Gerar nota fiscal</li>
                 </ul>
             </div>

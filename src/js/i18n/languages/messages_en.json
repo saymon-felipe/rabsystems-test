@@ -154,5 +154,10 @@
         "you": "You",
         "purchase": "Purchase",
         "type_here": "Type here..."
+    },
+    "order_details": {
+        "order_details": "Order details",
+        "enter_price": "Enter price",
+        "generate_payment": "Generate payment"
     }
 }

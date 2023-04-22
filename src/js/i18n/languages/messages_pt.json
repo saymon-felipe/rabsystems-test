@@ -152,5 +152,10 @@
         "you": "Você",
         "purchase": "Compra",
         "type_here": "Digite aqui..."
+    },
+    "order_details": {
+        "order_details": "Detalhes do pedido",
+        "enter_price": "Inserir preço",
+        "generate_payment": "Gerar pagamento"
     }
 }
