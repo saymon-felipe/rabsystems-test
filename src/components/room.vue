@@ -149,8 +149,7 @@ export default {
                     Authorization: jwt
                 }
             })
-            .then((response) => {
-                console.log(response.data.message);
+            .then(() => {
                 self.pingMeeting(false);
             })
         },
@@ -168,8 +167,7 @@ export default {
                     Authorization: jwt
                 }
             })
-            .then((response) => {
-                console.log(response.data.message);
+            .then(() => {
                 self.pingMeeting(false);
             })
         },
@@ -207,9 +205,6 @@ export default {
                         Authorization: jwt
                     }
                 })
-                .then(function (response) {
-                    console.log(response.data.message);
-                })
             } else {
                 this.changeLockUnlockButtonStyle(false);
 
@@ -217,9 +212,6 @@ export default {
                     headers: {
                         Authorization: jwt
                     }
-                })
-                .then(function (response) {
-                    console.log(response.data.message);
                 })
             }
         },
@@ -251,9 +243,6 @@ export default {
                         Authorization: jwt
                     }
                 })
-                .then(function (response) {
-                    console.log(response.data.message);
-                })
             } else {
                 this.changeRoomVisibilityStyle(false);
 
@@ -261,9 +250,6 @@ export default {
                     headers: {
                         Authorization: jwt
                     }
-                })
-                .then(function (response) {
-                    console.log(response.data.message);
                 })
             }
         },
@@ -314,8 +300,7 @@ export default {
                     self.checkIfHavePermissionGranted();
                 }
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(() => {
                 self.$router.push("/rooms");
             })
         },
@@ -358,9 +343,8 @@ export default {
                     Authorization: jwt
                 }
             })
-            .then((response) => {
+            .then(() => {
                 self.pingMeeting();
-                console.log(response.data.message);
             })
         },
         generateUniqueName: function () {
@@ -470,7 +454,6 @@ export default {
                         self.room_visible = false;
                         self.changeRoomVisibilityStyle(false);
                     }
-                    console.log(response.data.message);
                     if (recursive) {
                         setTimeout(() => {
                             self.pingMeeting();

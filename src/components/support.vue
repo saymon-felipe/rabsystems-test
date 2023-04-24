@@ -57,7 +57,6 @@ export default {
 
             setTimeout(() => {
                 $(".loading").hide();
-                
                 console.log(data)
             }, 500);
         }

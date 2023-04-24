@@ -68,12 +68,6 @@ export default {
                 $(".loading").hide();
                 $(".response").addClass("error").html("Verifique o número de telefone!");
             }
-
-            
-
-            
-
-            
         }
     }
 }

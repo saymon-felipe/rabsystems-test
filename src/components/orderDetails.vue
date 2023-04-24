@@ -13,32 +13,32 @@
             <div class="order-actions-admin" v-if="$root.havePermission">
                 <ul>
                     <li v-if="order.price == 0" v-on:click="insertPrice()">{{ $t("order_details.enter_price") }}</li>
-                    <li v-if="order.price != 0 && order.payment_method == ''" v-on:click="generatePayment()">{{ $t("order_details.generate_payment") }}</li>
-                    <li v-if="order.price != 0 && order.invoice_has_generated == ''">Gerar nota fiscal</li>
+                    <li v-if="order.price != 0 && order.was_paid == 0" v-on:click="generatePayment()">{{ $t("order_details.generate_payment") }}</li>
+                    <li v-if="order.price != 0 && order.invoice_has_generated == ''" style="display: none;">Gerar nota fiscal</li>
                 </ul>
             </div>
             <div class="animation-progress"></div>
             <div class="order-details-animation">
                 <div class="animation-line">
-                    <div class="canceled" style="display: none;" title="Cancelado">
+                    <div class="canceled" style="display: none;" :title="$t('order_details.canceled')">
                         <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_zx4v6jjx.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
                     </div>
-                    <div class="animation-step" title="Aguardando resposta">
+                    <div class="animation-step" :title="$t('order_details.waiting_answer')">
                         <div class="step-icon" id="waiting-response">
                             <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_8d1e22ya.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
                         </div>
                     </div>
-                    <div class="animation-step" title="Aguardando pagamento">
+                    <div class="animation-step" :title="$t('order_details.waiting_payment')">
                         <div class="step-icon" id="waiting-payment">
                             <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_4q43fuco.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
                         </div>
                     </div>
-                    <div class="animation-step" title="Em progresso">
+                    <div class="animation-step" :title="$t('order_details.in_progress')">
                         <div class="step-icon" id="in-progress">
                             <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_aspfe0ly.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
                         </div>
                     </div>
-                    <div class="animation-step" title="Concluído">
+                    <div class="animation-step" :title="$t('order_details.done')">
                         <div class="step-icon" id="finished">
                             <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_obseqf6i.json"  background="transparent"  speed="1" loop autoplay></lottie-player>
                         </div>
@@ -48,30 +48,30 @@
             <div class="order-details-informations">
                 <table class="order">
                     <tr class="order-head">
-                        <td>Id</td>
+                        <td>{{ $t("order_details.id") }}</td>
                         <td>
-                            Data
+                            {{ $t("order_details.date") }}
                         </td>
-                        <td>Serviço</td>
+                        <td>{{ $t("order_details.service") }}</td>
                         <td>
-                            Preço
+                            {{ $t("order_details.price") }}
                         </td>
                     </tr>
                     <tr class="order-table-details">
                         <td><strong>#</strong>{{ order.order_id }}</td>
                         <td>{{ getMomentExtended(order.create_date) }}</td>
-                        <td>{{ order.service }}</td>
+                        <td>{{ returnOrderService(order.service) }}</td>
                         <td><strong>R$</strong>: {{ order.price == 0 ? "--,--" : order.price }}</td>
                     </tr>
                 </table>
                 <div class="order-description">
-                    <h1>Descrição do pedido</h1>
+                    <h1>{{ $t("order_details.order_description") }}</h1>
                     <p>{{ order.order_description }}</p>
                 </div>
             </div>
             <div class="order-details-buttons">
-                <button v-on:click="talkWithCompany()" id="talk-with-company" v-if="order.order_status != 4">FALE COM {{ $root.havePermission ? order.user_name : "A RABSYSTEMS" }}</button>
-                <button v-on:click="confirm_action = 'finished'; openConfirmationModal()" v-if="order.order_status == 2" id="finish-order">NOTIFICAR COMO CONCLUÍDO</button>
+                <button v-on:click="talkWithCompany()" id="talk-with-company" v-if="order.order_status != 4">{{ $t("order_details.talk_with") }} {{ $root.havePermission ? order.user_name : "RABSYSTEMS" }}</button>
+                <button v-on:click="confirm_action = 'finished'; openConfirmationModal()" v-if="order.order_status == 2 && $root.havePermission" id="finish-order">NOTIFICAR COMO CONCLUÍDO</button>
                 <button v-on:click="confirm_action = 'cancel'; openConfirmationModal()" id="cancel-order" v-if="order.order_status != 4 && order.order_status != 3">CANCELAR PEDIDO</button>
                 <router-link to="/my-orders" id="return">VOLTAR</router-link>
             </div>
@@ -113,7 +113,9 @@ export default {
     },
     watch: {
         showModal: function () {
-            this.toggleAdmin(true);
+            if (this.showModal == false) {
+                this.toggleAdmin(true);
+            }
         }
     },
     data() {
@@ -136,19 +138,21 @@ export default {
     },
     methods: {
         checkActions: function () {
-            if (this.order.price == 0 || (this.order.price != 0 && this.order.payment_method == '') || (this.order.price != 0 && this.order.invoice_has_generated == '')) {
+            if (this.order.price == "" || (this.order.price != 0 && this.order.was_paid == 0)) {
                 this.haveActions = true;
+            } else {
+                this.haveActions = false;
             }
         },
         generatePayment: function () {
             this.showModal = true;
             this.showGeneratePayment = true;
-            this.fillModalVariables("Gerar pagamento", "Salvar", "Cancelar");
+            this.fillModalVariables(this.$i18n.t("order_details.generate_payment"), this.$i18n.t("order_details.save"), this.$i18n.t("order_details.cancel"));
         },
         insertPrice: function () {
             this.showModal = true;
             this.showInsertPrice = true;
-            this.fillModalVariables("Inserir valor", "Salvar", "Cancelar");
+            this.fillModalVariables(this.$i18n.t("order_details.enter_value"), this.$i18n.t("order_details.save"), this.$i18n.t("order_details.cancel"));
         },
         showAdmin: function (className) {
             let container = $(className);
@@ -290,12 +294,6 @@ export default {
                     Authorization: jwt
                 }
             })
-            .then(function (response) {
-                console.log(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
         },
         cancelOrder: function () {
             let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
@@ -307,11 +305,6 @@ export default {
                 headers: {
                         Authorization: jwt
                     }
-            })
-            .then(function(response){
-                console.log(response.data)
-            }).catch(function(error){
-                console.log(error);
             })
         },
         talkWithCompany: function () {

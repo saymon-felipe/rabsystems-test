@@ -44,7 +44,7 @@
                                 <td class="order-id">#{{ order.order_id }}</td>
                                 <td class="order-date" :title="getMomentExtended(order.create_date)">{{ getMoment(order.create_date) }}</td>
                                 <td class="order-title" :title="returnOrderService(order.service)">{{ returnOrderService(order.service) }}</td>
-                                <td class="order-price">{{ order.price == "" ? "--,--" : order.price }}</td>
+                                <td class="order-price">{{ order.price == "" ? "--,--" : "R$ " + order.price }}</td>
                                 <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
                             </router-link>
                         </div>
@@ -80,21 +80,6 @@ export default {
         this.returnOrders();
     },
     methods: {
-        returnOrderService: function (service) {
-            let returnService = "";
-            switch (service) {
-                case "site":
-                    returnService = this.$i18n.t("my_orders.site");
-                    break;
-                case "web-system":
-                    returnService = this.$i18n.t("my_orders.web_system");
-                    break;
-                case "web-design":
-                    returnService = this.$i18n.t("my_orders.web_design");
-                    break;
-            }
-            return returnService;
-        },
         fillNewMessageNotification: function (order_list) {
             let play_audio = false;
             let audioElement = $("#notification-audio")[0];
@@ -139,7 +124,6 @@ export default {
         },
         returnOrders: function () {
             let self = this;
-            let jwt = "Bearer " + self.getJwtInLocalStorage();
 
             // Status: 0 = aguardando pagamento
             // Status: 1 = Aguardando resposta
@@ -153,33 +137,20 @@ export default {
                 return;
             }
 
+            let endpoint = "/orders";
+
             if (self.$root.havePermission) {
-                api.get("/orders/return_all_orders", {
-                    headers: {
-                            Authorization: jwt
-                        }
-                })
-                .then(function(response){
-                    self.orders = response.data.obj.all_orders;
-                    self.checkNewMessages();
-                    self.filterOrders(self.sortType, self.sortStatus);
-                }).catch(function(error){
-                    console.log(error);
-                })
-            } else {
-                api.get("/orders", {
-                    headers: {
-                            Authorization: jwt
-                        }
-                })
-                .then(function(response){
-                    self.orders = response.data.obj.all_orders;
-                    self.checkNewMessages();
-                    self.filterOrders(self.sortType, self.sortStatus);
-                }).catch(function(error){
-                    console.log(error);
-                })
+                endpoint = "/orders/return_all_orders";
             }
+
+            api.get(endpoint)
+            .then(function(response){
+                self.orders = response.data.obj.all_orders;
+                self.checkNewMessages();
+                self.filterOrders(self.sortType, self.sortStatus);
+            }).catch(function(error){
+                console.log(error);
+            })
             
             setTimeout(() => {
                 self.returnOrders();

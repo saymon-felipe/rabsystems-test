@@ -70,8 +70,6 @@ export default {
                         self.getRabsystemsUser(true);
                     }, 10 * 1000);
                 }
-            }).catch(function(error){
-                console.log(error);
             })
         },
         

@@ -5,10 +5,12 @@
 </template>
 <script>
 import $ from 'jquery';
+import { globalMethods } from '../js/globalMethods';
 
 export default {
     name: "rabsystemsCurrencyInput",
     props: ["propPlaceholder", "propName", "propId", "propRequired"],
+    mixins: [globalMethods],
     data() {
         return {
             inputValue: "R$ 0,00",

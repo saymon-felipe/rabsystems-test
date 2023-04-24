@@ -158,6 +158,28 @@
     "order_details": {
         "order_details": "Order details",
         "enter_price": "Enter price",
-        "generate_payment": "Generate payment"
+        "generate_payment": "Generate payment",
+        "canceled": "Canceled",
+        "waiting_answer": "Waiting answer",
+        "waiting_payment": "Waiting payment",
+        "in_progress": "In progress",
+        "done": "Done",
+        "id": "Id",
+        "date": "Date",
+        "service": "Service",
+        "price": "Price",
+        "save": "Save",
+        "cancel": "Cancel",
+        "enter_value": "Enter value",
+        "payment_method": "Payment method",
+        "ticket": "Ticket",
+        "transfer": "Transfer",
+        "enter_payment": "Enter payment",
+        "initial_price": "Initial price",
+        "amount_paid": "Amount paid",
+        "remaining": "Remaining",
+        "invalid_payment": "Invalid payment",
+        "order_description": "Order description",
+        "talk_with": "TALK WITH"
     }
 }

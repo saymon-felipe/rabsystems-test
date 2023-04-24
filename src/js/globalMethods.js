@@ -300,6 +300,29 @@ export const globalMethods = {
                 }
             }
         },
+        returnOrderService: function (service) {
+            let returnService = "";
+            switch (service) {
+                case "site":
+                    returnService = this.$i18n.t("my_orders.site");
+                    break;
+                case "web-system":
+                    returnService = this.$i18n.t("my_orders.web_system");
+                    break;
+                case "web-design":
+                    returnService = this.$i18n.t("my_orders.web_design");
+                    break;
+                }
+            return returnService;
+        },
+        returnFloatNumber(string) {
+            let replacedString = string.toString();
+            if (replacedString.indexOf("R$ ") != -1) {
+                replacedString = replacedString.replace("R$ ", "");
+            }
+            let formattedNumber = parseFloat(replacedString.replace(",", "."));
+            return formattedNumber.toFixed(2);
+        }
     },
     data() {
         return {

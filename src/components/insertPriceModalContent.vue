@@ -36,17 +36,14 @@ export default {
                 return obj;
             }, {});
 
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
+            let self = this;
             let responseElement = $(".response");
             responseElement.removeClass("error");
             self.response = "";
             data["order_id"] = self.order.order_id;
+            data["price"] = this.returnFloatNumber(data["price"]).replace(".", ",");
             
-            api.patch("/orders/change_price", data, {
-                headers: {
-                        Authorization: jwt
-                    }
-            })
+            api.patch("/orders/change_price", data)
             .then(function(response){
                 let message = response.data.message;
                 self.response = message;

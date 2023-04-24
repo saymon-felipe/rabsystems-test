@@ -4,10 +4,10 @@
             <form action="insert_payment" @submit.prevent="insertPayment()" id="insert-payment-form">
                 <div class="form-group">
                     <select name="payment_method" id="payment-method" required>
-                        <option value="">-- Método de pagamento --</option>
+                        <option value="">-- {{ $t("order_details.payment_method") }} --</option>
                         <option value="pix">Pix</option>
-                        <option value="boleto">Boleto</option>
-                        <option value="transferencia">Transferência</option>
+                        <option value="boleto">{{ $t("order_details.ticket") }}</option>
+                        <option value="transferencia">{{ $t("order_details.transfer") }}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -15,21 +15,21 @@
                 </div>
                 <div class="payment-submit">
                     <button type="submit" class="btn primary">
-                        Inserir pagamento
+                        {{ $t("order_details.enter_payment") }}
                     </button>
                 </div>
             </form>
             <div class="payment-informations-container">
                 <div class="payment-informations">
-                    <h5>Preço inicial</h5>
+                    <h5>{{ $t("order_details.initial_price") }}</h5>
                     <p>{{ initialPrice }}</p>
                 </div>
                 <div class="payment-informations">
-                    <h5>Valor pago</h5>
+                    <h5>{{ $t("order_details.amount_paid") }}</h5>
                     <p>{{ payValue }}</p>
                 </div>
                 <div class="payment-informations">
-                    <h5>Restante</h5>
+                    <h5>{{ $t("order_details.remaining") }}</h5>
                     <p>{{ rest }}</p>
                 </div>
             </div>
@@ -68,95 +68,47 @@ export default {
             }, {});
             this.data["order_id"] = this.order.order_id;
             this.payValue = this.data['payment_value'];
+            this.data["payment_value"] = this.returnFloatNumber(this.data["payment_value"]).replace(".", ",");
             this.calculatePayment(this.payValue);
         },
         calculatePayment: function (paymentValue) {
-            this.computedPayValue = this.returnOnlyNumbers(paymentValue);
-            this.computedInitialPrice = this.returnOnlyNumbers(this.order.price);
-            this.computedRest = this.calculateRest(this.computedPayValue, this.computedInitialPrice);
+            this.computedPayValue = this.returnFloatNumber(paymentValue);
+            this.computedInitialPrice = this.returnFloatNumber(this.returnFloatNumber(this.order.price) - this.returnFloatNumber(this.order.price_paid));
+            this.computedRest = this.calculateRest(this.computedInitialPrice, this.computedPayValue);
             let formatedRest = this.formateRest(this.computedRest);
             this.rest = formatedRest;
             
         },
-        validatePayment: function () {
-            $(".response").removeClass("error");
-            this.response = "";
-            if (this.computedRest != 0) {
-                this.isValidValue = false;
-                $(".response").addClass("error");
-                this.response = "Pagamento inválido";
-                return false;
-            } else {
-                return true;
-            }
-        },
         formateRest: function (rest) {
-            let value = rest.toString();
-            let floatValue = "00";
-            if (value.length <= 2) {
-                if (value.length != 0) {
-                    floatValue = value;
-                }
-                if (value.length == 1) {
-                    floatValue = "0" + value;
-                }
-                value = "0";
-            } else {
-                floatValue = value.slice(-2);
-                value = value.slice(0, -2);
-                if (value.length > 3) {
-                    let newValue = "";
-                    for (let i = 0; i < value.length; i++) {
-                        let currentCharacter = value[i];
-                        if (i == value.length - 3 || i == value.length - 7 || i == value.length - 10) {
-                            if (i == value.length - 7 || i == value.length - 10) {
-                                newValue += currentCharacter + ".";
-                            } else {
-                                newValue += "." + currentCharacter;
-                            }
-                        } else {
-                            newValue += currentCharacter;
-                        }
-                    }
-                    value = newValue;
-                }
-            }
-            let finalNumber = "R$ " + value + "," + floatValue;
-            return finalNumber;
+            let parts = rest.toFixed(2).toString().split('.');
+
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            let value = "R$ " + parts.join(",");
+            return value;
         },
-        calculateRest: function (payValue, initialPrice) {
-            let calc = parseInt(initialPrice) - parseInt(payValue);
+        calculateRest: function (initialPrice, payValue) {
+            let calc = parseFloat(initialPrice) - parseFloat(payValue);
             return calc;
         },
         generatePayment: function () {
             let self = this;
-            let jwt = "Bearer " + self.getJwtInLocalStorage();
-            if (this.validatePayment()) {
-                api.patch("/orders/generate_payment", self.data, {
-                    headers: {
-                        Authorization: jwt
-                    }
-                })
-                .then(function (response) {
-                    self.response = response.data.message;
-                    self.$emit("success", true);
-                })
-                .catch(function (error) {
-                    console.log(error)
-                })
-            } else {
-                console.log("Pagamento inválido")
-            }
-        },
-        returnOnlyNumbers: function (string) {
-            let newString = string.replace("R$", "").replace(".", "").replace(".", "").replace(".", "").replace(",", "");
-            return newString;
+            api.patch("/orders/generate_payment", self.data)
+            .then(function (response) {
+                self.response = response.data.message;
+                self.$emit("success", true);
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
         }
     },
     mounted: function () {
-        this.initialPrice = this.order.price;
+        this.initialPrice = "R$ " + (this.returnFloatNumber(this.order.price) - this.returnFloatNumber(this.order.price_paid)).toFixed(2).replace(".", ",");
     },
-    components: { RabsystemsCurrencyInput }
+    components: { 
+        RabsystemsCurrencyInput 
+    }
 }
 </script>
 <style>

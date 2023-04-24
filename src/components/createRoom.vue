@@ -38,15 +38,13 @@ export default {
                     Authorization: jwt
                 }
             })
-            .then(function (response) {
-                console.log(response.data.message);
+            .then(function () {
                 api.post("/rooms/enter_room", data, {
                     headers: {
                         Authorization: jwt
                     }
                 })
-                .then((response2) => {
-                    console.log(response2.data.message);
+                .then(() => {
                     self.$router.push("/room/" + meeting_id + "?rn=" + roomName);
                 })
             })

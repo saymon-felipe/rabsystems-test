@@ -156,6 +156,28 @@
     "order_details": {
         "order_details": "Detalhes do pedido",
         "enter_price": "Inserir preço",
-        "generate_payment": "Gerar pagamento"
+        "generate_payment": "Gerar pagamento",
+        "canceled": "Cancelado",
+        "waiting_answer": "Aguardando resposta",
+        "waiting_payment": "Aguardando pagamento",
+        "in_progress": "Em andamento",
+        "done": "Concluído",
+        "id": "Id",
+        "date": "Data",
+        "service": "Serviço",
+        "price": "Preço",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "enter_value": "Inserir valor",
+        "payment_method": "Método de pagamento",
+        "ticket": "Boleto",
+        "transfer": "Transferência",
+        "enter_payment": "Inserir pagamento",
+        "initial_price": "Preço inicial",
+        "amount_paid": "Valor pago",
+        "remaining": "Restante",
+        "invalid_payment": "Pagamento inválido",
+        "order_description": "Descrição do pedido",
+        "talk_with": "FALAR COM"
     }
 }
