@@ -178,6 +178,18 @@
         "remaining": "Restante",
         "invalid_payment": "Pagamento inválido",
         "order_description": "Descrição do pedido",
-        "talk_with": "FALAR COM"
+        "talk_with": "FALAR COM",
+        "notify_complete": "NOTIFICAR COMO CONCLUÍDO",
+        "cancel_order": "CANCELAR PEDIDO",
+        "return": "VOLTAR",
+        "confirm_action_text": "Tem certeza que deseja confirmar esta ação?",
+        "action_warning": "Uma vez confirmada a ação é irreversível",
+        "confirm": "CONFIRMAR",
+        "cancel_2": "CANCELAR"
+    },
+    "insert_price": {
+        "amount": "Valor",
+        "requirement_update": "Atualização de requisito",
+        "enter_message": "Digite a mensagem para o cliente..."
     }
 }

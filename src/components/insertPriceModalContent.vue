@@ -2,12 +2,12 @@
     <div class="insert-price">
         <form action="insert_price" @submit.prevent="changePrice()" id="price-form">
             <div class="form-group">
-                <label for="price-input">Valor</label>
+                <label for="price-input">{{ $t("insert_price.amount") }}</label>
                 <rabsystemsCurrencyInput propPlaceholder="R$ 0,00" propName="price" propId="price-input" propRequired="required" />
             </div>
             <div class="form-group">
-                <label for="new-order-description">Atualização de requisito</label>
-                <textarea name="order_description" id="new-order-description" v-model="order.order_description" cols="30" rows="7" placeholder="Digite a mensagem para o cliente..." required></textarea>
+                <label for="new-order-description">{{ $t("insert_price.requirement_update") }}</label>
+                <textarea name="order_description" id="new-order-description" v-model="order.order_description" cols="30" rows="7" :placeholder="$t('insert_price.enter_message')" required></textarea>
             </div>
             <input type="submit" class="hidden-submit" id="submit-informations-form" />
         </form>

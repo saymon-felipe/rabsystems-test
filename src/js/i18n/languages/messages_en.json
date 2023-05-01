@@ -180,6 +180,18 @@
         "remaining": "Remaining",
         "invalid_payment": "Invalid payment",
         "order_description": "Order description",
-        "talk_with": "TALK WITH"
+        "talk_with": "TALK WITH",
+        "notify_complete": "NOTIFY AS COMPLETE",
+        "cancel_order": "CANCEL ORDER",
+        "return": "RETURN",
+        "confirm_action_text": "Are you sure you want to confirm this action?",
+        "action_warning": "Once confirmed, the action is irreversible",
+        "confirm": "CONFIRM",
+        "cancel_2": "CANCEL"
+    },
+    "insert_price": {
+        "amount": "Amount",
+        "requirement_update": "Requirement update",
+        "enter_message": "Enter the message to the customer..."
     }
 }

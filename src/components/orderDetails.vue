@@ -71,9 +71,9 @@
             </div>
             <div class="order-details-buttons">
                 <button v-on:click="talkWithCompany()" id="talk-with-company" v-if="order.order_status != 4">{{ $t("order_details.talk_with") }} {{ $root.havePermission ? order.user_name : "RABSYSTEMS" }}</button>
-                <button v-on:click="confirm_action = 'finished'; openConfirmationModal()" v-if="order.order_status == 2 && $root.havePermission" id="finish-order">NOTIFICAR COMO CONCLUÍDO</button>
-                <button v-on:click="confirm_action = 'cancel'; openConfirmationModal()" id="cancel-order" v-if="order.order_status != 4 && order.order_status != 3">CANCELAR PEDIDO</button>
-                <router-link to="/my-orders" id="return">VOLTAR</router-link>
+                <button v-on:click="confirm_action = 'finished'; openConfirmationModal()" v-if="order.order_status == 2 && $root.havePermission" id="finish-order">{{ $t("order_details.notify_complete") }}</button>
+                <button v-on:click="confirm_action = 'cancel'; openConfirmationModal()" id="cancel-order" v-if="order.order_status != 4 && order.order_status != 3">{{ $t("order_details.cancel_order") }}</button>
+                <router-link to="/my-orders" id="return">{{ $t("order_details.return") }}</router-link>
             </div>
         </div>
         <modal v-if="showModal" :title="modalTitle" :buttonTitle="modalButtonTitle" :button2Title="modalButtonTitle2" @closeModal="closeThisModal()" @submitEvent="submitFunction()">
@@ -81,11 +81,11 @@
             <generatePaymentModalContent v-if="showGeneratePayment" :order="order" @success="generatePaymentSuccess()" />
         </modal>
         <div class="confirmation-modal">
-            <h1>Tem certeza que deseja confirmar esta ação?</h1>
-            <p>Uma vez confirmada a ação é irreversível</p>
+            <h1>{{ $t("order_details.confirm_action_text") }}</h1>
+            <p>{{ $t("order_details.action_warning") }}</p>
             <div class="confirm-buttons">
-                <button v-on:click="confirmAction(confirm_action)">CONFIRMAR</button>
-                <button v-on:click="closeConfirmationModal()">CANCELAR</button>
+                <button v-on:click="confirmAction(confirm_action)">{{ $t("order_details.confirm") }}</button>
+                <button v-on:click="closeConfirmationModal()">{{ $t("order_details.cancel_2") }}</button>
             </div>
         </div>
         <div class="overlay" v-on:click="closeConfirmationModal()"></div>
