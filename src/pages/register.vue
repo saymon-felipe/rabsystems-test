@@ -58,7 +58,7 @@ export default {
             }).catch(function(error){
                 if (error) {
                     $("#submit").attr("disabled", false);
-                    self.message = this.$i18n.t("register.registration_error");
+                    self.message = self.$i18n.t("register.registration_error");
                     self.responseClass = "error";
                 }
             })

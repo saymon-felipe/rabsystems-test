@@ -68,7 +68,7 @@ export default {
                 if (error) {
                     self.loading = false;
                     $("#submit").attr("disabled", false);
-                    self.message = this.$i18n.t("login.login_error");
+                    self.message = self.$i18n.t("login.login_error");
                     self.responseClass = "error";
                 }
             })
