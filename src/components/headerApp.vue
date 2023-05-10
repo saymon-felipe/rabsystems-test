@@ -27,6 +27,7 @@
                     </nav>  
                     <div class="more-options-container" title="">
                         <ul>
+                            <li v-on:click="goToTimeMachine()">Máquina do tempo</li>
                             <li v-on:click="logoutUser()" class="logout-user-button">{{ $t("header.exit") }}</li>
                         </ul>
                     </div>
@@ -79,6 +80,9 @@ export default {
         this.checkNewMessages();
     },
     methods: {
+        goToTimeMachine: function () {
+            this.$router.push("/time-machine")
+        },
         playNotificationAudio: function () {
             let audioElement = $("#notification-audio")[0];
             audioElement.play();

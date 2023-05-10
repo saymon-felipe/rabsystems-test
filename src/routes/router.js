@@ -17,6 +17,7 @@ import conferencePage from "../components/conferencePage.vue";
 import createRoom from "../components/createRoom.vue";
 import room from "../components/room.vue";
 import waitToEnterRoom from "../components/waitToEnterRoom.vue";
+import timeMachine from "../components/timeMachine.vue";
 
 const routes = [
     {
@@ -70,6 +71,10 @@ const routes = [
             {
                 path: '/order-details/:id',
                 component: orderDetails
+            },
+            {
+                path: "/time-machine",
+                component: timeMachine
             }
         ]
     },

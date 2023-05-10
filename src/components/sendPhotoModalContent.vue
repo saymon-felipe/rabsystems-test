@@ -30,6 +30,7 @@ import api from '../configs/api.js';
 export default {
     name: "sendPhotoModalContent",
     mixins: [globalMethods],
+    props: ["sendType", "sendId"],
     data() {
         return {
             modalResponse: null
@@ -77,36 +78,38 @@ export default {
             }
         },
         uploadPhoto: function (formData) {
-            let self = this, jwt = "Bearer " + self.getJwtInLocalStorage();
-            self.excludePhoto(true);
+            let self = this;
+
+            if (this.sendType != "time_machine_photo") {
+                self.excludePhoto(true);
+            }
 
             self.modalResponse = "";
             $(".loading").show();
 
-            api.patch("/user/change_photo", formData, {
-                headers: {
-                        Authorization: jwt
-                    }
-            })
-            .then(function(){
-                self.hideSendPhotoContainer();
-                self.$router.go();
-            }).catch(function(error){
-                self.modalResponse = this.$i18n.t("my_profile.file_too_large");
-                console.log(error);
-            }).then(function () {
+            let patch;
+
+            if (this.sendType == "user_photo") {
+                patch = "/user/change_photo";
+            } else if (this.sendType == "time_machine_photo") {
+                patch = "/utils/time_machine_send_photo";
+            }
+
+            api.patch(patch, formData)
+            .then(function(response){
+                let id = "";
+                if (response.data.obj.image.id != undefined) {
+                    id = response.data.obj.image
+                }
+                self.$emit("success", id);
                 $(".loading").hide();
+                if (self.sendType != "time_machine_photo") {
+                    self.$router.go();
+                }
+            }).catch(function(error){
+                self.modalResponse = self.$i18n.t("my_profile.file_too_large");
+                console.log(error);
             })
-        },
-        hideSendPhotoContainer: function () {
-            let self = this;
-            $(".upload").css("transform", "translateY(-100px)").css("opacity", 0);
-            
-            setTimeout(() => {
-                self.resetPhotoInput();
-                $(".upload").hide();
-                $(".overlay").hide();
-            }, 400); 
         }
     }
 }

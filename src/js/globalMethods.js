@@ -322,6 +322,28 @@ export const globalMethods = {
             }
             let formattedNumber = parseFloat(replacedString.replace(",", "."));
             return formattedNumber.toFixed(2);
+        },
+        viewPhoto: function (img_url = "") {
+            if (img_url != "") {
+                this.preview_photo = img_url;
+            }
+            $(".view-photo-container").css("display", "flex");
+            setTimeout(() => {
+                $(".overlay").show();
+                $(".view-photo-container").css("opacity", 1).css("transform", "translateY(0)");
+            }, 10);
+        },
+        closePhotoContainer: function () {
+            $(".view-photo-container").css("opacity", 0).css("transform", "translateY(-100px)");
+            
+            setTimeout(() => {
+                $(".overlay").hide();
+                $(".view-photo-container").hide();
+            }, 400);
+        },
+        hideSendPhotoContainer: function () {
+            this.closeThisModal();
+            this.resetModalVariables();
         }
     },
     data() {

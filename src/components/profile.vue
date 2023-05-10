@@ -165,7 +165,7 @@
             <img :src="$root.user.profile_photo">
         </div>
         <modal v-if="showModal" :title="modalTitle" buttonTitle="" button2Title="" @closeModal="closeThisModal()" @submitEvent="submitFunction()">
-            <sendPhotoModalContent @success="hideSendPhotoContainer()" />
+            <sendPhotoModalContent @success="hideSendPhotoContainer()" sendType="user_photo" />
         </modal>
         <div class="overlay" v-on:click="closePhotoContainer()"></div>
     </section>
@@ -344,28 +344,9 @@ export default {
                 }, 400);
             }
         },
-        viewPhoto: function () {
-            $(".view-photo-container").css("display", "flex");
-            setTimeout(() => {
-                $(".overlay").show();
-                $(".view-photo-container").css("opacity", 1).css("transform", "translateY(0)");
-            }, 10);
-        },
-        closePhotoContainer: function () {
-            $(".view-photo-container").css("opacity", 0).css("transform", "translateY(-100px)");
-            
-            setTimeout(() => {
-                $(".overlay").hide();
-                $(".view-photo-container").hide();
-            }, 400);
-        },
         showSendPhotoContainer: function () {
             this.showModal = true;
             this.fillModalVariables(this.$i18n.t("my_profile.send_picture"), "", "");
-        },
-        hideSendPhotoContainer: function () {
-            this.closeThisModal();
-            this.resetModalVariables();
         },
         checkDefaultPhoto: function () {
             let profile_photo = this.$root.user.profile_photo;
@@ -384,32 +365,6 @@ export default {
 </script>
 
 <style scoped>
-
-.view-photo-container {
-    width: 80%;
-    height: 90%;
-    max-width: 800px;
-    max-height: 600px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    background: var(--white);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.4s;
-    transform: translateY(-100px);
-    opacity: 0;
-    display: none;
-    z-index: 4;
-}
     .profile {
         width: calc(100% - 225px);
         height: 100%;
@@ -444,38 +399,6 @@ export default {
             .profile-container button {
                 margin-top: 0 !important;
             }
-    }
-
-    .view-photo-container i {
-        align-self: flex-end;
-        margin-bottom: 1rem;
-        cursor: pointer;
-    }
-
-    .view-photo-container img {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        object-fit: cover;
-        border-radius: 10px;
-    }
-
-    @media (max-width: 600px) {
-        .view-photo-container {
-            width: 98%;
-            justify-content: start;
-            height: fit-content;
-        }
-
-        .view-photo-container img {
-            height: 70%;
-        }
-    }
-
-    @media (max-width: 390px) {
-        .view-photo-container {
-            margin-top: 0px;
-        }
     }
 
     .user-image {
