@@ -108,10 +108,6 @@ export default {
         }
     }
 
-    .page-title h1 {
-        font-size: 1.8rem;
-    }
-
     table {
         width: 100%;
     }

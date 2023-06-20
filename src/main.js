@@ -4,8 +4,10 @@ import router from "../src/routes/router.js";
 import $ from 'jquery';
 import api from './configs/api.js';
 import i18n from './js/i18n/i18n.js';
+import CKEditor from 'ckeditor4-vue';
 
 Vue.config.productionTip = false;
+Vue.use(CKEditor);
 
 //Variáveis globais
 let firstLoad = true;

@@ -18,6 +18,7 @@ import createRoom from "../components/createRoom.vue";
 import room from "../components/room.vue";
 import waitToEnterRoom from "../components/waitToEnterRoom.vue";
 import timeMachine from "../components/timeMachine.vue";
+import admin from "../components/admin.vue";
 
 const routes = [
     {
@@ -75,7 +76,15 @@ const routes = [
             {
                 path: "/time-machine",
                 component: timeMachine
+            },
+
+            // ROTAS ADMIN
+            {
+                path: "/admin",
+                component: admin
             }
+            // ROTAS ADMIN
+
         ]
     },
     {

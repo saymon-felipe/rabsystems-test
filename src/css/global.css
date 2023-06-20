@@ -4,6 +4,7 @@
     --purple-low: #6d00a0;
     --blue-high: #4ed6ff;
     --blue-high-2: #87e2fd;
+    --blue-high-3: #def7ff;
     --blue: #05C5FD;
     --blue-low: #008eba;
     --blue-low-2: #006280;
@@ -213,6 +214,23 @@ input:disabled, select:disabled, textarea:disabled {
 
 label {
     cursor: pointer;
+}
+
+.page-container {
+    width: calc(100% - 225px);
+    height: 100%;
+    padding: 1rem;
+    padding-top: 2rem;
+    text-align: center;
+    background: var(--white);
+    position: absolute;
+    right: 0;
+}
+
+@media (max-width: 876px) {
+    .page-container {
+        width: 100%;
+    }
 }
 
 ul {
@@ -426,7 +444,9 @@ button:disabled {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1rem;
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    font-weight: 500;
 }
 
     .page-title h1 {

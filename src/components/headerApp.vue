@@ -27,7 +27,8 @@
                     </nav>  
                     <div class="more-options-container" title="">
                         <ul>
-                            <li v-on:click="goToTimeMachine()">Máquina do tempo</li>
+                            <li v-on:click="goToAdmin()">Admin</li>
+                            <li v-on:click="goToTimeMachine()" v-if="$root.havePermission">Máquina do tempo</li>
                             <li v-on:click="logoutUser()" class="logout-user-button">{{ $t("header.exit") }}</li>
                         </ul>
                     </div>
@@ -82,6 +83,9 @@ export default {
     methods: {
         goToTimeMachine: function () {
             this.$router.push("/time-machine")
+        },
+        goToAdmin: function () {
+            this.$router.push("/admin");
         },
         playNotificationAudio: function () {
             let audioElement = $("#notification-audio")[0];

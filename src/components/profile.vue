@@ -436,10 +436,6 @@ export default {
                     background: var(--gray-high);
                 }
 
-    .page-title {
-        margin: 1rem 0;
-    }
-
     .profile-container {
         border-right: 1px solid var(--gray-high);
         height: 100%;

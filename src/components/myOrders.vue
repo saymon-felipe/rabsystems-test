@@ -258,7 +258,7 @@ export default {
 
     .orders-list {
         overflow-y: auto;
-        height: 60vh;
+        height: 71vh;
     }
 
     .order-list {
