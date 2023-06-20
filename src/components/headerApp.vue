@@ -27,7 +27,7 @@
                     </nav>  
                     <div class="more-options-container" title="">
                         <ul>
-                            <li v-on:click="goToAdmin()">Admin</li>
+                            <li v-on:click="goToAdmin()" v-if="$root.havePermission">Admin</li>
                             <li v-on:click="goToTimeMachine()" v-if="$root.havePermission">Máquina do tempo</li>
                             <li v-on:click="logoutUser()" class="logout-user-button">{{ $t("header.exit") }}</li>
                         </ul>
@@ -324,7 +324,7 @@ export default {
         padding: .5rem;
         width: 200px;
         position: absolute;
-        bottom: calc(5vh - 105px);
+        top: 116%;
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
         transition: all 0.4s;
         opacity: 0;
