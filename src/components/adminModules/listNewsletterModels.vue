@@ -1,6 +1,6 @@
 <template>
     <div class="list-newsletter-models">
-            <p class="page-title">Modelos de newsletter</p>
+        <p class="page-title">Modelos de newsletter</p>
         <table>
             <thead>
                 <tr>

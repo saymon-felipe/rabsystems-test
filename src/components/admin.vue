@@ -28,7 +28,7 @@
                     <div class="admin-item" id="list-newsletter" v-if="showList">
                         <listNewsletterModels @edit_newsletter="editNewsletter($event)" />
                     </div>
-                    <div class="admin-item" id="send-newsletter" v-if="showSend">
+                    <div class="admin-item" id="send-newsletter" v-if="showSend" style="display: block !important;">
                         <sendNewsletter />
                     </div>
                 </div>
@@ -49,7 +49,7 @@ export default {
             newsletterEdit: null,
             showCreate: false,
             showList: false,
-            showSend: false
+            showSend: true
         }
     },
     methods: {
