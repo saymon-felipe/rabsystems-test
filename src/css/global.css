@@ -81,6 +81,29 @@
     border: 2px solid var(--white);
 }
 
+table {
+    width: 100%;
+}
+
+    table tr td {
+        padding: 7px;
+    }
+
+    table tbody tr:hover {
+        background: var(--blue-high-3);
+        cursor: pointer;
+    }
+
+    .item-selected {
+        background: var(--blue-high-3);
+    }
+
+.submit-container {
+    margin: 10px 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
 .secondary {
     background-color: var(--gray-high-3) !important;
     color: var(--black) !important;

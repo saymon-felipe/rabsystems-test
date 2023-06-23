@@ -141,18 +141,6 @@ export default {
 }
 </script>
 <style scoped>
-.datatable-users table {
-    width: 100%;
-}
-
-    .datatable-users table tr td {
-        padding: 7px;
-    }
-
-    .datatable-users table tbody tr:hover {
-        background: var(--blue-high-3);
-        cursor: pointer;
-    }
 
 .user-container {
     display: flex;
@@ -178,10 +166,4 @@ export default {
         margin-right: 10px;
         cursor: pointer;
     }
-
-.submit-container {
-    margin: 10px 0;
-    display: flex;
-    justify-content: flex-end;
-}
 </style>
