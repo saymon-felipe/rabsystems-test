@@ -9,6 +9,10 @@
                 <label for="newsletter-description">Descrição:</label>
                 <input type="text" v-model="description" name="description" id="newsletter-description" required>
             </div>
+            <div class="form-group">
+                <label for="newsletter-subject-name">Título do email:</label>
+                <input type="text" v-model="subject_name" name="subject_name" id="newsletter-subject-name" required>
+            </div>
             <div class="ck-editor">
                 <ckeditor v-model="newsletter_html"></ckeditor>
             </div>
@@ -46,6 +50,7 @@ export default {
             newsletter_html: "",
             name: "",
             description: "",
+            subject_name: "",
             type: null
         }
     },
@@ -54,10 +59,10 @@ export default {
             if (this.editObj == null) {
                 return;
             }
-            console.log(this.editObj)
             this.name = this.editObj.name;
             this.description = this.editObj.description;
             this.newsletter_html = this.editObj.html;
+            this.subject_name = this.editObj.subject_name;
             this.type = this.editObj.type;
         },
         createNewsletter: function () {

@@ -1,6 +1,6 @@
 <template>
     <div class="list-newsletter-models">
-        <p class="page-title">Modelos de newsletter</p>
+        <p class="page-title page-title-left">Modelos de newsletter</p>
         <returnNewsletterDataTable @edit_newsletter="editThisNewsletter($event)" />
     </div>
 </template>

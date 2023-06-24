@@ -28,6 +28,13 @@
     --gray-low: #555555;
 }
 
+.text-ellipsis {
+    white-space: nowrap;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .btn {
     border-radius: 7px !important;
 }

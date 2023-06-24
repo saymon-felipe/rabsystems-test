@@ -306,7 +306,6 @@ export default {
         background: var(--gray-high-3);
         color: #000 !important;
         padding: .8rem;
-        height: 50px;
         border-bottom: 1px solid var(--gray-high);
         display: flex;
         justify-content: space-between;

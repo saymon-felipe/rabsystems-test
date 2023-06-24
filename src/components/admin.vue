@@ -14,6 +14,7 @@
                         <li v-on:click="showAdminModule('create-newsletter', true)">Criar modelo</li>
                         <li v-on:click="showAdminModule('list-newsletter')">Listar modelos</li>
                         <li v-on:click="showAdminModule('send-newsletter')">Enviar newsletter</li>
+                        <li v-on:click="showAdminModule('mail-queue')">Fila de emails</li>
                     </ul>
                 </li>
             </ul>
@@ -28,8 +29,11 @@
                     <div class="admin-item" id="list-newsletter" v-if="showList">
                         <listNewsletterModels @edit_newsletter="editNewsletter($event)" />
                     </div>
-                    <div class="admin-item" id="send-newsletter" v-if="showSend" style="display: block !important;">
-                        <sendNewsletter />
+                    <div class="admin-item" id="send-newsletter" v-if="showSend">
+                        <sendNewsletter @submitMailQueue="showAdminModule('mail-queue')" />
+                    </div>
+                    <div class="admin-item" id="mail-queue" v-if="showMailQueue">
+                        <mailQueue />
                     </div>
                 </div>
             </div>
@@ -41,6 +45,7 @@ import $ from 'jquery';
 import createNewsletterModel from "./adminModules/createNewsletterModel.vue";
 import listNewsletterModels from "./adminModules/listNewsletterModels.vue";
 import sendNewsletter from "./adminModules/sendNewsletter.vue";
+import mailQueue from "./adminModules/mailQueue.vue";
 
 export default {
     name: "admin",
@@ -49,6 +54,7 @@ export default {
             newsletterEdit: null,
             showCreate: false,
             showList: false,
+            showMailQueue: false,
             showSend: true
         }
     },
@@ -86,19 +92,26 @@ export default {
         },
         showAdminModule: function (module, clickInItem = false) {    
             this.resetAdminModules();
-            switch (module) {
-                case "create-newsletter":
-                    if (clickInItem) {
-                        this.newsletterEdit = null;
-                    }
-                    this.showCreate = true;
-                    break;
-                case "list-newsletter":
-                    this.showList = true;
-                    break;
-                case "send-newsletter":
-                    this.showSend = true;
-            } 
+            setTimeout(() => {
+                switch (module) {
+                    case "create-newsletter":
+                        if (clickInItem) {
+                            this.newsletterEdit = null;
+                        }
+                        this.showCreate = true;
+                        break;
+                    case "list-newsletter":
+                        this.showList = true;
+                        break;
+                    case "send-newsletter":
+                        this.showSend = true;
+                        break;
+                    case "mail-queue":
+                        this.showMailQueue = true;
+                        break;
+                } 
+            }, 10)
+            
             setTimeout(() => {
                 let targetModule = $("#" + module);
                 targetModule.show();
@@ -117,7 +130,8 @@ export default {
     components: {
         createNewsletterModel,
         listNewsletterModels,
-        sendNewsletter
+        sendNewsletter,
+        mailQueue
     },
     mounted: function () {
         this.closeAllAdminOptions();
@@ -140,6 +154,10 @@ export default {
     .admin {
         width: 100%;
     }
+}
+
+.admin-content {
+    overflow-y: auto;
 }
 
 .admin-options {

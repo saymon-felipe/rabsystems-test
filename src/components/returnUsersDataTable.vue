@@ -34,7 +34,7 @@
             </tbody>
         </table>
         <div class="submit-container" v-if="showSelect">
-            <button type="button" class="btn primary" v-on:click="selectUsers()">Selecionar</button>
+            <button type="button" class="btn primary" v-on:click="selectUsers()">Enviar</button>
         </div>
     </div>
 </template>

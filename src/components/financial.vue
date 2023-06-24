@@ -115,7 +115,6 @@ export default {
     .order-list-head {
         width: 100%;
         display: flex;
-        height: 40px;
         margin: .5rem 0;
         font-weight: 600;
     }
@@ -132,7 +131,6 @@ export default {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        height: 40px;
         border-bottom: 1px solid var(--gray-high);
         cursor: pointer;
     }
