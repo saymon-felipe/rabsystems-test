@@ -43,7 +43,7 @@
             <div class="vertical-menu-list">
                 <router-link class="link" to="/my-orders">{{ $t("header.my_orders") }}</router-link>
                 <router-link class="link" to="/financial">{{ $t("header.financial") }}</router-link>
-                <router-link class="link" to="/rooms">{{ $t("header.conferences") }}</router-link>
+                <router-link class="link" to="/rooms" style="display: none;">{{ $t("header.conferences") }}</router-link>
                 <router-link class="link" to="/profile" @click.native="$router.go()">{{ $t("header.my_profile") }}</router-link>
                 <router-link class="link" to="/support">{{ $t("header.support") }}</router-link>
             </div>
