@@ -36,7 +36,11 @@
         "financial": "Financeiro",
         "conferences": "Conferências",
         "my_profile": "Meu perfil",
-        "support": "Suporte"
+        "support": "Suporte",
+        "my_tickets": "Meus tickets"
+    },
+    "my_tickets" : {
+        "my_tickets": "Meus tickets"
     },
     "financial": {
         "financial": "Financeiro",
@@ -100,7 +104,7 @@
         "file_too_large": "Arquivo muito grande (limite 2mb)"
     },
     "support": {
-        "support": "Suporte",
+        "support": "Enviar um ticket",
         "contact_reason": "Motivo do contato",
         "name": "Nome",
         "technical_assistance": "Assistência técnica",

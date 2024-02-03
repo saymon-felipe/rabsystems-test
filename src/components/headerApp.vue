@@ -46,6 +46,7 @@
                 <router-link class="link" to="/rooms" style="display: none;">{{ $t("header.conferences") }}</router-link>
                 <router-link class="link" to="/profile" @click.native="$router.go()">{{ $t("header.my_profile") }}</router-link>
                 <router-link class="link" to="/support">{{ $t("header.support") }}</router-link>
+                <router-link class="link" to="/requests">{{ $t("header.my_tickets") }}</router-link>
             </div>
             <div class="vertical-menu-footer">
                 <img src="../assets/img/icone-preto.png" class="icon-footer">
