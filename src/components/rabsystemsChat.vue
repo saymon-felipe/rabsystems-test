@@ -285,12 +285,21 @@ export default {
         },
         checkIfMyMessagesHaveBeenViewed: function () {
             let notViewed = false;
+
+            if (this.messages == undefined) {
+                setTimeout(() => {
+                    this.checkIfMyMessagesHaveBeenViewed();
+                }, 10)
+                return;
+            }
+
             for (let i = 0; i < this.messages.length; i++) {
                 let currentMessage = this.messages[i];
                 if (currentMessage.view_date == '""' ) {
                     notViewed = true;
                 }
             }
+
             if (notViewed) {
                 this.fillMessages();
             }
@@ -583,6 +592,7 @@ export default {
         opacity: 0;
         display: none;
         overflow: hidden;
+        z-index: 11;
     }
 
     .chat-header {
@@ -863,6 +873,7 @@ export default {
         border-radius: 10px;
         display: flex;
         flex-direction: column;
+        text-align: left;
     }
 
     .reply-message-sender-name {
@@ -907,6 +918,7 @@ export default {
         background: var(--white);
         color: var(--black);
         cursor: pointer;
+        text-align: left;
     }
 
     .new-messages-indicator {

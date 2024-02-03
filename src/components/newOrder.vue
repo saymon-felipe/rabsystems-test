@@ -45,6 +45,12 @@ export default {
                 return obj;
             }, {});
 
+            let text = data["description"].replace(/\n/g, '\\n');
+
+            console.log(text)
+
+            data["description"] = text;
+
             api.post("/orders", data, {
                 headers: {
                         Authorization: jwt

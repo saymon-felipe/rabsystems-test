@@ -135,7 +135,6 @@ export default {
 
 .chat-list-body {
     height: calc(100% - 50px);
-    padding: 1rem;
     position: relative;
 }
 

@@ -66,7 +66,7 @@
                 </table>
                 <div class="order-description">
                     <h1>{{ $t("order_details.order_description") }}</h1>
-                    <p>{{ order.order_description }}</p>
+                    <p v-html="order.order_description"></p>
                 </div>
             </div>
             <div class="order-details-buttons">
@@ -209,6 +209,7 @@ export default {
             })
             .then(function(response){
                 self.order = response.data.obj.order;
+                self.order.order_description = self.order.order_description.replace(/\\n/g, '<br>');
                 self.loading = false;
                 self.findProgressAnimation();
                 self.checkActions();
@@ -570,6 +571,10 @@ export default {
         .order-description h1 {
             font-size: 1.4rem;
             font-weight: 700;
+        }
+
+        .order-description p {
+            text-align: left;
         }
 
     .order-more-options, .order-actions-admin {
