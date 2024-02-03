@@ -303,14 +303,14 @@ export const globalMethods = {
         returnOrderService: function (service) {
             let returnService = "";
             switch (service) {
-                case "site":
-                    returnService = this.$i18n.t("my_orders.site");
+                case "website-design":
+                    returnService = this.$i18n.t("my_orders.site_design");
                     break;
-                case "web-system":
-                    returnService = this.$i18n.t("my_orders.web_system");
+                case "traffic-management":
+                    returnService = this.$i18n.t("my_orders.traffic_management");
                     break;
-                case "web-design":
-                    returnService = this.$i18n.t("my_orders.web_design");
+                case "web-maintenance":
+                    returnService = this.$i18n.t("my_orders.web_maintenance");
                     break;
                 }
             return returnService;

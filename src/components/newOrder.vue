@@ -9,9 +9,9 @@
                     <div class="form-input">
                         <select name="service" id="service" required>
                             <option value="">-- {{ $t("new_order.service_type") }} --</option>
-                            <option value="site">{{ $t("new_order.website_creation") }}</option>
-                            <option value="web-system">{{ $t("new_order.web_system_creation") }}</option>
-                            <option value="web-design">{{ $t("new_order.web_design_creation") }}</option>
+                            <option value="website-design">{{ $t("new_order.website_design") }}</option>
+                            <option value="traffic-management">{{ $t("new_order.traffic_management") }}</option>
+                            <option value="web-maintenance">{{ $t("new_order.web_maintenance") }}</option>
                         </select>
                     </div>
                 </div>
