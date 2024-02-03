@@ -50,7 +50,7 @@
             <div class="vertical-menu-footer">
                 <img src="../assets/img/icone-preto.png" class="icon-footer">
                 <div class="copyrigth">
-                    <h6>&copy; 2023 - Rabsystems</h6>
+                    <h6>&copy; {{ year }} - Rabsystems</h6>
                 </div>
             </div>
         </aside>
@@ -71,7 +71,8 @@ export default {
             expanded: false,
             newMessages: [],
             newMessagesLength: null,
-            firstTime: true
+            firstTime: true,
+            year: null
         }
     },
     components: {
@@ -79,6 +80,9 @@ export default {
     },
     mounted: function () {
         this.checkNewMessages();
+
+        let now = new Date();
+        this.year = now.getFullYear();
     },
     methods: {
         goToTimeMachine: function () {
@@ -210,7 +214,7 @@ export default {
     }
 
     .chat-container {
-        margin-right: 2rem;
+        margin-right: 1rem;
         font-size: 1.5rem;
         cursor: pointer;
         border-radius: 50%;
@@ -221,6 +225,7 @@ export default {
         justify-content: center;
         transition: all 0.4s;
         position: relative;
+        color: var(--black);
     }
 
         .chat-container:hover {
@@ -244,8 +249,8 @@ export default {
         }
 
     .header-container {
-        padding: 1rem 0;
-        width: 90%;
+        padding: 1rem;
+        width: 100%;
         margin: auto;
         display: flex;
         align-items: center;
@@ -276,15 +281,12 @@ export default {
             font-weight: 500;
             text-align: center;
             display: flex;
+            color: var(--black);
         }
 
     .user-name {
         text-align: left;
         display: block;
-        max-width: 100px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
     }
 
     @media (max-width: 735px) {
@@ -297,6 +299,10 @@ export default {
         .home-user {
             flex-direction: column;
         }
+
+            .home-user h5 {
+                display: none;
+            }
 
         .user-avatar {
             margin: 0 !important;
@@ -389,6 +395,7 @@ export default {
                 cursor: pointer;
                 transition: all 0.5s;
                 text-align: center;
+                color: var(--black);
             }
 
                 .vertical-menu .vertical-menu-list .link:hover {
@@ -476,10 +483,6 @@ export default {
     }
 
     @media (max-width: 876px) {
-        .header-container {
-            justify-content: space-between;
-            width: 80% !important;
-        }
 
         .vertical-menu {
             transform: translateX(-100%);
@@ -515,10 +518,6 @@ export default {
 
         .site-logo-img-big {
             display: none;
-        }
-
-        .user-name {
-            max-width: 50px;
         }
     }
 

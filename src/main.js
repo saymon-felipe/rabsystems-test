@@ -12,6 +12,8 @@ Vue.use(CKEditor);
 //Variáveis globais
 let firstLoad = true;
 
+let hidden;
+
 new Vue({
   router,
   i18n,
@@ -37,7 +39,6 @@ if ($(document).length) {
   findPageVisibility();
 }
 
-let hidden;
 function findPageVisibility() {
   let visibilityChange;
 

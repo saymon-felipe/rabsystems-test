@@ -52,8 +52,9 @@ export default {
         checkUsersChatList: function () {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
+
             if (!self.$root.havePermission) {
-                self.userList = [];
+
                 let jwt = "Bearer " + self.getJwtInLocalStorage();
                 api.get("/user/get_rabsystems_user?with_last_message=true", {
                     headers: {
@@ -61,9 +62,8 @@ export default {
                     }
                 })
                 .then(function(response){
-                    self.userList.push(response.data.obj.user);
+                    self.userList = [response.data.obj.user];
                     self.loadingUsers = false;
-                    self.resetUsersList();
                     setTimeout(() => {
                         self.checkUsersChatList();
                     }, 10 * 1000)
@@ -81,7 +81,6 @@ export default {
             .then(function (response) {
                 self.userList = response.data.users_list;
                 self.loadingUsers = false;
-                self.resetUsersList();
                 setTimeout(() => {
                     self.checkUsersChatList();
                 }, 10 * 1000)
