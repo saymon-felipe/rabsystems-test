@@ -97,18 +97,17 @@ export default {
 
             api.patch(patch, formData)
             .then(function(response){
-                let id = "";
-                if (response.data.obj.image.id != undefined) {
-                    id = response.data.obj.image
+                let url = "";
+                if (response.data.obj.profile_photo != undefined) {
+                    url = response.data.profile_photo;
                 }
-                self.$emit("success", id);
+                self.$emit("success", url);
                 $(".loading").hide();
                 if (self.sendType != "time_machine_photo") {
                     self.$router.go();
                 }
-            }).catch(function(error){
+            }).catch(function(){
                 self.modalResponse = self.$i18n.t("my_profile.file_too_large");
-                console.log(error);
             })
         }
     }
