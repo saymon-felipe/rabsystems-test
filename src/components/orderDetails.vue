@@ -479,51 +479,6 @@ export default {
         display: flex;
     }
 
-    .order-details-informations {
-        margin-top: 3rem;
-    }
-
-    .order {
-        width: 100%;
-    }
-
-    .order-head td {
-        font-weight: 700;
-        font-size: 1.3rem;
-    }
-
-    .order-table-details {
-        width: 100%;
-    }
-
-        .order-table-details td {
-            width: 25%;
-            padding-top: 1rem;
-        }
-
-    @media (max-width: 500px) {
-        .order-table-details {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: auto;
-            font-size: 1.3rem;
-        }
-
-        .order-head {
-            display: none;
-        }
-
-            .order-table-details td {
-                width: 100%;
-            }
-
-        .order-details-container {
-            height: 90px;
-        }
-    }
-
     .order-details-buttons {
         display: flex;
         flex-wrap: wrap;
@@ -624,4 +579,48 @@ export default {
                     background: var(--gray-high);
                 }
 
+                .order-details-informations {
+                    margin-top: 3rem;
+                }
+
+.order {
+    width: 100%;
+}
+
+.order-head td {
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.order-table-details {
+    width: 100%;
+}
+
+    .order-table-details td {
+        width: 25%;
+        padding-top: 1rem;
+    }
+
+@media (max-width: 500px) {
+    .order-table-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        font-size: 1.3rem;
+    }
+
+    .order-head {
+        display: none;
+    }
+
+        .order-table-details td {
+            width: 100%;
+        }
+
+    .order-details-container {
+        height: 90px;
+    }
+}
 </style>

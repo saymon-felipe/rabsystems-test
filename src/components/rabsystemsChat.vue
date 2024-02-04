@@ -259,7 +259,7 @@ export default {
         playNewMessageAudio: function () {
             let audioElement = $("#message-audio")[0];
             if (audioElement != undefined) {
-                audioElement.play();
+                audioElement.play().catch(() => {});
             }
         },
         viewMessage: function () {

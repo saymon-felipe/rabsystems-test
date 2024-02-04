@@ -20,6 +20,7 @@ import waitToEnterRoom from "../components/waitToEnterRoom.vue";
 import timeMachine from "../components/timeMachine.vue";
 import admin from "../components/admin.vue";
 import myTickets from "../components/myTickets.vue";
+import ticketDetails from "../components/ticketDetails.vue";
 
 const routes = [
     {
@@ -81,6 +82,10 @@ const routes = [
             {
                 path: "/requests",
                 component: myTickets
+            },
+            {
+                path: "/ticket-details/:id",
+                component: ticketDetails
             },
 
             // ROTAS ADMIN

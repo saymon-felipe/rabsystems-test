@@ -94,7 +94,7 @@ export default {
         },
         playNotificationAudio: function () {
             let audioElement = $("#notification-audio")[0];
-            audioElement.play();
+            audioElement.play().catch(() => {});
         },
         checkNewMessages: function () {
             let self = this

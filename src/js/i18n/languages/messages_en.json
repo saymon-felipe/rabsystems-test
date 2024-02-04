@@ -40,7 +40,18 @@
         "my_tickets": "My tickets"
     },
     "my_tickets" : {
-        "my_tickets": "My tickets"
+        "my_tickets": "My tickets",
+        "id": "Id",
+        "subject": "Subject",
+        "description": "Description",
+        "contact_type": "Contact type",
+        "request_date": "Request date",
+        "details": "Ticket details",
+        "status": "Status",
+        "in_progress": "In progress",
+        "finished": "Finished",
+        "canceled": "Canceled",
+        "finish": "Complete ticket"
     },
     "financial": {
         "financial": "Financial",
@@ -106,7 +117,7 @@
     "support": {
         "support": "Submit a ticket",
         "contact_reason": "Reason for contact",
-        "name": "Name",
+        "subject": "Subject",
         "technical_assistance": "Technical assistance",
         "sugestion_text": "Suggestion, question or complaint",
         "requests": "Requests",

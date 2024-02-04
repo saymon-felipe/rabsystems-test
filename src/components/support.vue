@@ -12,12 +12,12 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-md-6">
                                         <div class="form-input">
-                                            <input type="text" name="name" id="name" :placeholder="$t('support.name')" required>
+                                            <input type="text" name="subject" id="subject" :placeholder="$t('support.subject')" maxlength="50" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="form-input">
-                                            <select name="contact-option" id="contact-option" required>
+                                            <select name="contact_type" id="contact-option" required>
                                                 <option value="">-- {{ $t("support.contact_reason") }} --</option>
                                                 <option value="formatting">{{ $t("support.technical_assistance") }}</option>
                                                 <option value="pc-assembly">{{ $t("support.sugestion_text") }}</option>
@@ -43,22 +43,36 @@
 
 <script>
 import $ from 'jquery';
+import api from '../configs/api.js';
+import { globalMethods } from '../js/globalMethods';
 
 export default {
     name: "support",
+    mixins: [globalMethods],
     methods: {
         submitSupportForm: function () {
+            let self = this;
+            let jwt = "Bearer " + self.getJwtInLocalStorage();
+
             let data = $("form").serializeArray().reduce(function (obj, item) { // Pega todos os dados do formulário e coloca em um objeto.
                 obj[item.name] = item.value;
                 return obj;
             }, {});
 
+            data["description"] = data["description"].replace(/\n/g, '\\n');
+
             $(".loading").show();
 
-            setTimeout(() => {
+            api.post("/support", data, {
+                headers: {
+                    Authorization: jwt
+                }
+            }).then(() => {
                 $(".loading").hide();
-                console.log(data)
-            }, 500);
+                self.$router.push("/requests")
+            }).catch((error) => {
+                console.log(error);
+            })
         }
     }
 }
