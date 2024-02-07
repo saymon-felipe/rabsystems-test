@@ -12,6 +12,8 @@ Vue.use(CKEditor);
 //Variáveis globais
 let firstLoad = true;
 
+let hidden;
+
 new Vue({
   router,
   i18n,
@@ -37,7 +39,6 @@ if ($(document).length) {
   findPageVisibility();
 }
 
-let hidden;
 function findPageVisibility() {
   let visibilityChange;
 
@@ -69,6 +70,8 @@ function findPageVisibility() {
 
 function outUser(user_out = false) {
   let jwt = "Bearer " + getJwtInLocalStorage();
+
+  if (window.location.pathname.indexOf("login") != -1) return;
 
   if (user_out) {
       api.patch("/user/out_user", "", {

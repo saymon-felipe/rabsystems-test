@@ -44,18 +44,18 @@ export default {
 .chat-user-list-container {
     cursor: pointer;
     margin: 10px 0;
-    padding: 7px 0;
+    padding: 1rem;
     display: flex;
     align-items: center;
     position: relative;
 }
 
-    .chat-user-list-container:hover {
-        background: var(--gray-high-2);
+    .chat-user-list-container:first-child {
+        margin-top: 0;
     }
 
-    .chat-user-list-container img {
-        margin-right: 5px;
+    .chat-user-list-container:hover {
+        background: var(--gray-high-2);
     }
 
     .chat-user-list-container span {
@@ -63,7 +63,6 @@ export default {
     }
 
 .user-img-container {
-    flex-grow: auto;
     position: relative;
 }
 

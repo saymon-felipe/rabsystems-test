@@ -8,7 +8,7 @@
                     <div class="col-md-6 col-sm-12">
                         <div class="input-group">
                             <label for="name">{{ $t("complete_registration.name") }}</label>
-                            <input type="text" name="name" id="name" v-on:keydown="validateName($event)" maxlength="30" required>
+                            <input type="text" name="name" id="name" v-on:keydown="validateName($event)" maxlength="45" required>
                         </div>
                     </div> 
                     <div class="col-md-6 col-sm-12">

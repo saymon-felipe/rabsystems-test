@@ -48,11 +48,12 @@
                                 <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
                             </router-link>
                         </div>
+                        <div style="height: 75px;">&nbsp;</div>
                     </div>
                 </td>
             </tr>
         </table>
-        <router-link class="new-order" to="/new-order" v-if="!$root.havePermission">
+        <router-link class="new-order" id="new-order-button" to="/new-order" v-if="!$root.havePermission">
             <i class="fas fa-plus-circle"></i>
             <h5>{{ $t("my_orders.new_order") }}</h5>
         </router-link>
@@ -98,7 +99,7 @@ export default {
             if ((this.first_check_message && play_audio) || (this.new_messages_notification_number != order_list.length && play_audio)) {
                 this.new_messages_notification_number = order_list.length;
                 if (audioElement != undefined) {
-                    audioElement.play();
+                    audioElement.play().catch(() => {});
                 }
                 play_audio = false;
             }
@@ -107,7 +108,7 @@ export default {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
 
-            api.get("messages/check_order_new_message", {
+            api.get("/messages/check_order_new_message", {
                 headers: {
                     Authorization: jwt
                 }
@@ -261,97 +262,6 @@ export default {
         height: 71vh;
     }
 
-    .order-list {
-        margin-top: 2rem;
-        width: 100%;
-        height: 80%;
-        position: relative;
-    }
-
-    .order-list-head {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: .5rem;
-        padding: 0 1rem;
-        font-weight: 600;
-    }
-
-        .order-list-head td {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 15%;
-        }
-
-        .order-list-head td {
-            width: 15%;
-        }
-
-        .order-list-head td:nth-child(4) {
-            width: 30%;
-        }
-
-    .empty {
-        padding: 1rem;
-        height: 50px;
-        background: var(--gray-high-2);
-    }
-
-        .empty td {
-            width: 100%;
-            text-align: center;
-        }
-
-    .order {
-        background: var(--gray-high-3);
-        color: #000 !important;
-        padding: .8rem;
-        border-bottom: 1px solid var(--gray-high);
-        display: flex;
-        justify-content: space-between;
-    }
-
-        .order:hover {
-            background: var(--gray-high-2);
-        }
-
-        .order td {
-            text-align: center;
-            display: block;
-        }
-
-    .order:last-child {
-        border: none;
-    }
-
-    .order-id {
-        font-weight: 600;
-        width: 15%;
-    }
-
-    .order-date, .order-status, .order-name {
-        width: 15%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .order-title {
-        text-decoration: underline;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        width: 30%;
-    }
-
-    .order-price {
-        width: 15%;
-    }
-
-    .order-status {
-        width: 15%;
-    }
-
     .new-order {
         color: var(--black);
         position: absolute;
@@ -368,6 +278,8 @@ export default {
         border-radius: 10px;
         margin-bottom: 1.5rem;
         cursor: pointer;
+        background: var(--white);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
 
         .new-order:hover {
@@ -384,30 +296,121 @@ export default {
             font-weight: 500;
         }
 
-    @media (max-width: 707px) {
-        .order {
-            display: flex;
-            height: auto;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-            .order td {
-                width: auto;
-                margin: 1rem;
-            }
-
-        .order-list-head {
-            display: none;
-        }
-
-        .responsive-filter {
-            display: block;
-            position: absolute;
-            right: 1rem;
-            top: -2.5rem;
-            font-size: 1.5rem;
-        }
+    .order-list-head td:nth-child(4) {
+        width: 30%;
     }
+
+    .order-list {
+    margin-top: 2rem;
+    width: 100%;
+    height: 80%;
+    position: relative;
+}
+
+.order-list-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: .5rem;
+    padding: 0 1rem;
+    font-weight: 600;
+}
+
+    .order-list-head td {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 15%;
+    }
+
+    .order-list-head td {
+        width: 15%;
+    }
+
+.empty {
+    padding: 1rem;
+    height: 50px;
+    background: var(--gray-high-2);
+}
+
+    .empty td {
+        width: 100%;
+        text-align: center;
+    }
+
+.order {
+    background: var(--gray-high-3);
+    color: #000 !important;
+    padding: .8rem;
+    border-bottom: 1px solid var(--gray-high);
+    display: flex;
+    justify-content: space-between;
+}
+
+    .order:hover {
+        background: var(--gray-high-2);
+    }
+
+    .order td {
+        text-align: center;
+        display: block;
+    }
+
+.order:last-child {
+    border: none;
+}
+
+.order-id {
+    font-weight: 600;
+    width: 15%;
+}
+
+.order-date, .order-status, .order-name {
+    width: 15%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.order-title {
+    text-decoration: underline;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 30%;
+}
+
+.order-price {
+    width: 15%;
+}
+
+.order-status {
+    width: 15%;
+}
+
+@media (max-width: 707px) {
+    .order {
+        display: flex;
+        height: auto;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+        .order td {
+            width: auto;
+            margin: 1rem;
+        }
+
+    .order-list-head {
+        display: none;
+    }
+
+    .responsive-filter {
+        display: block;
+        position: absolute;
+        right: 1rem;
+        top: -2.5rem;
+        font-size: 1.5rem;
+    }
+}
 </style>

@@ -19,7 +19,7 @@
         <div class="chat-body" v-if="!loading">
             <div class="messages-container">
                 <div class="message-wrapper" v-for="message in messages" :key="message.message_id" :class="message.reference_message_id != 0 ? 'with-reply' : ''">
-                    <div class="replied-message" v-if="message.reference_message_id != 0" :class="message.sender_id == $root.user.id ? 'out' : 'in'">
+                    <div class="replied-message" v-if="messages.length > 0 && message.reference_message_id != 0" :class="message.sender_id == $root.user.id ? 'out' : 'in'">
                         <div class="replied-message-inner" v-on:click="goToReferencedMessage(message.reference_message_id)">
                             <div class="replied-message-header">
                                 <h5>{{ message.reference_message_sender_id == $root.user.id ? $t("chat.you") : message.reference_message_sender_name }}</h5>
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="message" :id="'message-' + message.message_id" :class="message.sender_id == $root.user.id ? 'out' : 'in'">
+                    <div class="message" v-if="messages.length > 0" :id="'message-' + message.message_id" :class="message.sender_id == $root.user.id ? 'out' : 'in'">
                         <div class="message-header">
                             <h5>{{ message.sender_name }}</h5>
                             <span>{{ formatDate(message.send_date) }}</span>
@@ -259,7 +259,7 @@ export default {
         playNewMessageAudio: function () {
             let audioElement = $("#message-audio")[0];
             if (audioElement != undefined) {
-                audioElement.play();
+                audioElement.play().catch(() => {});
             }
         },
         viewMessage: function () {
@@ -285,12 +285,21 @@ export default {
         },
         checkIfMyMessagesHaveBeenViewed: function () {
             let notViewed = false;
+
+            if (this.messages == undefined) {
+                setTimeout(() => {
+                    this.checkIfMyMessagesHaveBeenViewed();
+                }, 10)
+                return;
+            }
+
             for (let i = 0; i < this.messages.length; i++) {
                 let currentMessage = this.messages[i];
                 if (currentMessage.view_date == '""' ) {
                     notViewed = true;
                 }
             }
+
             if (notViewed) {
                 this.fillMessages();
             }
@@ -571,7 +580,7 @@ export default {
         right: 10px;
         margin: auto;
         width: 60vw;
-        min-width: 260px;
+        min-width: 300px;
         max-width: 800px;
         height: 80vh;
         min-height: 500px;
@@ -583,6 +592,7 @@ export default {
         opacity: 0;
         display: none;
         overflow: hidden;
+        z-index: 11;
     }
 
     .chat-header {
@@ -863,6 +873,7 @@ export default {
         border-radius: 10px;
         display: flex;
         flex-direction: column;
+        text-align: left;
     }
 
     .reply-message-sender-name {
@@ -907,6 +918,7 @@ export default {
         background: var(--white);
         color: var(--black);
         cursor: pointer;
+        text-align: left;
     }
 
     .new-messages-indicator {

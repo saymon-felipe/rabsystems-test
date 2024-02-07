@@ -10,7 +10,7 @@
     --blue: #05C5FD;
     --blue-low: #008eba;
     --blue-low-2: #006280;
-    --black: #000;
+    --black: #0f0f0f;
     --white: #fff;
     --gray-high: #d8d8d8;
     --gray-high-2: rgb(240, 240, 240);
@@ -284,6 +284,7 @@ ul {
     display: none;
     position: relative;
     cursor: pointer;
+    color: var(--black);
 }
 
 .responsive-filter-container {
@@ -617,12 +618,5 @@ button:disabled {
     .avatar-p {
         width: 40px;
         height: 40px;
-    }
-}
-
-@media (max-width: 353px) {
-    .avatar-p {
-        width: 30px;
-        height: 30px;
     }
 }

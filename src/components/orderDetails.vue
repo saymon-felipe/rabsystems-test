@@ -66,7 +66,7 @@
                 </table>
                 <div class="order-description">
                     <h1>{{ $t("order_details.order_description") }}</h1>
-                    <p>{{ order.order_description }}</p>
+                    <p v-html="order.order_description"></p>
                 </div>
             </div>
             <div class="order-details-buttons">
@@ -209,6 +209,7 @@ export default {
             })
             .then(function(response){
                 self.order = response.data.obj.order;
+                self.order.order_description = self.order.order_description.replace(/\\n/g, '<br>');
                 self.loading = false;
                 self.findProgressAnimation();
                 self.checkActions();
@@ -478,51 +479,6 @@ export default {
         display: flex;
     }
 
-    .order-details-informations {
-        margin-top: 3rem;
-    }
-
-    .order {
-        width: 100%;
-    }
-
-    .order-head td {
-        font-weight: 700;
-        font-size: 1.3rem;
-    }
-
-    .order-table-details {
-        width: 100%;
-    }
-
-        .order-table-details td {
-            width: 25%;
-            padding-top: 1rem;
-        }
-
-    @media (max-width: 500px) {
-        .order-table-details {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: auto;
-            font-size: 1.3rem;
-        }
-
-        .order-head {
-            display: none;
-        }
-
-            .order-table-details td {
-                width: 100%;
-            }
-
-        .order-details-container {
-            height: 90px;
-        }
-    }
-
     .order-details-buttons {
         display: flex;
         flex-wrap: wrap;
@@ -572,6 +528,10 @@ export default {
             font-weight: 700;
         }
 
+        .order-description p {
+            text-align: left;
+        }
+
     .order-more-options, .order-actions-admin {
         position: absolute;
     }
@@ -619,4 +579,48 @@ export default {
                     background: var(--gray-high);
                 }
 
+                .order-details-informations {
+                    margin-top: 3rem;
+                }
+
+.order {
+    width: 100%;
+}
+
+.order-head td {
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.order-table-details {
+    width: 100%;
+}
+
+    .order-table-details td {
+        width: 25%;
+        padding-top: 1rem;
+    }
+
+@media (max-width: 500px) {
+    .order-table-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        font-size: 1.3rem;
+    }
+
+    .order-head {
+        display: none;
+    }
+
+        .order-table-details td {
+            width: 100%;
+        }
+
+    .order-details-container {
+        height: 90px;
+    }
+}
 </style>

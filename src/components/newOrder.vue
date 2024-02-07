@@ -9,9 +9,9 @@
                     <div class="form-input">
                         <select name="service" id="service" required>
                             <option value="">-- {{ $t("new_order.service_type") }} --</option>
-                            <option value="site">{{ $t("new_order.website_creation") }}</option>
-                            <option value="web-system">{{ $t("new_order.web_system_creation") }}</option>
-                            <option value="web-design">{{ $t("new_order.web_design_creation") }}</option>
+                            <option value="website-design">{{ $t("new_order.website_design") }}</option>
+                            <option value="traffic-management">{{ $t("new_order.traffic_management") }}</option>
+                            <option value="web-maintenance">{{ $t("new_order.web_maintenance") }}</option>
                         </select>
                     </div>
                 </div>
@@ -19,7 +19,7 @@
                 <div class="form-body">
                     <textarea name="description" id="description" maxlength="5000" :placeholder="$t('new_order.description')" required></textarea>
                 </div>
-                <input type="submit" :value="$t('new_order.send')">
+                <input type="submit" id="send-order-button" :value="$t('new_order.send')">
             </form>
             <div class="loading"></div>
         </div>
@@ -44,6 +44,10 @@ export default {
                 obj[item.name] = item.value;
                 return obj;
             }, {});
+
+            let text = data["description"].replace(/\n/g, '\\n');
+
+            data["description"] = text;
 
             api.post("/orders", data, {
                 headers: {

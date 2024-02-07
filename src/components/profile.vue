@@ -41,7 +41,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <div class="input-group">
                                     <label for="name">{{ $t("my_profile.name") }}</label>
-                                    <input type="text" name="name" id="name" v-on:keydown="validateName($event)" v-model="$root.user.name" maxlength="30" required>
+                                    <input type="text" name="name" id="name" v-on:keydown="validateName($event)" v-model="$root.user.name" maxlength="45" required>
                                 </div>
                             </div> 
                             <div class="col-md-6 col-sm-12">
