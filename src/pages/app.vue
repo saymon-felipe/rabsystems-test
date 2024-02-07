@@ -9,6 +9,7 @@
             <div class="container">
                 <headerAppComponent />
                 <router-view path="$router.key"></router-view>
+                <tutorialComponent :steps="steps" v-if="steps.length > 0" />
             </div>
         </div>
     </div>  
@@ -18,6 +19,7 @@
 import api from '../configs/api.js';
 import { globalMethods } from '../js/globalMethods';
 import headerAppComponent from "../components/headerApp.vue";
+import tutorialComponent from "../components/tutorialComponent.vue";
 import $ from "jquery";
 import moment from 'moment';
 
@@ -25,7 +27,8 @@ export default {
     name: 'appPage',
     mixins: [globalMethods],
     components: {
-        headerAppComponent
+        headerAppComponent,
+        tutorialComponent
     },
     data() {
         return {
@@ -33,10 +36,19 @@ export default {
             user: {},
             rabsystemsUser: {},
             havePermission: false,
-            newMessages: []
+            newMessages: [],
+            steps: []
         }
     },
     methods: {
+        returnSteps: function () {
+            let self = this;
+
+            api.get("/utils/get_tutorial_steps")
+            .then(function(response){
+                self.steps = response.data.returnObj;
+            })
+        },
         checkPermission: function () {
             if (this.$root.rabsystemsUser.id == this.$root.user.id) {
                 this.$root.havePermission = true;
@@ -72,7 +84,6 @@ export default {
                 }
             })
         },
-        
         isDefaultPhoto: function (url) {
             if (url.indexOf("/public/") != -1) {
                 if ($(".view-photo").length) {
@@ -87,6 +98,7 @@ export default {
             this.checkIfUserIsAuthenticated();
             this.getRabsystemsUser(true);
             this.checkData();
+            this.returnSteps();
         }, 20);
    },
 }

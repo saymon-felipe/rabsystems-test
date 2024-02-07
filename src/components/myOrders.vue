@@ -52,7 +52,7 @@
                 </td>
             </tr>
         </table>
-        <router-link class="new-order" to="/new-order" v-if="!$root.havePermission">
+        <router-link class="new-order" id="new-order-button" to="/new-order" v-if="!$root.havePermission">
             <i class="fas fa-plus-circle"></i>
             <h5>{{ $t("my_orders.new_order") }}</h5>
         </router-link>
@@ -107,7 +107,7 @@ export default {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();
 
-            api.get("messages/check_order_new_message", {
+            api.get("/messages/check_order_new_message", {
                 headers: {
                     Authorization: jwt
                 }

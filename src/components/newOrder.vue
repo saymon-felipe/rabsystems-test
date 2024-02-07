@@ -19,7 +19,7 @@
                 <div class="form-body">
                     <textarea name="description" id="description" maxlength="5000" :placeholder="$t('new_order.description')" required></textarea>
                 </div>
-                <input type="submit" :value="$t('new_order.send')">
+                <input type="submit" id="send-order-button" :value="$t('new_order.send')">
             </form>
             <div class="loading"></div>
         </div>
@@ -46,8 +46,6 @@ export default {
             }, {});
 
             let text = data["description"].replace(/\n/g, '\\n');
-
-            console.log(text)
 
             data["description"] = text;
 

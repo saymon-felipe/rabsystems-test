@@ -71,6 +71,8 @@ function findPageVisibility() {
 function outUser(user_out = false) {
   let jwt = "Bearer " + getJwtInLocalStorage();
 
+  if (window.location.pathname.indexOf("login") != -1) return;
+
   if (user_out) {
       api.patch("/user/out_user", "", {
           headers: {
