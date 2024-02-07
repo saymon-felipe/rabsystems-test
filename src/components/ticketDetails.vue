@@ -3,32 +3,30 @@
         <div class="page-title">
             <h1 class="rabsystems-font">{{ $t("my_tickets.details") }}</h1>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="order-details-informations">
-                    <table class="order">
-                        <tr class="order-head">
-                            <td>{{ $t("my_tickets.id") }}</td>
-                            <td>{{ $t("my_tickets.subject") }}</td>
-                            <td>{{ $t("my_tickets.contact_type") }}</td>
-                            <td>{{ $t("my_tickets.request_date") }}</td>
-                            <td>{{ $t("my_tickets.status") }}</td>
-                        </tr>
-                        <tr class="order-table-details">
-                            <td>#{{ ticket.id }}</td>
-                            <td :title="ticket.subject"><strong>{{ ticket.subject }}</strong></td>
-                            <td :title="ticket.contact_type">{{ ticket.contact_type }}</td>
-                            <td :title="getMomentExtended(ticket.request_date)">{{ getMoment(ticket.request_date) }}</td>
-                            <td class="order-name" :title="getTicketStatus(ticket.status)">{{ getTicketStatus(ticket.status) }}</td>
-                        </tr>
-                    </table>
-                    <div class="order-description">
-                        <h1>{{ $t("my_tickets.description") }}</h1>
-                        <p v-html="ticket.description"></p>
-                    </div>
-                    <div class="order-details-buttons">
-                        <button v-on:click="finishTicket()" v-if="ticket.status == 0 && $root.havePermission" id="finish-ticket">{{ $t("my_tickets.finish") }}</button>
-                    </div>
+        <div class="order-details-container">
+            <div class="order-details-informations">
+                <table class="order">
+                    <tr class="order-head">
+                        <td>{{ $t("my_tickets.id") }}</td>
+                        <td>{{ $t("my_tickets.subject") }}</td>
+                        <td>{{ $t("my_tickets.contact_type") }}</td>
+                        <td>{{ $t("my_tickets.request_date") }}</td>
+                        <td>{{ $t("my_tickets.status") }}</td>
+                    </tr>
+                    <tr class="order-table-details">
+                        <td>#{{ ticket.id }}</td>
+                        <td :title="ticket.subject"><strong>{{ ticket.subject }}</strong></td>
+                        <td :title="ticket.contact_type">{{ ticket.contact_type }}</td>
+                        <td :title="getMomentExtended(ticket.request_date)">{{ getMoment(ticket.request_date) }}</td>
+                        <td class="order-name" :title="getTicketStatus(ticket.status)">{{ getTicketStatus(ticket.status) }}</td>
+                    </tr>
+                </table>
+                <div class="order-description">
+                    <h1>{{ $t("my_tickets.description") }}</h1>
+                    <p v-html="ticket.description"></p>
+                </div>
+                <div class="order-details-buttons">
+                    <button v-on:click="finishTicket()" v-if="ticket.status == 0 && $root.havePermission" id="finish-ticket">{{ $t("my_tickets.finish") }}</button>
                 </div>
             </div>
         </div>
@@ -109,11 +107,12 @@ export default {
 <style scoped>
 .ticket {
     width: calc(100% - 225px);
-    height: 100%;
+    height: 95%;
     padding: 1rem;
     text-align: center;
     background: var(--white);
     position: absolute;
+    overflow-x: hidden;
     right: 0;
 }
 
@@ -142,7 +141,11 @@ export default {
 
     .order-table-details td {
         width: 25%;
+        max-width: 300px;
         padding-top: 1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .order-description {
@@ -156,7 +159,36 @@ export default {
 
         .order-description p {
             text-align: left;
+            word-break: break-word;
         }
+
+    .order-details-container {
+        margin-top: 2rem;
+        max-width: 75%;
+        display: inline-block;
+        border-radius: 2rem;
+        padding: 1.2rem;
+        position: relative;
+    }
+
+@media (max-width: 1200px) {
+
+    .order-table-details td {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 876px) {
+    .order-details-container {
+        margin-top: 0;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .order-table-details td {
+        max-width: 100px;
+    }
+}
 
 @media (max-width: 500px) {
     .order-table-details {
@@ -166,6 +198,10 @@ export default {
         justify-content: center;
         margin: auto;
         font-size: 1.3rem;
+    }
+
+    .order-table-details td {
+        max-width: 86vw;
     }
 
     .order-head {

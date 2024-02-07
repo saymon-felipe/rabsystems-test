@@ -51,7 +51,8 @@
         "in_progress": "In progress",
         "finished": "Finished",
         "canceled": "Canceled",
-        "finish": "Complete ticket"
+        "finish": "Complete ticket",
+        "empty_tickets": "You haven't opened any tickets yet"
     },
     "financial": {
         "financial": "Financial",

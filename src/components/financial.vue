@@ -3,7 +3,7 @@
         <div class="page-title">
             <h1 class="rabsystems-font">{{ $t("financial.financial") }}</h1>
         </div>
-        <div class="responsive-filter" v-on:click="showResponsiveFilter()">
+        <div class="responsive-filter" v-on:click="toggleResponsiveFilter()">
             <i class="fas fa-filter" title="Filtrar por"></i>
             <div class="responsive-filter-container">
                 <ul>
@@ -12,6 +12,7 @@
                 </ul>
             </div>
         </div>
+        <div class="responsive-filter-wrapper" v-on:click="toggleResponsiveFilter()"></div>
         <div class="charges-list">
             <table>
                 <tr class="order-list-head">

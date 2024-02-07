@@ -44,7 +44,7 @@
                                     <input type="text" name="name" id="name" v-on:keydown="validateName($event)" v-model="$root.user.name" maxlength="45" required>
                                 </div>
                             </div> 
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-6 col-sm-12" v-if="!reload_tel">
                                 <div class="input-group">
                                 <label for="tel-input">{{ $t("my_profile.phone") }}</label>
                                 <div class="rabsystems-input">
@@ -177,6 +177,7 @@ import { globalMethods } from '../js/globalMethods';
 import api from '../configs/api.js';
 import modal from "./modal.vue";
 import sendPhotoModalContent from "./sendPhotoModalContent.vue";
+import { initInput } from "../js/rabsystemsTelInput.js";
 
 export default {
     name: "profile",
@@ -191,7 +192,8 @@ export default {
             defaultPhoto: false,
             response: null,
             showModal: false,
-            modalTitle: ""
+            modalTitle: "",
+            reload_tel: false
         }
     },
     watch: {
@@ -355,11 +357,12 @@ export default {
                 is_default = true;
             }
             this.defaultPhoto = is_default;
-        },
+        }
     },
     mounted() {
         this.checkDefaultPhoto();
         this.reloadInputs(true);
+        initInput();
     }
 }
 </script>

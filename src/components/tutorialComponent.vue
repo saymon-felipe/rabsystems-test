@@ -125,8 +125,10 @@ export default {
         }
     },
     mounted: function () {
-        this.showContainer();
-        this.findPosition();
+        setTimeout(() => {
+            this.showContainer();
+            this.findPosition();
+        }, 100)
 
         setInterval(() => {
             this.checkUrl();

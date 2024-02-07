@@ -15,7 +15,7 @@
                         <td>{{ $t("my_tickets.status") }}</td>
                     </tr>
                     <tr class="empty" v-if="tickets.length == 0">
-                        <td>{{ $t("my_orders.empty_orders") }}</td>
+                        <td>{{ $t("my_tickets.empty_tickets") }}</td>
                     </tr>
                     <tr>
                         <td>
@@ -107,17 +107,24 @@ export default {
         right: 0;
     }
 
+    
+    .orders-list {
+        overflow-y: auto;
+        height: 71vh;
+        width: calc(100vw - 270px);
+    }
+
     @media (max-width: 876px) {
         .my-tickets {
             width: 100%;
         }
-    }
 
-    .orders-list {
-        overflow-y: auto;
-        height: 71vh;
+        .orders-list {
+            overflow-y: auto;
+            width: 94vw;
+            height: 71vh;
+        }
     }
-
 .order-list {
     width: 100%;
     height: 80%;

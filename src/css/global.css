@@ -280,6 +280,17 @@ ul {
     cursor: pointer;
 }
 
+.responsive-filter-wrapper {
+    position: fixed;
+    width: 200vw;
+    height: 200vh;
+    top: -50vh;
+    left: 0;
+    background: transparent;
+    z-index: 1;
+    display: none;
+}
+
 .responsive-filter {
     display: none;
     position: relative;
@@ -298,6 +309,7 @@ ul {
     display: none;
     opacity: 0;
     transition: all 0.4s;
+    z-index: 3;
 }
 
     .responsive-filter-container ul {

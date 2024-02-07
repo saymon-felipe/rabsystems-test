@@ -24,7 +24,7 @@
             <tr class="empty" v-if="orders.length == 0">
                 <td>{{ $t("my_orders.empty_orders") }}</td>
             </tr>
-            <div class="responsive-filter" v-on:click="showResponsiveFilter()">
+            <div class="responsive-filter" v-on:click="toggleResponsiveFilter()">
                 <i class="fas fa-filter" title="Filtrar por"></i>
                 <div class="responsive-filter-container">
                     <ul>
@@ -34,6 +34,7 @@
                     </ul>
                 </div>
             </div>
+            <div class="responsive-filter-wrapper" v-on:click="toggleResponsiveFilter()"></div>
             <tr>
                 <td>
                     <div class="orders-list">

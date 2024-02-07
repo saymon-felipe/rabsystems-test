@@ -37,16 +37,16 @@
             </div>
         </div>
         <aside class="vertical-menu">
-            <div class="vertical-menu-icon" v-on:click="expandVerticalMenu()">
+            <div class="vertical-menu-icon" v-on:click="toggleVerticalMenu()">
                 <i class="fas fa-bars"></i>
             </div>
             <div class="vertical-menu-list">
-                <router-link class="link" to="/my-orders">{{ $t("header.my_orders") }}</router-link>
-                <router-link class="link" to="/financial">{{ $t("header.financial") }}</router-link>
-                <router-link class="link" to="/rooms" style="display: none;">{{ $t("header.conferences") }}</router-link>
-                <router-link class="link" to="/profile" @click.native="$router.go()">{{ $t("header.my_profile") }}</router-link>
-                <router-link class="link" to="/support">{{ $t("header.support") }}</router-link>
-                <router-link class="link" to="/requests">{{ $t("header.my_tickets") }}</router-link>
+                <router-link class="link" to="/my-orders" @click.native="toggleVerticalMenu()">{{ $t("header.my_orders") }}</router-link>
+                <router-link class="link" to="/financial" @click.native="toggleVerticalMenu()">{{ $t("header.financial") }}</router-link>
+                <router-link class="link" to="/rooms" style="display: none;" @click.native="toggleVerticalMenu()">{{ $t("header.conferences") }}</router-link>
+                <router-link class="link" to="/profile" @click.native="toggleVerticalMenu()">{{ $t("header.my_profile") }}</router-link>
+                <router-link class="link" to="/support" @click.native="toggleVerticalMenu()">{{ $t("header.support") }}</router-link>
+                <router-link class="link" to="/requests" @click.native="toggleVerticalMenu()">{{ $t("header.my_tickets") }}</router-link>
             </div>
             <div class="vertical-menu-footer">
                 <img src="../assets/img/icone-preto.png" class="icon-footer">
@@ -55,6 +55,7 @@
                 </div>
             </div>
         </aside>
+        <div class="vertical-menu-wrapper" v-on:click="toggleVerticalMenu()"></div>
         <audio src="../assets/audio/message_notification.ogg" id="notification-audio" preload="auto"></audio>
     </header>
 </template>
@@ -149,16 +150,20 @@ export default {
                 element.css("transform", "translateX(0)")
             }, 10)
         },
-        expandVerticalMenu: function () {
+        toggleVerticalMenu: function () {
             let self = this;
+
+            if (window.innerWidth > 876) return;
 
             if (self.expanded) {
                 $(".vertical-menu").css("transform", "translateX(-100%)");
                 $(".vertical-menu-icon").removeClass("opacity-1");
+                $(".vertical-menu-wrapper").hide();
                 self.expanded = false;
                 return;
             } 
 
+            $(".vertical-menu-wrapper").show();
             $(".vertical-menu").css("transform", "translateX(0)");
             $(".vertical-menu-icon").addClass("opacity-1");
             self.expanded = true;
@@ -379,6 +384,7 @@ export default {
         padding: 2rem 1rem;
         bottom: -102px;
         transition: transform 0.5s;
+        z-index: 2;
     }
 
         .vertical-menu .vertical-menu-list {
@@ -420,6 +426,17 @@ export default {
         flex-direction: column;
     }
 
+    .vertical-menu-wrapper {
+        position: fixed;
+        width: 200vw;
+        height: 200vh;
+        top: -50vh;
+        left: 0;
+        background: transparent;
+        z-index: 1;
+        display: none;
+    }
+
     .vertical-menu-icon {
         display: none;
         position: absolute;
@@ -431,6 +448,7 @@ export default {
         border-radius: 0 10px 10px 0;
         opacity: 0.5;
         transition: opacity 0.4s;
+        z-index: 2;
     }
 
         .vertical-menu-icon:hover {

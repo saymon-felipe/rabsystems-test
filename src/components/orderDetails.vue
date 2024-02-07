@@ -530,6 +530,7 @@ export default {
 
         .order-description p {
             text-align: left;
+            word-break: break-word;
         }
 
     .order-more-options, .order-actions-admin {

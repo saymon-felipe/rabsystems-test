@@ -35,6 +35,9 @@ function findFlags (country) {
 
 function mountTelInputElement () {
     let countries = ['brazil', 'usa', "portugal"]; // Array deverá conter os países que serão contemplados no componente.
+    
+    $(".current-flag-container").html("");
+    $(".flag-list").html("");
 
     for (let i in countries) {
         if (countries[i] == 'brazil') {
@@ -45,7 +48,7 @@ function mountTelInputElement () {
     } 
 }
 
-function initInput() {
+ export function initInput() {
     let input = $(".rabsystems-input");
 
     if (input.length == 0) {
