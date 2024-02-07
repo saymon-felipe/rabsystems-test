@@ -48,6 +48,7 @@
                                 <td :class="'order-status ' + findStatusClass(order.order_status)" :title="findStatus(order.order_status)">{{ findStatus(order.order_status) }}</td>
                             </router-link>
                         </div>
+                        <div style="height: 75px;">&nbsp;</div>
                     </div>
                 </td>
             </tr>
@@ -277,6 +278,8 @@ export default {
         border-radius: 10px;
         margin-bottom: 1.5rem;
         cursor: pointer;
+        background: var(--white);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
 
         .new-order:hover {

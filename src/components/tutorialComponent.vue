@@ -69,6 +69,7 @@ export default {
 
             if (currentStep.final == 1) {
                 this.closeTutorial();
+                return;
             }
 
             this.hideContainer();

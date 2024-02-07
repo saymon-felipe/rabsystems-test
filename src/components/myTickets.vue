@@ -22,12 +22,12 @@
                             <div class="orders-list">
                                 <div :id="'ticket-' + ticket.id" v-for="(ticket, index) in tickets" :key="index">
                                     <router-link class="order" :to="'/ticket-details/' + ticket.id">
-                                        <td class="order-name">#{{ ticket.id }}</td>
-                                        <td class="order-name" :title="ticket.subject"><strong>{{ ticket.subject }}</strong></td>
-                                        <td class="order-name" :title="ticket.description">{{ ticket.description }}</td>
-                                        <td class="order-name" :title="ticket.contact_type">{{ ticket.contact_type }}</td>
-                                        <td class="order-name" :title="getMomentExtended(ticket.request_date)">{{ getMoment(ticket.request_date) }}</td>
-                                        <td class="order-name" :title="getTicketStatus(ticket.status)">{{ getTicketStatus(ticket.status) }}</td>
+                                        <td class="order-date">#{{ ticket.id }}</td>
+                                        <td class="order-date" :title="ticket.subject"><strong>{{ ticket.subject }}</strong></td>
+                                        <td class="order-date" :title="ticket.description">{{ ticket.description }}</td>
+                                        <td class="order-date" :title="ticket.contact_type">{{ ticket.contact_type }}</td>
+                                        <td class="order-date" :title="getMomentExtended(ticket.request_date)">{{ getMoment(ticket.request_date) }}</td>
+                                        <td class="order-date" :title="getTicketStatus(ticket.status)">{{ getTicketStatus(ticket.status) }}</td>
                                     </router-link>
                                 </div>
                             </div>
@@ -96,24 +96,29 @@ export default {
 }
 </script>
 <style scoped>
-.my-tickets {
-    width: calc(100% - 225px);
-    height: 100%;
-    padding: 1rem;
-    text-align: center;
-    background: var(--white);
-    position: absolute;
-    right: 0;
-}
 
-@media (max-width: 876px) {
     .my-tickets {
-        width: 100%;
+        width: calc(100% - 225px);
+        height: 100%;
+        padding: 1rem;
+        text-align: center;
+        background: var(--white);
+        position: absolute;
+        right: 0;
     }
-}
+
+    @media (max-width: 876px) {
+        .my-tickets {
+            width: 100%;
+        }
+    }
+
+    .orders-list {
+        overflow-y: auto;
+        height: 71vh;
+    }
 
 .order-list {
-    margin-top: 2rem;
     width: 100%;
     height: 80%;
     position: relative;
@@ -209,7 +214,7 @@ export default {
     }
 
         .order td {
-            width: auto;
+            width: 76vw;
             margin: 1rem;
         }
 
