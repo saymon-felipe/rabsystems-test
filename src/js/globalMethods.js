@@ -64,15 +64,17 @@ export const globalMethods = {
             this.modalButtonTitle = buttonTitle;
             this.modalButtonTitle2 = button2Title;
         },
-        showResponsiveFilter: function () {
+        toggleResponsiveFilter: function () {
             if ($(".responsive-filter-container").is(":visible")) {
                 $(".responsive-filter-container").css("opacity", 0);
+                $(".responsive-filter-wrapper").hide();
                 
                 setTimeout(() => {
                     $(".responsive-filter-container").hide();
                 }, 400);
             } else {
                 $(".responsive-filter-container").show();
+                $(".responsive-filter-wrapper").show();
                 setTimeout(() => {
                     $(".responsive-filter-container").css("opacity", 1);
                 }, 10);
