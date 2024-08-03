@@ -292,7 +292,7 @@ export const globalMethods = {
                             }
                             setTimeout(() => {
                                 self.checkIfUserIsAuthenticated();
-                            }, 60 * 1000); // Repetição da função a cada 20 segundos
+                            },  1000); // Repetição da função a cada 20 segundos
                         }
                         
                     }).catch(function(){

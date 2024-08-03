@@ -1,130 +1,134 @@
 <template>
-    <section class="complete-registration">
-        <div class="complete-registration-container">
-            <i class="fas fa-power-off logout-icon" v-on:click="logoutUser()"></i>
-            <h1 class="rabsystems-font">{{ $t("complete_registration.complete_registration") }}</h1>
-            <form id="complete-registration-form" @submit.prevent="complete_registration()">
-                <div class="row">
-                    <div class="col-md-6 col-sm-12">
+    <div>
+        <section class="logo-background">
+            <div class="glass-container">
+                <i class="fas fa-power-off logout-icon" v-on:click="logoutUser()"></i>
+                <h1 class="rabsystems-font">{{ $t("complete_registration.complete_registration") }}</h1>
+                <form id="complete-registration-form" @submit.prevent="complete_registration()">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="name">{{ $t("complete_registration.name") }}</label>
+                                <input type="text" name="name" id="name" v-on:keydown="validateName($event)" maxlength="45" required>
+                            </div>
+                        </div> 
+                        <div class="col-md-6 col-sm-12">
                         <div class="input-group">
-                            <label for="name">{{ $t("complete_registration.name") }}</label>
-                            <input type="text" name="name" id="name" v-on:keydown="validateName($event)" maxlength="45" required>
-                        </div>
-                    </div> 
-                    <div class="col-md-6 col-sm-12">
-                    <div class="input-group">
-                            <label for="tel-input">{{ $t("complete_registration.phone") }}</label>
-                            <div class="rabsystems-input">
-                                <div class="flag-input">
-                                    <div class="current-flag-container"></div>
-                                    <div class="flag-list"></div>
+                                <label for="tel-input">{{ $t("complete_registration.phone") }}</label>
+                                <div class="rabsystems-input">
+                                    <div class="flag-input">
+                                        <div class="current-flag-container"></div>
+                                        <div class="flag-list"></div>
+                                    </div>
+                                    <input type="tel" name="tel" id="tel-input" required>
                                 </div>
-                                <input type="tel" name="tel" id="tel-input" required>
+                            </div>
+                        </div> 
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="cpf">{{ $t("complete_registration.identification_number") }}</label>
+                                <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)">
                             </div>
                         </div>
-                    </div> 
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="cpf">{{ $t("complete_registration.identification_number") }}</label>
-                            <input type="text" name="cpf" id="cpf" v-on:keydown="validateCpfInput($event)" v-on:focusout="formatCpf($event)" v-on:keyup="restoreCpf($event)">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="street">{{ $t("complete_registration.street") }}</label>
+                                <input type="text" name="street" id="street" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="number">{{ $t("complete_registration.house_number") }}</label>
+                                <input type="number" name="number" id="number" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="complement">{{ $t("complete_registration.complement") }}</label>
+                                <input type="text" name="complement" id="complement" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="cep">{{ $t("complete_registration.zip_code") }}</label>
+                                <input type="number" name="cep" id="cep" v-on:keydown="validaCep($event)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="district">{{ $t("complete_registration.district") }}</label>
+                                <input type="text" name="district" id="district" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="city">{{ $t("complete_registration.city") }}</label>
+                                <input type="text" name="city" id="city" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" v-if="$i18n.locale != 'pt'">
+                            <div class="input-group">
+                                <label for="country">{{ $t("complete_registration.state") }}</label>
+                                <input type="text" name="state" id="state" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12" v-if="$i18n.locale == 'pt'">
+                            <div class="input-group">
+                                <label for="state">{{ $t("complete_registration.state") }}</label>
+                                <select name="state" id="state" required>
+                                    <option value="">----</option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                    <option value="DF">Distrito Federal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="input-group">
+                                <label for="country">{{ $t("complete_registration.country") }}</label>
+                                <input type="text" name="country" id="country" required>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="street">{{ $t("complete_registration.street") }}</label>
-                            <input type="text" name="street" id="street" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="number">{{ $t("complete_registration.house_number") }}</label>
-                            <input type="number" name="number" id="number" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="complement">{{ $t("complete_registration.complement") }}</label>
-                            <input type="text" name="complement" id="complement" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="cep">{{ $t("complete_registration.zip_code") }}</label>
-                            <input type="number" name="cep" id="cep" v-on:keydown="validaCep($event)" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="district">{{ $t("complete_registration.district") }}</label>
-                            <input type="text" name="district" id="district" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="city">{{ $t("complete_registration.city") }}</label>
-                            <input type="text" name="city" id="city" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12" v-if="$i18n.locale != 'pt'">
-                        <div class="input-group">
-                            <label for="country">{{ $t("complete_registration.state") }}</label>
-                            <input type="text" name="state" id="state" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12" v-if="$i18n.locale == 'pt'">
-                        <div class="input-group">
-                            <label for="state">{{ $t("complete_registration.state") }}</label>
-                            <select name="state" id="state" required>
-                                <option value="">----</option>
-                                <option value="AC">Acre</option>
-                                <option value="AL">Alagoas</option>
-                                <option value="AP">Amapá</option>
-                                <option value="AM">Amazonas</option>
-                                <option value="BA">Bahia</option>
-                                <option value="CE">Ceará</option>
-                                <option value="ES">Espírito Santo</option>
-                                <option value="GO">Goiás</option>
-                                <option value="MA">Maranhão</option>
-                                <option value="MT">Mato Grosso</option>
-                                <option value="MS">Mato Grosso do Sul</option>
-                                <option value="MG">Minas Gerais</option>
-                                <option value="PA">Pará</option>
-                                <option value="PB">Paraíba</option>
-                                <option value="PR">Paraná</option>
-                                <option value="PE">Pernambuco</option>
-                                <option value="PI">Piauí</option>
-                                <option value="RJ">Rio de Janeiro</option>
-                                <option value="RN">Rio Grande do Norte</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="RO">Rondônia</option>
-                                <option value="RR">Roraima</option>
-                                <option value="SC">Santa Catarina</option>
-                                <option value="SP">São Paulo</option>
-                                <option value="SE">Sergipe</option>
-                                <option value="TO">Tocantins</option>
-                                <option value="DF">Distrito Federal</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <div class="input-group">
-                            <label for="country">{{ $t("complete_registration.country") }}</label>
-                            <input type="text" name="country" id="country" required>
-                        </div>
-                    </div>
-                </div>
-                <input type="submit" :value="$t('complete_registration.complete_registration_button')">
-            </form>
-            <div class="response"></div>
-            <div class="loading"></div>
-        </div>
-    </section>
+                    <input type="submit" :value="$t('complete_registration.complete_registration_button')">
+                </form>
+                <div class="response"></div>
+                <div class="loading"></div>
+            </div>
+        </section>
+        <hexBackground />
+    </div>
 </template>
 
 <script>
 import $ from 'jquery';
 import api from '../configs/api.js';
 import { globalMethods } from '../js/globalMethods';
+import hexBackground from "../components/hexBackground.vue";
 
 export default {
     name: "complete_registration",
@@ -172,22 +176,14 @@ export default {
             $(".input-group input").attr("disabled", false);
             $(".input-group select").attr("disabled", false);
         }
+    },
+    components: {
+        hexBackground
     }
 }
 </script>
 
 <style scoped>
-    .complete-registration {
-        width: 100vw;
-        height: 100vh;
-        background: var(--white);
-        background-image: url('../assets/img/logo-completa.png');
-        background-repeat: no-repeat;
-        background-size: 200px;
-        background-position-x: center;
-        background-position-y: 1rem;
-    }
-
     form {
         width: 100%;
         margin: 1rem 0;
@@ -200,32 +196,10 @@ export default {
         bottom: 6px;
     }
 
-    .complete-registration-container {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        width: 50vw;
-        max-width: 700px;
-        height: 70vh;
-        max-height: 900px;
-        background: var(--gray-high);
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        padding: 1rem;
-        transition: all 0.4s;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    .glass-container h1 {
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
     }
-
-        .complete-registration-container h1 {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-        }
 
     .input-group {
         width: 95%;

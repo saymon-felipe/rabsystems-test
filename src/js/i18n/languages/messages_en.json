@@ -138,13 +138,15 @@
         "register": "REGISTER",
         "email": "E-mail",
         "password": "Password",
+        "repeat_password": "Repeat password",
+        "password_not_same": "Passwords are not the same",
         "register_button": "REGISTER",
         "already_registered": "Already registered?",
         "sign_in": "Sign in",
         "registration_error": "Registration error"
     },
     "complete_registration": {
-        "complete_registration": "COMPLETE THE REGISTRATION",
+        "complete_registration": "COMPLETE REGISTRATION",
         "name": "Name",
         "phone": "Phone",
         "identification_number": "Identification number (SSN)",

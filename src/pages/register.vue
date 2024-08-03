@@ -1,29 +1,36 @@
 <template>
-    <section class="register">
-        <div class="register-container">
-            <h1 class="rabsystems-font">{{ $t("register.register") }}</h1>
-            <form action="login" @submit.prevent="register()">
-                <div class="input-group">
-                    <input class="input" type="email" name="email" id="email" :placeholder="$t('register.email')" v-on:focusout="validateEmailInput($event)" required>
+    <div>
+        <section class="logo-background">
+            <div class="glass-container">
+                <h1 class="rabsystems-font">{{ $t("register.register") }}</h1>
+                <form action="login" @submit.prevent="register()">
+                    <div class="input-group">
+                        <input class="input" type="email" name="email" id="email" :placeholder="$t('register.email')" v-on:focusout="validateEmailInput($event)" required>
+                    </div>
+                    <div class="input-group">
+                        <input class="input" type="password" name="password" id="password" :placeholder="$t('register.password')" required>
+                    </div>
+                    <div class="input-group">
+                        <input class="input" type="password" id="repeat-password" :placeholder="$t('register.repeat_password')" required>
+                    </div>
+                    <input type="submit" :value="$t('register.register_button')" id="submit">
+                </form>
+                <div class="go-to-login">
+                    <span>{{ $t("register.already_registered") }} </span>
+                    <router-link to="/login">{{ $t("register.sign_in") }}</router-link>
                 </div>
-                <div class="input-group">
-                    <input class="input" type="password" name="password" id="password" :placeholder="$t('register.password')" required>
-                </div>
-                <input type="submit" :value="$t('register.register_button')" id="submit">
-            </form>
-            <div class="go-to-login">
-                <span>{{ $t("register.already_registered") }} </span>
-                <router-link to="/login">{{ $t("register.sign_in") }}</router-link>
+                <div class="response" :class="responseClass">{{ message }}</div>
             </div>
-            <div class="response" :class="responseClass">{{ message }}</div>
-        </div>
-    </section>
+        </section>
+        <hexBackground />
+    </div>
 </template>
 
 <script>
 import $ from 'jquery';
 import api from '../configs/api.js';
 import { globalMethods } from '../js/globalMethods';
+import hexBackground from "../components/hexBackground.vue";
 
 export default {
     name: "register",
@@ -46,6 +53,12 @@ export default {
                 obj[item.name] = item.value;
                 return obj;
             }, {});
+
+            if ($("#password").val() != $("#repeat-password")) {
+                self.message = self.$i18n.t("register.password_not_same");
+                self.responseClass = "error";
+                return;
+            }
 
             api.post("/user/register", data)
             .then(function(response){
@@ -71,6 +84,9 @@ export default {
                 target.removeClass("invalid-value");
             }
         },
+    },
+    components: {
+        hexBackground
     }
 }
 </script>
@@ -88,47 +104,14 @@ export default {
             margin-right: .5rem;
         }
 
-    .register {
-        width: 100vw;
-        height: 100vh;
-        background: var(--white);
-        background-image: url('../assets/img/logo-completa.png');
-        background-repeat: no-repeat;
-        background-size: 300px;
-        background-position-x: center;
-        background-position-y: 1rem;
-    }
-
     form {
         width: 100%;
     }
 
-    .register-container {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        width: 50vw;
-        max-width: 700px;
-        height: 50vh;
-        max-height: 600px;
-        background: var(--gray-high);
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        padding: 1rem;
-        transition: all 0.4s;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    .glass-container h1 {
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
     }
-
-        .register-container h1 {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-        }
 
     .input-group {
         width: 100%;

@@ -1,6 +1,7 @@
 <template>
-    <section class="login">
-        <div class="login-container">
+    <div>
+        <section class="logo-background">
+        <div class="glass-container">
             <h1 class="rabsystems-font">{{ $t("login.login") }}</h1>
             <form action="login" @submit.prevent="login()">
                 <div class="input-group">
@@ -19,12 +20,15 @@
             <div class="response" :class="responseClass">{{ message }}</div>
         </div>
     </section>
+        <hexBackground />
+    </div>
 </template>
 
 <script>
 import $ from 'jquery';
 import api from '../configs/api.js';
 import { globalMethods } from '../js/globalMethods';
+import hexBackground from "../components/hexBackground.vue";
 
 export default {
     name: "login",
@@ -89,6 +93,9 @@ export default {
             }
         }
     },
+    components: {
+        hexBackground
+    },
     mounted: function () {
         this.autoLogin();
     }
@@ -107,49 +114,15 @@ export default {
         .go-to-register span {
             margin-right: .5rem;
         }
-    
-    .login {
-        width: 100vw;
-        height: 100vh;
-        background: var(--white);
-        background-image: url('../assets/img/logo-completa.png');
-        background-repeat: no-repeat;
-        background-size: 300px;
-        background-position-x: center;
-        background-position-y: 1rem;
-    }
 
     form {
         width: 100%;
     }
 
-    .login-container {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        width: 50vw;
-        max-width: 700px;
-        height: fit-content;
-        min-height: 60vh;
-        max-height: 600px;
-        background: var(--gray-high);
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        padding: 1rem;
-        transition: all 0.4s;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    .glass-container h1 {
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
     }
-
-        .login-container h1 {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-        }
 
     .input-group {
         width: 100%;

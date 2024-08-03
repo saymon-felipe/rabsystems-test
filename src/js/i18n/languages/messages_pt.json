@@ -138,6 +138,8 @@
         "register": "REGISTRE-SE",
         "email": "Email",
         "password": "Senha",
+        "repeat_password": "Repita a senha",
+        "password_not_same": "As senhas não são iguais",
         "register_button": "REGISTRAR",
         "already_registered": "Ja é cadastrado?",
         "sign_in": "Faça login",
