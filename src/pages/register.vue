@@ -54,7 +54,7 @@ export default {
                 return obj;
             }, {});
 
-            if ($("#password").val() != $("#repeat-password")) {
+            if ($("#password").val() != $("#repeat-password").val()) {
                 self.message = self.$i18n.t("register.password_not_same");
                 self.responseClass = "error";
                 return;
