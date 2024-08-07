@@ -290,14 +290,14 @@ export const globalMethods = {
                                     self.$router.push('/my-orders');
                                 }, 2 * 1000)
                             }
-                            setTimeout(() => {
-                                self.checkIfUserIsAuthenticated();
-                            },  1000); // Repetição da função a cada 20 segundos
                         }
-                        
                     }).catch(function(){
                         console.log("Unauthenticated user. JWT check in " + new Date());
                         self.logoutUser();
+                    }).then(() => {
+                        setTimeout(() => {
+                            self.checkIfUserIsAuthenticated();
+                        },  20 * 1000); // Repetição da função a cada 20 segundos
                     })
                 }
             }

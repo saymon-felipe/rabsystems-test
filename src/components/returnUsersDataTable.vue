@@ -8,7 +8,7 @@
             <thead>
                 <th v-if="showSelect">&nbsp;</th>
                 <th>Id</th>
-                <th>Usuário</th>
+                <th class="text-start pl-5">Usuário</th>
                 <th>Aceita newsletter?</th>
                 <th>Idioma</th>
             </thead>
@@ -18,7 +18,7 @@
                         <input type="checkbox" :id="'select-item-' + index">
                     </td>
                     <td>{{ item.id }}</td>
-                    <td>
+                    <td class="d-flex pl-5">
                         <div class="user-container">
                             <img :src="item.profile_photo" class="avatar-pp" />
                             <p class="user-name">{{ item.name }}</p>

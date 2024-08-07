@@ -3,16 +3,16 @@
         <table>
             <thead>
                 <tr>
-                    <th>Título email</th>
-                    <th>Destinatário</th>
+                    <th class="text-start">Título email</th>
+                    <th class="text-start">Destinatário</th>
                     <th>Remetente</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in mailQueue" v-bind:key="index">
-                    <td class="text-ellipsis" :title="item.subject_name">{{ item.subject_name }}</td>
-                    <td>{{ item.receiver_email }}</td>
+                    <td class="text-ellipsis text-start" :title="item.subject_name">{{ item.subject_name }}</td>
+                    <td class="text-start">{{ item.receiver_email }}</td>
                     <td>{{ item.sender_name }}</td>
                     <td>
                         <div class="badge" :style="returnStatus(item.status, true)">
