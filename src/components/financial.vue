@@ -7,8 +7,8 @@
             <i class="fas fa-filter" title="Filtrar por"></i>
             <div class="responsive-filter-container">
                 <ul>
-                    <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">{{ $t("financial.price") }}</li>
-                    <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">{{ $t("financial.status") }}</li>
+                    <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortDataOrder('price', 'sort-by-price-responsive', true)" sortStatus="down">{{ $t("financial.price") }}</li>
+                    <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortDataOrder('status', 'sort-by-status-responsive', true)" sortStatus="down">{{ $t("financial.status") }}</li>
                 </ul>
             </div>
         </div>
@@ -17,11 +17,11 @@
             <table>
                 <tr class="order-list-head">
                     <td>{{ $t("financial.id") }}</td>
-                    <td class="sort-button" id="sort-by-price" v-on:click="sortData('price', 'sort-by-price')" sortStatus="down">
+                    <td class="sort-button" id="sort-by-price" v-on:click="sortDataOrder('price', 'sort-by-price')" sortStatus="down">
                         {{ $t("financial.price") }}
                         <i class="fas fa-sort-down sort-icon"></i>
                     </td>
-                    <td class="sort-button" id="sort-by-status"  v-on:click="sortData('status', 'sort-by-status')" sortStatus="down">
+                    <td class="sort-button" id="sort-by-status"  v-on:click="sortDataOrder('status', 'sort-by-status')" sortStatus="down">
                         {{ $t("financial.situation") }}
                         <i class="fas fa-sort-down sort-icon"></i>
                     </td>

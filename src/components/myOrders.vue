@@ -7,16 +7,16 @@
             <tr class="order-list-head">
                 <td>{{ $t("my_orders.name") }}</td>
                 <td>{{ $t("my_orders.id") }}</td>
-                <td class="sort-button" id="sort-by-date" v-on:click="sortData('date', 'sort-by-date')" sortStatus="down">
+                <td class="sort-button" id="sort-by-date" v-on:click="sortDataOrder('date', 'sort-by-date')" sortStatus="down">
                     {{ $t("my_orders.date") }}
                     <i class="fas fa-sort-down sort-icon"></i>
                 </td>
                 <td>{{ $t("my_orders.service") }}</td>
-                <td class="sort-button" id="sort-by-price" v-on:click="sortData('price', 'sort-by-price')" sortStatus="down">
+                <td class="sort-button" id="sort-by-price" v-on:click="sortDataOrder('price', 'sort-by-price')" sortStatus="down">
                     {{ $t("my_orders.price") }}
                     <i class="fas fa-sort-down sort-icon"></i>
                 </td>
-                <td class="sort-button" id="sort-by-status"  v-on:click="sortData('status', 'sort-by-status')" sortStatus="down">
+                <td class="sort-button" id="sort-by-status"  v-on:click="sortDataOrder('status', 'sort-by-status')" sortStatus="down">
                     {{ $t("my_orders.status") }}
                     <i class="fas fa-sort-down sort-icon"></i>
                 </td>
@@ -28,9 +28,9 @@
                 <i class="fas fa-filter" title="Filtrar por"></i>
                 <div class="responsive-filter-container">
                     <ul>
-                        <li class="sort-button" id="sort-by-date-responsive" v-on:click="sortData('date', 'sort-by-date-responsive', true)" sortStatus="down">{{ $t("my_orders.date") }}</li>
-                        <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortData('price', 'sort-by-price-responsive', true)" sortStatus="down">{{ $t("my_orders.price") }}</li>
-                        <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortData('status', 'sort-by-status-responsive', true)" sortStatus="down">{{ $t("my_orders.status") }}</li>
+                        <li class="sort-button" id="sort-by-date-responsive" v-on:click="sortDataOrder('date', 'sort-by-date-responsive', true)" sortStatus="down">{{ $t("my_orders.date") }}</li>
+                        <li class="sort-button" id="sort-by-price-responsive" v-on:click="sortDataOrder('price', 'sort-by-price-responsive', true)" sortStatus="down">{{ $t("my_orders.price") }}</li>
+                        <li class="sort-button" id="sort-by-status-responsive" v-on:click="sortDataOrder('status', 'sort-by-status-responsive', true)" sortStatus="down">{{ $t("my_orders.status") }}</li>
                     </ul>
                 </div>
             </div>
@@ -117,12 +117,6 @@ export default {
             .then(function (response) {
                 self.fillNewMessageNotification(response.data.message_list);
             })
-        },
-        getMoment: function (date) {
-            return moment(date).fromNow();
-        },
-        getMomentExtended: function (date) {
-            return moment(date).format('LLLL');
         },
         returnOrders: function () {
             let self = this;

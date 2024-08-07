@@ -111,10 +111,10 @@ export const globalMethods = {
             }
             this.orders = newOrders;
         },
-        sortData: function (sortType, sortId, responsive = false) {
+        sortDataOrder: function (sortType, sortId, responsive = false) {
             let element = $("#" + sortId);
             this.sortType = sortType;
-            this.toggleSortStatus(sortType, element, responsive);
+            this.toggleSortStatusOrder(sortType, element, responsive);
         },
         resetFilters: function () {
             let elements = $(".sort-button");
@@ -127,7 +127,13 @@ export const globalMethods = {
                 currentItem.attr("sortStatus", "down").attr("indexEl", index);
             })
         },
-        toggleSortStatus: function (sortType, element, responsive) {
+        getMoment: function (date) {
+            return moment(date).fromNow();
+        },
+        getMomentExtended: function (date) {
+            return moment(date).format('LLLL');
+        },
+        toggleSortStatusOrder: function (sortType, element, responsive) {
             let status = element.attr("sortStatus");
             let iElement;
 

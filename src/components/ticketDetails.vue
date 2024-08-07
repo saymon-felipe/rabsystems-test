@@ -77,12 +77,6 @@ export default {
 
             return text;
         },
-        getMoment: function (date) {
-            return moment(date).fromNow();
-        },
-        getMomentExtended: function (date) {
-            return moment(date).format('LLLL');
-        },
         getTicket: function () {
             let self = this;
             let jwt = "Bearer " + self.getJwtInLocalStorage();

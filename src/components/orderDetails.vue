@@ -219,9 +219,6 @@ export default {
                 }
             })
         },
-        getMomentExtended: function (date) {
-            return moment(date).format('LLLL');
-        },
         findProgressAnimation: function () {
             let container = $(".animation-progress");
             let self = this;
