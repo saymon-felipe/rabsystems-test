@@ -4,16 +4,43 @@
             <p v-on:click="selectAll()">Selecionar todos</p>
             <p v-on:click="descelectAll()">Descelecionar todos</p>
         </div>
+        <div class="filters-container">
+            <div class="input-group">
+                <label for="name">Nome:</label>
+                <input type="text" name="name" id="name" v-model="filters.name" @input="filter()">
+            </div>
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input type="text" name="email" id="email" v-model="filters.email" @input="filter()">
+            </div>
+            <div class="input-group">
+                <label for="origin">Origem:</label>
+                <select name="origin" id="origin" v-model="filters.origin" @change="filter()">
+                    <option value="">* Qualquer *</option>
+                    <option value="user">Usuário</option>
+                    <option value="lead">Lead</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="accept-newsletter">Aceita newsletter?</label>
+                <select name="accept_newsletter" id="accept-newsletter" v-model="filters.accept_newsletter" @change="filter()">
+                    <option value="">* Qualquer *</option>
+                    <option value="0">Não</option>
+                    <option value="1">Sim</option>
+                </select>
+            </div>
+        </div>
         <table>
             <thead>
                 <th v-if="showSelect">&nbsp;</th>
                 <th>Id</th>
                 <th class="text-start pl-5">Usuário</th>
+                <th>Origem</th>
                 <th>Aceita newsletter?</th>
                 <th>Idioma</th>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in newsletterUsers" v-bind:key="index" :id="'user-' + index" :userEmail="item.email" v-on:click="checkThis('user-' + index)">
+                <tr v-for="(item, index) in newsletterUsersCopy" v-bind:key="index" :id="'user-' + index" :userEmail="item.email" v-on:click="checkThis('user-' + index)">
                     <td v-if="showSelect">
                         <input type="checkbox" :id="'select-item-' + index">
                     </td>
@@ -23,6 +50,9 @@
                             <img :src="item.profile_photo" class="avatar-pp" />
                             <p class="user-name">{{ item.name }}</p>
                         </div>
+                    </td>
+                    <td>
+                        {{ item.origin == "lead" ? "Lead" : "Usuário" }}
                     </td>
                     <td>
                         <div class="badge" :style="acceptNewsletter(item.accept_newsletter, true)">
@@ -47,10 +77,34 @@ export default {
     props: ["showSelect"],
     data() {
         return {
-            newsletterUsers: []
+            newsletterUsers: [],
+            newsletterUsersCopy: [],
+            filters: {
+                name: "",
+                email: "",
+                origin: "",
+                accept_newsletter: ""
+            }
         }
     },
     methods: {
+        filter: function () {
+            if (this.filters.name.trim() == "" && this.filters.email.trim() == "" && this.filters.origin.trim() == "" && this.filters.accept_newsletter.trim() == "") {
+                this.newsletterUsersCopy = this.newsletterUsers;
+                return;
+            }
+
+            this.newsletterUsersCopy = this.newsletterUsers.filter(user => {
+                const nameMatch = user.name.toLowerCase().indexOf(this.filters.name.toLowerCase()) !== -1;
+                const emailMatch = user.email.toLowerCase().indexOf(this.filters.email.toLowerCase()) !== -1;
+                const originMatch = user.origin.toLowerCase().indexOf(this.filters.origin.toLowerCase()) !== -1;
+                const acceptNewsletter = this.filters.accept_newsletter == user.accept_newsletter;
+
+                return nameMatch && emailMatch && originMatch && acceptNewsletter;
+            });
+
+            this.descelectAll();
+        },
         checkThis: function (id) {
             let element = $("#" + id);
             let input = element.find("input");
@@ -62,6 +116,9 @@ export default {
         },
         descelectAll: function () {
             let checkBoxes = $("input[id*='select-item-'");
+
+            this.$emit("submit_users", []);
+
             checkBoxes.each((index, item) => {
                 let currentItem = $(item);
                 currentItem.attr("checked", false);
@@ -94,9 +151,14 @@ export default {
         },
         getNewsletterUsers: function () {
             let self = this;
-            api.get("/newsletter/return_all_users")
+            api.post("/newsletter/return_all_users", self.filters)
             .then(function(response){
-                self.newsletterUsers = response.data.obj.users_list;
+                self.newsletterUsers = response.data.returnObj;
+                self.newsletterUsersCopy = response.data.returnObj;
+                
+                setTimeout(() => {
+                    self.filter();
+                }, 1)
             }).catch(function(error){
                 console.log(error);
             })

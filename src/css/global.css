@@ -636,6 +636,22 @@ button:disabled {
     border-radius: 10px;
 }
 
+.filters-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+    .filters-container button {
+        margin-top: 1.5rem;
+    }
+
+.input-group {
+    margin: 0 .5rem;
+}
+
 @media (max-width: 600px) {
     .view-photo-container {
         width: 98%;
