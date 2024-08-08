@@ -29,6 +29,15 @@
                     <option value="1">Sim</option>
                 </select>
             </div>
+            <div class="input-group">
+                <label for="marker">Marcador</label>
+                <select name="marker" id="marker" v-model="filters.marker" @change="filter()">
+                    <option value="">* Qualquer *</option>
+                    <option value="Prospecção inicial">Prospecção inicial</option>
+                    <option value="Negociação">Negociação</option>
+                    <option value="Cliente">Cliente</option>
+                </select>
+            </div>
         </div>
         <table>
             <thead>
@@ -36,13 +45,14 @@
                 <th>Id</th>
                 <th class="text-start pl-5">Usuário</th>
                 <th>Origem</th>
+                <th>Marcador</th>
                 <th>Aceita newsletter?</th>
                 <th>Idioma</th>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in newsletterUsersCopy" v-bind:key="index" :id="'user-' + index" :userEmail="item.email" v-on:click="checkThis('user-' + index)">
+                <tr v-for="(item, index) in newsletterUsersCopy" v-bind:key="index" :id="'user-' + index" :userEmail="item.email" v-on:click="checkThis('user-' + index, item.accept_newsletter, $event)">
                     <td v-if="showSelect">
-                        <input type="checkbox" :id="'select-item-' + index">
+                        <input type="checkbox" :id="'select-item-' + index" v-on:click="checkThis('user-' + index, item.accept_newsletter, $event)">
                     </td>
                     <td>{{ item.id }}</td>
                     <td class="d-flex pl-5">
@@ -53,6 +63,9 @@
                     </td>
                     <td>
                         {{ item.origin == "lead" ? "Lead" : "Usuário" }}
+                    </td>
+                    <td>
+                        {{ item.marker }}
                     </td>
                     <td>
                         <div class="badge" :style="acceptNewsletter(item.accept_newsletter, true)">
@@ -83,13 +96,14 @@ export default {
                 name: "",
                 email: "",
                 origin: "",
-                accept_newsletter: ""
+                accept_newsletter: "",
+                marker: ""
             }
         }
     },
     methods: {
         filter: function () {
-            if (this.filters.name.trim() == "" && this.filters.email.trim() == "" && this.filters.origin.trim() == "" && this.filters.accept_newsletter.trim() == "") {
+            if (this.filters.name.trim() == "" && this.filters.email.trim() == "" && this.filters.origin.trim() == "" && this.filters.accept_newsletter.trim() == "" && this.filters.marker.trim() == "") {
                 this.newsletterUsersCopy = this.newsletterUsers;
                 return;
             }
@@ -99,25 +113,33 @@ export default {
                 const emailMatch = user.email.toLowerCase().indexOf(this.filters.email.toLowerCase()) !== -1;
                 const originMatch = user.origin.toLowerCase().indexOf(this.filters.origin.toLowerCase()) !== -1;
                 const acceptNewsletter = this.filters.accept_newsletter == user.accept_newsletter;
+                const marker = this.filters.marker == user.marker;
 
-                return nameMatch && emailMatch && originMatch && acceptNewsletter;
+                return nameMatch && emailMatch && originMatch && acceptNewsletter && marker;
             });
 
             this.descelectAll();
         },
-        checkThis: function (id) {
+        checkThis: function (id, accept_newsletter, event) {
             let element = $("#" + id);
             let input = element.find("input");
+
+            if (accept_newsletter == 0) {
+                event.preventDefault();
+
+                if (!confirm("Esse usuário não aceita newsletter. \n\nDeseja continuar?")) {
+                    return;
+                }
+            }
+
             if (input.is(":checked")) {
-                input.attr("checked", false);
+                input.prop("checked", false);
             } else {
-                input.attr("checked", true);
+                input.prop("checked", true);
             }
         },
         descelectAll: function () {
             let checkBoxes = $("input[id*='select-item-'");
-
-            this.$emit("submit_users", []);
 
             checkBoxes.each((index, item) => {
                 let currentItem = $(item);
