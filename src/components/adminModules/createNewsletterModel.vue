@@ -17,7 +17,7 @@
                 <ckeditor v-model="newsletter_html"></ckeditor>
             </div>
             <div class="form-group">
-                <label>Marcadores</label>
+                <label>Categoria</label>
                 <div class="div-marcadores">
                     <label for="special-date">Data comemorativa.</label>
                     <input type="radio" v-model="type" value="special-date" name="type" id="special-date" required>
@@ -30,6 +30,15 @@
                     <label for="marketing">Marketing.</label>
                     <input type="radio" v-model="type" value="marketing" name="type" id="marketing" required>
                 </div>
+            </div>
+            <div class="form-group">
+                <label>Marcador</label>
+                <select name="marker" id="marker" v-model="marker">
+                    <option value="">* Nenhum *</option>
+                    <option value="Prospecção inicial">Prospecção inicial</option>
+                    <option value="Negociação">Negociação</option>
+                    <option value="Cliente">Cliente</option>
+                </select>
             </div>
             <div class="submit-buttons">
                 <button type="button" class="btn secondary">Cancelar</button>
@@ -51,7 +60,8 @@ export default {
             name: "",
             description: "",
             subject_name: "",
-            type: null
+            type: null,
+            marker: ""
         }
     },
     methods: {
@@ -64,6 +74,7 @@ export default {
             this.newsletter_html = this.editObj.html;
             this.subject_name = this.editObj.subject_name;
             this.type = this.editObj.type;
+            this.marker = this.editObj.marker;
         },
         createNewsletter: function () {
             let self = this;
@@ -71,6 +82,7 @@ export default {
                 obj[item.name] = item.value;
                 return obj;
             }, {});
+
             data["html"] = this.newsletter_html;
 
             let path = "create_model";

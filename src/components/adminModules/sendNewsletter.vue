@@ -26,7 +26,8 @@ export default {
     data() {
         return {
             userEmails: [],
-            selectedNewsletter: null
+            selectedNewsletter: null,
+            selectedNewsletterType: null
         }
     },
     methods: {
@@ -43,7 +44,8 @@ export default {
             }, 400)
         },
         selectNewsletter: function (event) {
-            this.selectedNewsletter = event;
+            this.selectedNewsletter = event.id;
+            this.selectedNewsletterType = event.type;
         },
         storeUserEmails: function (obj) {
             let self = this;
@@ -56,9 +58,10 @@ export default {
 
             let data = {
                 users: self.userEmails,
-                newsletter_id: self.selectedNewsletter
+                newsletter_id: self.selectedNewsletter,
+                mail_type: self.selectedNewsletterType
             }
-
+            
             api.post("/newsletter/mail_queue", data)
             .then(function(){
                 self.$emit("submitMailQueue");

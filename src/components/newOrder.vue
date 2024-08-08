@@ -10,12 +10,12 @@
                         <select name="service" id="service" required>
                             <option value="">-- {{ $t("new_order.service_type") }} --</option>
                             <option value="website-design">{{ $t("new_order.website_design") }}</option>
-                            <option value="traffic-management">{{ $t("new_order.traffic_management") }}</option>
+                            <option value="traffic-management" v-if="false">{{ $t("new_order.traffic_management") }}</option>
                             <option value="web-maintenance">{{ $t("new_order.web_maintenance") }}</option>
                         </select>
                     </div>
                 </div>
-                <h5 class="error" style="display: none;">Pedidos ainda não serão realizados pois o sistema está em beta.</h5>
+                <h5 class="error" v-if="false">Pedidos ainda não serão realizados pois o sistema está em beta.</h5>
                 <div class="form-body">
                     <textarea name="description" id="description" maxlength="5000" :placeholder="$t('new_order.description')" required></textarea>
                 </div>

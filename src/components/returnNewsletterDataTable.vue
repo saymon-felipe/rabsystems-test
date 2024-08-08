@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in newsletterModels" v-bind:key="index" class="newsletter-model" :id="'newsletter-' + index" v-on:click="selectThisNewsletterModel(item.id, 'newsletter-' + index)">
+                <tr v-for="(item, index) in newsletterModels" v-bind:key="index" class="newsletter-model" :id="'newsletter-' + index" v-on:click="selectThisNewsletterModel(item.id, 'newsletter-' + index, item.marker)">
                     <td class="item-id" v-on:click="selectThisNewsletter(item)">{{ item.id }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.description }}</td>
@@ -36,16 +36,24 @@ export default {
         }
     },
     methods: {
-        selectThisNewsletterModel: function (id, elementId) {
+        selectThisNewsletterModel: function (id, elementId, type) {
             if (this.returnClick) {
                 let elements = $(".newsletter-model");
+
                 elements.each((index, item) => {
                     let currentElement = $(item);
                     currentElement.removeClass("item-selected");
                 })
+
                 let element = $("#" + elementId);
                 element.addClass("item-selected");
-                this.$emit("select_newsletter", id);
+
+                let data = {
+                    id: id,
+                    type: type
+                }
+
+                this.$emit("select_newsletter", data);
             }
         },
         returnNewsletterModels: function () {
