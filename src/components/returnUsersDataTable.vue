@@ -19,6 +19,7 @@
                     <option value="">* Qualquer *</option>
                     <option value="user">Usuário</option>
                     <option value="lead">Lead</option>
+                    <option value="lead_excel">Lead importado</option>
                 </select>
             </div>
             <div class="input-group">
@@ -62,7 +63,7 @@
                         </div>
                     </td>
                     <td>
-                        {{ item.origin == "lead" ? "Lead" : "Usuário" }}
+                        {{ item.origin == "lead" ? "Lead site" : item.origin == "lead_excel" ? "Lead importado" : "Usuário" }}
                     </td>
                     <td>
                         {{ item.marker }}
@@ -112,8 +113,14 @@ export default {
                 const nameMatch = user.name.toLowerCase().indexOf(this.filters.name.toLowerCase()) !== -1;
                 const emailMatch = user.email.toLowerCase().indexOf(this.filters.email.toLowerCase()) !== -1;
                 const originMatch = user.origin.toLowerCase().indexOf(this.filters.origin.toLowerCase()) !== -1;
-                const acceptNewsletter = this.filters.accept_newsletter == user.accept_newsletter;
+                const acceptNewsletter = this.filters.accept_newsletter == user.accept_newsletter.toString();
                 const marker = this.filters.marker == user.marker;
+
+                console.log("nameMatch: " + nameMatch)
+                console.log("emailMatch: " + nameMatch)
+                console.log("originMatch: " + originMatch)
+                console.log("acceptNewsletter: " + acceptNewsletter)
+                console.log("marker: " + marker)
 
                 return nameMatch && emailMatch && originMatch && acceptNewsletter && marker;
             });

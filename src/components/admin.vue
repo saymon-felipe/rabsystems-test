@@ -17,6 +17,15 @@
                         <li v-on:click="showAdminModule('mail-queue')">Fila de emails</li>
                     </ul>
                 </li>
+                <li class="admin-menu-item" v-on:click="toggleMenuItem($event)">
+                    <div class="admin-menu-item-internal">
+                        <i class="fas fa-angle-down" toggle="down"></i>
+                        Clientes
+                    </div>
+                    <ul class="admin-menu-list-internal">
+                        <li v-on:click="showAdminModule('import-leads', true)">Importar leads</li>
+                    </ul>
+                </li>
             </ul>
             <div class="admin-content">
                 <div class="admin-item">
@@ -35,6 +44,9 @@
                     <div class="admin-item" id="mail-queue" v-if="showMailQueue">
                         <mailQueue />
                     </div>
+                    <div class="admin-item" id="import-leads" v-if="showImportLeads">
+                        <importLeads @importedLeads="showAdminModule('send-newsletter')" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,6 +58,7 @@ import createNewsletterModel from "./adminModules/createNewsletterModel.vue";
 import listNewsletterModels from "./adminModules/listNewsletterModels.vue";
 import sendNewsletter from "./adminModules/sendNewsletter.vue";
 import mailQueue from "./adminModules/mailQueue.vue";
+import importLeads from "./adminModules/importLeads.vue";
 
 export default {
     name: "admin",
@@ -55,7 +68,8 @@ export default {
             showCreate: false,
             showList: false,
             showMailQueue: false,
-            showSend: true
+            showSend: false,
+            showImportLeads: false
         }
     },
     methods: {
@@ -109,6 +123,9 @@ export default {
                     case "mail-queue":
                         this.showMailQueue = true;
                         break;
+                    case "import-leads":
+                        this.showImportLeads = true;
+                        break;
                 } 
             }, 10)
             
@@ -131,7 +148,8 @@ export default {
         createNewsletterModel,
         listNewsletterModels,
         sendNewsletter,
-        mailQueue
+        mailQueue,
+        importLeads
     },
     mounted: function () {
         this.closeAllAdminOptions();
