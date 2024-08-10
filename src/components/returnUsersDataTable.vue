@@ -110,19 +110,13 @@ export default {
             }
 
             this.newsletterUsersCopy = this.newsletterUsers.filter(user => {
-                const nameMatch = user.name.toLowerCase().indexOf(this.filters.name.toLowerCase()) !== -1;
-                const emailMatch = user.email.toLowerCase().indexOf(this.filters.email.toLowerCase()) !== -1;
-                const originMatch = user.origin.toLowerCase().indexOf(this.filters.origin.toLowerCase()) !== -1;
-                const acceptNewsletter = this.filters.accept_newsletter == user.accept_newsletter.toString();
-                const marker = this.filters.marker == user.marker;
+                const nameMatch = user.name.toLowerCase().indexOf(this.filters.name.toLowerCase()) !== -1 || this.filters.name.trim() == "";
+                const emailMatch = user.email.toLowerCase().indexOf(this.filters.email.toLowerCase()) !== -1 || this.filters.email.trim() == "";
+                const originMatch = this.filters.origin == user.origin || this.filters.origin == "";
+                const acceptNewsletterMatch = this.filters.accept_newsletter.trim() == "" || this.filters.accept_newsletter == user.accept_newsletter.toString();
+                const markerMatch = this.filters.marker.trim() == "" || this.filters.marker == user.marker;
 
-                console.log("nameMatch: " + nameMatch)
-                console.log("emailMatch: " + nameMatch)
-                console.log("originMatch: " + originMatch)
-                console.log("acceptNewsletter: " + acceptNewsletter)
-                console.log("marker: " + marker)
-
-                return nameMatch && emailMatch && originMatch && acceptNewsletter && marker;
+                return nameMatch && emailMatch && originMatch && acceptNewsletterMatch && markerMatch;
             });
 
             this.descelectAll();
