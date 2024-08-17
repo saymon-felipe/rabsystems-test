@@ -20,6 +20,7 @@
                     <option value="user">Usuário</option>
                     <option value="lead">Lead</option>
                     <option value="lead_excel">Lead importado</option>
+                    <option value="teste">Teste</option>
                 </select>
             </div>
             <div class="input-group">
