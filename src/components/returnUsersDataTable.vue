@@ -64,7 +64,7 @@
                         </div>
                     </td>
                     <td>
-                        {{ item.origin == "lead" ? "Lead site" : item.origin == "lead_excel" ? "Lead importado" : "Usuário" }}
+                        {{ item.origin == "lead" ? "Lead site" : item.origin == "lead_excel" ? "Lead importado" : item.origin == "teste" ? "Teste" : "Usuário" }}
                     </td>
                     <td>
                         {{ item.marker }}
