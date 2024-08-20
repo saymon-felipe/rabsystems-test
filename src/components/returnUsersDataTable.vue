@@ -52,7 +52,7 @@
                 <th>Idioma</th>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in newsletterUsersCopy" v-bind:key="index" :id="'user-' + index" :userEmail="item.email" v-on:click="checkThis('user-' + index, item.accept_newsletter, $event)">
+                <tr v-for="(item, index) in newsletterUsersCopy" v-bind:key="index" :id="'user-' + index" :userEmail="item.email" :dataacceptnewsletter="item.accept_newsletter" v-on:click="checkThis('user-' + index, item.accept_newsletter, $event)">
                     <td v-if="showSelect">
                         <input type="checkbox" :id="'select-item-' + index" v-on:click="checkThis('user-' + index, item.accept_newsletter, $event)">
                     </td>
@@ -158,19 +158,36 @@ export default {
         selectUsers: function () {
             let users = $("tr[id*='user-']");
             let userEmails = [];
+            
             if (users.length == 0) {
                 return;
             }
+
+            let haveUsersWhoNotAcceptNewsletter = 0;
+
             users.each((index, item) => {
                 let currentItem = $(item);
                 let currentUserEmail = currentItem.attr("userEmail");
+
+                if (currentItem.attr("dataacceptnewsletter") == 0) {
+                    haveUsersWhoNotAcceptNewsletter = 1;
+                }
+
                 if (currentItem.find("input[id*='select-item-']").is(":checked")) {
                     userEmails.push(currentUserEmail);
                 }
             })
+
             if (userEmails.length == 0) {
                 return;
             }
+
+            if (haveUsersWhoNotAcceptNewsletter) {
+                if (!confirm("Existem usuários que não aceitam newsletter. \n\nDeseja continuar?")) {
+                    return;
+                }
+            }
+
             this.$emit("submit_users", userEmails);
         },
         getNewsletterUsers: function () {
