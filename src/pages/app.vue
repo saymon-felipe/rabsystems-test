@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="loading-app" v-if="loadingUsers">
-            <div class="loading-wrapper" v-if="loadingUsers">
+        <div class="loading-app" v-if="loading">
+            <div class="loading-wrapper">
                 <div class="loading-frame"></div>
             </div>
         </div>
-        <div class="app-container" v-if="!loadingUsers">
+        <div class="app-container" v-if="!loading">
             <div class="container">
                 <headerAppComponent />
                 <router-view path="$router.key"></router-view>
@@ -32,7 +32,7 @@ export default {
     },
     data() {
         return {
-            loadingUsers: true,
+            loading: true,
             user: {},
             rabsystemsUser: {},
             havePermission: false,
@@ -41,6 +41,16 @@ export default {
         }
     },
     methods: {
+        initSystemRequests: function () {
+            let self = this;
+
+            this.returnSteps();
+
+            self.getRabsystemsUser(true).then(() => {
+                self.checkPermission();
+                self.loading = false;
+            })
+        },
         returnSteps: function () {
             let self = this;
 
@@ -65,23 +75,31 @@ export default {
                 }, 10)
             }
         },
-        requireUser: async function() { // Função retorna o usuário pelo id.
+        requireUser: function() { // Função retorna o usuário pelo id.
             let self = this;
-            if (self.$route.path != "/login" && self.$route.path != "/register") {
-                self.$root.user = await api.get("/user/get_user").then(res => res.data.response.user);
-            }
+            return new Promise((resolve, reject) => {
+                api.get("/user/get_user").then((res) => {
+                    self.$root.user = res.data.response.user;
+                    resolve();
+                })
+            })
         },
         getRabsystemsUser: function (recursive = false) {
-            let self = this;
-            self.requireUser();
-            api.get("/user/get_rabsystems_user?with_last_message=true")
-            .then(function(response){
-                self.$root.rabsystemsUser = response.data.obj.user;
-                if (recursive) {
-                    setTimeout(() => {
-                        self.getRabsystemsUser(true);
-                    }, 10 * 1000);
-                }
+            return new Promise((resolve, reject) => {
+                let self = this;
+
+                self.requireUser().then(() => {
+                    api.get("/user/get_rabsystems_user?with_last_message=true")
+                    .then(function(response){
+                        self.$root.rabsystemsUser = response.data.obj.user;
+                        if (recursive) {
+                            setTimeout(() => {
+                                self.getRabsystemsUser(true);
+                            }, 10 * 1000);
+                        }
+                        resolve();
+                    })
+                })
             })
         },
         isDefaultPhoto: function (url) {
@@ -94,12 +112,17 @@ export default {
    },
    mounted() {
         moment.locale("pt-br");
-        setTimeout(() => {
-            this.checkIfUserIsAuthenticated();
-            this.getRabsystemsUser(true);
-            this.checkData();
-            this.returnSteps();
-        }, 20);
+        let self = this;
+
+        this.checkIfUserIsAuthenticated().then(() => {
+            let interval = setInterval(() => {
+                if (self.$root.jwtLoaded) {
+                    clearInterval(interval);
+
+                    self.initSystemRequests();
+                }
+            }, 100)
+        }).catch(() => {})
    },
 }
 </script>

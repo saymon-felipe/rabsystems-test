@@ -9,7 +9,6 @@ export const globalMethods = {
             self.removeJwtInLocalStorage();
             self.removeEmailInSessionStorage();
             self.$router.push("/login");
-            self.$router.go();
         },
         submitFunction: function () {
             $("#submit-informations-form").click();
@@ -25,6 +24,17 @@ export const globalMethods = {
         },
         setJwtInLocalStorage: function (jwt) {
             localStorage.setItem("rabsystems_jwt", jwt);
+            this.checkAndSetJwt();
+        },
+        checkAndSetJwt: function() {
+            let interval = setInterval(() => {
+                let jwt = this.getJwtInLocalStorage();
+                if (jwt != null) {
+                    api.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+                    this.$root.jwtLoaded = true;
+                    clearInterval(interval);
+                }
+            }, 100)
         },
         getJwtInLocalStorage: function () {
             return localStorage.getItem("rabsystems_jwt");
@@ -115,6 +125,9 @@ export const globalMethods = {
             let element = $("#" + sortId);
             this.sortType = sortType;
             this.toggleSortStatusOrder(sortType, element, responsive);
+        },
+        returnRelativeTime: function (date) {
+            return moment(date).fromNow();
         },
         resetFilters: function () {
             let elements = $(".sort-button");
@@ -271,20 +284,26 @@ export const globalMethods = {
             .then(function(response){
                 let refreshedToken = response.data.returnObj.token;
                 self.setJwtInLocalStorage(refreshedToken);
-            }).catch(function(error){
-                console.log(error);
             })
         },
         checkIfUserIsAuthenticated: function () {
-            let self = this;
-            let jwt = "Bearer " + self.getJwtInLocalStorage();
-            if (window.location.pathname != "/register") {
+            return new Promise((resolve, reject) => {
+                let self = this;
+                let jwt = "Bearer " + self.getJwtInLocalStorage();
+
                 if (jwt == "Bearer null") {
-                    self.logoutUser();
+                    if (window.location.pathname.indexOf("/login") == -1) {
+                        self.logoutUser();
+                    }
                 } else {
                     let user_out = $("body").hasClass("hidden");
-                    api.post("/user/check_jwt", {user_out: user_out})
+                    api.post("/user/check_jwt", {user_out: user_out}, {
+                        headers: {
+                            Authorization: jwt
+                        }
+                    })
                     .then(function(response){
+                        self.setJwtInLocalStorage(response.data.new_token);
                         console.log("Authenticated user. JWT check in " + new Date());
                         if (response.data.user.incomplete_registration == "true") {
                             if (self.$route.path != "/complete-registration") {
@@ -292,11 +311,11 @@ export const globalMethods = {
                             }
                         } else {
                             if (window.location.pathname == "/login") {
-                                setTimeout(() => {
-                                    self.$router.push('/my-orders');
-                                }, 2 * 1000)
+                                self.$router.push('/my-orders');
                             }
                         }
+                        
+                        resolve();
                     }).catch(function(){
                         console.log("Unauthenticated user. JWT check in " + new Date());
                         self.logoutUser();
@@ -306,7 +325,7 @@ export const globalMethods = {
                         },  20 * 1000); // Repetição da função a cada 20 segundos
                     })
                 }
-            }
+            })
         },
         returnOrderService: function (service) {
             let returnService = "";

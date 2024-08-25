@@ -67,7 +67,6 @@ export default {
                 } else {
                     self.$router.push('/my-orders');
                 }
-                self.$router.go();
             }).catch(function(error){
                 if (error) {
                     self.loading = false;

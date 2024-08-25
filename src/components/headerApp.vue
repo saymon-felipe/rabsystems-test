@@ -47,6 +47,7 @@
                 <router-link class="link" to="/profile" @click.native="toggleVerticalMenu()">{{ $t("header.my_profile") }}</router-link>
                 <router-link class="link" to="/support" @click.native="toggleVerticalMenu()">{{ $t("header.support") }}</router-link>
                 <router-link class="link" to="/requests" @click.native="toggleVerticalMenu()">{{ $t("header.my_tickets") }}</router-link>
+                <router-link class="link" to="/support-chat" @click.native="toggleVerticalMenu()" v-if="$root.havePermission">Central de mensagens</router-link>
             </div>
             <div class="vertical-menu-footer">
                 <img src="../assets/img/icone-preto.png" class="icon-footer">

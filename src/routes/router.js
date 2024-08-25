@@ -21,6 +21,7 @@ import timeMachine from "../components/timeMachine.vue";
 import admin from "../components/admin.vue";
 import myTickets from "../components/myTickets.vue";
 import ticketDetails from "../components/ticketDetails.vue";
+import supportChat from "../components/supportChat.vue";
 
 const routes = [
     {
@@ -70,6 +71,10 @@ const routes = [
             {
                 path: '/support',
                 component: support
+            },
+            {
+                path: '/support-chat',
+                component: supportChat
             },
             {
                 path: '/order-details/:id',
