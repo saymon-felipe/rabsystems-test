@@ -91,8 +91,9 @@ export default {
         },
         async connectToChat() {
             let replacedUrlApi = api.defaults.baseURL.replace("http://", "").replace("https://", "");
+            let replacedWs = api.defaults.baseURL.indexOf("https") != -1 ? 'wss' : 'ws';
 
-            this.ws = new WebSocket('ws://' + replacedUrlApi + "?uuid=" + this.uuid);
+            this.ws = new WebSocket(replacedWs + '://' + replacedUrlApi + "?uuid=" + this.uuid + "&name=" + this.sender_name);
 
             this.ws.onopen = () => {
                 this.connecting = false;
