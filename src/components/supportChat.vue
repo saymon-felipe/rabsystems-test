@@ -133,7 +133,7 @@ export default {
 
             setInterval(() => {
                 this.ws.send(JSON.stringify({ type: 'heartbeat' }));
-            }, 25000);
+            }, 10000);
         },
         selectUser(uuid) {
             const user = this.pendingUsers.find(user => user.uuid === uuid);
