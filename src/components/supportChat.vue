@@ -130,6 +130,10 @@ export default {
             this.ws.onclose = () => {
                 this.ended = true;
             };
+
+            setInterval(() => {
+                this.ws.send(JSON.stringify({ type: 'heartbeat' }));
+            }, 25000);
         },
         selectUser(uuid) {
             const user = this.pendingUsers.find(user => user.uuid === uuid);
